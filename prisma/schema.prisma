@@ -228,3 +228,24 @@ model Crm {
 
   @@map("crms")
 }
+
+model Province {
+  code      String  @id @unique
+  name      String
+  latitude  String?
+  longitude String?
+  cities    City[]
+
+  @@map("indonesia_provinces")
+}
+
+model City {
+  code          String   @id @unique
+  name          String
+  province      Province @relation(fields: [province_code], references: [code])
+  province_code String
+  latitude      String?
+  longitude     String?
+
+  @@map("indonesia_cities")
+}

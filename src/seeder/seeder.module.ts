@@ -3,7 +3,7 @@ import { SeederService } from './seeder.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [],
   providers: [SeederService],
 })
-export class SeederModule { }
+export class SeederModule {}
