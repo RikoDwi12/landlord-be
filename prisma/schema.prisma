@@ -1,0 +1,230 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String
+  username   String    @unique
+  email      String    @unique
+  password   String
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime? @db.Timestamptz(3)
+
+  @@map("users")
+}
+
+model Group {
+  id            Int           @id @default(autoincrement())
+  name          String        @unique
+  created_at    DateTime      @default(now()) @db.Timestamptz(3)
+  updated_at    DateTime      @updatedAt @db.Timestamptz(3)
+  deleted_at    DateTime?     @db.Timestamptz(3)
+  entity_groups EntityGroup[]
+  properties    Property[]
+
+  @@map("groups")
+}
+
+enum EntityType {
+  PT
+  CV
+  FIRMA
+  PERORANGAN
+}
+
+enum EntityCategory {
+  BROKER
+  CLIENT
+  NOTARIS
+  LANDLORD
+  PIC
+  SAKSI
+  OTHER
+}
+
+model Entity {
+  id                      Int              @id @default(autoincrement())
+  categories              EntityCategory[]
+  type                    EntityType
+  name                    String
+  phone                   String?
+  email                   String?
+  nib                     String?
+  npwp                    String?
+  address                 String?          @db.Text
+  contact_name            String?
+  contact_phone           String?
+  nop                     Nop[]
+  pbb                     Pbb[]
+  crm                     Crm[]
+  created_at              DateTime         @default(now()) @db.Timestamptz(3)
+  updated_at              DateTime         @updatedAt @db.Timestamptz(3)
+  deleted_at              DateTime?        @db.Timestamptz(3)
+  entity_groups           EntityGroup[]
+  owner_certificates      Certificate[]    @relation(name: "owner")
+  behalf_of_certificates  Certificate[]    @relation(name: "behalf_of")
+  ajb_notary_certificates Certificate[]    @relation(name: "ajb_notary")
+
+  @@map("entities")
+}
+
+model EntityGroup {
+  entity    Entity @relation(fields: [entity_id], references: [id])
+  entity_id Int
+  group     Group  @relation(fields: [group_id], references: [id])
+  group_id  Int
+
+  @@id([entity_id, group_id])
+  @@map("entity_group")
+}
+
+model Nop {
+  id               Int              @id @default(autoincrement())
+  taxpayer         Entity?          @relation(fields: [taxpayer_id], references: [id])
+  taxpayer_id      Int?
+  location         String?          @db.Text
+  land_area        Int?
+  building_area    Int?
+  created_at       DateTime         @default(now()) @db.Timestamptz(3)
+  updated_at       DateTime         @updatedAt @db.Timestamptz(3)
+  deleted_at       DateTime?        @db.Timestamptz(3)
+  pbbs             Pbb[]
+  certificate_nops CertificateNop[]
+
+  @@map("nops")
+}
+
+enum PropertyType {
+  KANTOR
+  TANAH
+  PABRIK
+  RUKO
+  GEDUNG
+  GUDANG
+}
+
+model Property {
+  id                  Int           @id @default(autoincrement())
+  group               Group?        @relation(fields: [group_id], references: [id])
+  group_id            Int?
+  name                String
+  type                PropertyType
+  address             String        @db.Text
+  land_area           Int
+  building_area       Int
+  dimension           String
+  link_gmap           String?
+  specific_info       Json?
+  lease_price_monthly Int
+  lease_price_yearly  Int
+  sell_price          Int
+  desc                String?
+  is_available        Boolean       @default(true)
+  other_info          String?       @db.Text
+  created_at          DateTime      @default(now()) @db.Timestamptz(3)
+  updated_at          DateTime      @updatedAt @db.Timestamptz(3)
+  deleted_at          DateTime?     @db.Timestamptz(3)
+  certificates        Certificate[]
+  crms                Crm[]
+
+  @@map("properties")
+}
+
+enum CertificateType {
+  SHM
+  SHGB
+  SHMSRS
+}
+
+model Certificate {
+  id               Int              @id @default(autoincrement())
+  property         Property         @relation(fields: [property_id], references: [id])
+  property_id      Int
+  behalf_of        Entity           @relation(fields: [behalf_of_id], references: [id], name: "behalf_of")
+  behalf_of_id     Int
+  type             CertificateType
+  no               String
+  address          String?          @db.Text
+  location_name    String?
+  original_cert    String?
+  original_doc     String?
+  copy_archive     String?
+  no_copy_archive  String?
+  ownership_status String?
+  owner            Entity?          @relation(fields: [owner_id], references: [id], name: "owner")
+  owner_id         Int?
+  functional       String?
+  land_area        Float
+  ajb_notary       Entity           @relation(fields: [ajb_notary_id], references: [id], name: "ajb_notary")
+  ajb_notary_id    Int
+  ajb_no           String
+  publish_date     DateTime         @db.Date
+  expired_date     DateTime         @db.Date
+  other_info       String?          @db.Text
+  created_at       DateTime         @default(now()) @db.Timestamptz(3)
+  updated_at       DateTime         @updatedAt @db.Timestamptz(3)
+  deleted_at       DateTime?        @db.Timestamptz(3)
+  certificate_nops CertificateNop[]
+
+  @@map("certificates")
+}
+
+model Pbb {
+  id             Int       @id @default(autoincrement())
+  nop            Nop       @relation(fields: [nop_id], references: [id])
+  nop_id         Int
+  year           String    @db.Char(4)
+  land_area      Int
+  building_area  Int
+  njop_land      Int
+  njop_building  Int
+  njop_no_tax    Int
+  taxpayer       Entity    @relation(fields: [taxpayer_id], references: [id])
+  taxpayer_id    Int
+  stimulus       Int
+  multiplier     Float
+  payment_fee    Int       @default(0)
+  total_payment  Int?
+  payment_method String?
+  payment_date   DateTime  @db.Date
+  created_at     DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at     DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at     DateTime? @db.Timestamptz(3)
+
+  @@map("pbbs")
+}
+
+model CertificateNop {
+  id             Int         @id @default(autoincrement())
+  certificate    Certificate @relation(fields: [certificate_id], references: [id])
+  certificate_id Int
+  nop            Nop         @relation(fields: [nop_id], references: [id])
+  nop_id         Int
+
+  @@map("certificate_nop")
+}
+
+model Crm {
+  id                 Int       @id @default(autoincrement())
+  property           Property  @relation(fields: [property_id], references: [id])
+  property_id        Int
+  date               DateTime  @db.Date
+  prospect_client    Entity    @relation(fields: [prospect_client_id], references: [id])
+  prospect_client_id Int
+  prospect_desc      String    @db.Text
+  created_at         DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at         DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at         DateTime? @db.Timestamptz(3)
+
+  @@map("crms")
+}
