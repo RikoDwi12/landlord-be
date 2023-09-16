@@ -1,14 +1,12 @@
 import { Seeder } from 'src/seeder/seeder.abstract';
-import path from 'path';
+import * as path from 'path';
 import { gunzipSync } from 'zlib';
-import fs from 'fs';
+import * as fs from 'fs';
 
 export class IndonesiaSeeder extends Seeder {
   async run(): Promise<void> {
-    console.log(await this.prisma.user.findMany());
-    // await this.seedProvinces();
-
-    // await this.seedCities();
+    await this.seedProvinces();
+    await this.seedCities();
   }
 
   protected async seedProvinces() {
@@ -19,10 +17,10 @@ export class IndonesiaSeeder extends Seeder {
       longitude: string,
     ];
     const content = gunzipSync(
-      fs.readFileSync(path.join(__dirname, '..', 'raw/provinces.csv.gz')),
+      fs.readFileSync(path.join(process.cwd(), 'raw/provinces.csv.gz')),
     );
     const provinces = this.csvToArray(content.toString()) as ProvinceRaw[];
-    this.prisma.province.createMany({
+    await this.prisma.province.createMany({
       data: provinces
         .map((row) => ({
           code: row[0],
@@ -43,10 +41,10 @@ export class IndonesiaSeeder extends Seeder {
       longitude: string,
     ];
     const content = gunzipSync(
-      fs.readFileSync(path.join(__dirname, '..', 'raw/cities.csv.gz')),
+      fs.readFileSync(path.join(process.cwd(), 'raw/cities.csv.gz')),
     );
     const cities = this.csvToArray(content.toString()) as CityRaw[];
-    this.prisma.city.createMany({
+    await this.prisma.city.createMany({
       data: cities
         .map((row) => ({
           code: row[0],
