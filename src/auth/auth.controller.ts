@@ -6,7 +6,8 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @Post('login')
-  login(@Body() body: LoginBodyDto) {
-    await this.authService.login(body);
+  async login(@Body() body: LoginBodyDto) {
+    const token = await this.authService.login(body);
+    return { token };
   }
 }
