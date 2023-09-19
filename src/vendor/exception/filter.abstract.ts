@@ -16,13 +16,12 @@ interface ReportCallback<E> {
 @Catch()
 export abstract class BaseFilter
   extends BaseExceptionFilter
-  implements OnModuleInit
-{
+  implements OnModuleInit {
   protected renderCallbacks: RenderCallback<any>[] = [];
   protected reportCallbacks: ReportCallback<any>[] = [];
   protected dontReport: Class<Error>[] = [];
 
-  register() {}
+  register() { }
   public renderable<E = Error>(
     exception: Class<E>,
     renderUsing: RenderUsing<E>,
@@ -44,7 +43,7 @@ export abstract class BaseFilter
     const httpAdapter = this.httpAdapterHost?.httpAdapter;
     if (httpAdapter) {
       let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-      let responseBody = {};
+      let responseBody = 'INTERNAL_SERVER_ERROR';
       const ctx = host.switchToHttp();
       for (let i = 0; i < this.renderCallbacks.length; i++) {
         const { exception, renderUsing } = this.renderCallbacks[i];
@@ -60,7 +59,6 @@ export abstract class BaseFilter
   }
   protected report(e: unknown) {
     if (this.shouldntReport(e)) return;
-    // TODO: make logger
     let report = (e: any) => {
       console.log(e);
     };
