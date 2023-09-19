@@ -1,7 +1,7 @@
-import { authConfigSchema } from 'src/@types/config.types';
+import { authConfigSchema } from 'src/@types';
 import { validateConfig } from '../validator';
 
-export default () =>
+export const authConfig = () =>
   validateConfig('auth', authConfigSchema, {
     jwtSecret: process.env.JWT_SECRET,
   });

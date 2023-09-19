@@ -1,4 +1,4 @@
-import { Seeder } from 'src/seeder/seeder.abstract';
+import { Seeder } from './seeder.abstract';
 import * as path from 'path';
 import { gunzipSync } from 'zlib';
 import * as fs from 'fs';

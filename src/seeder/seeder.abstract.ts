@@ -1,8 +1,9 @@
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Class } from 'src/@types';
+import { PrismaService } from 'src/prisma';
 
 export abstract class Seeder {
-  constructor(protected prisma: PrismaService) {}
-  async run() {}
+  constructor(protected prisma: PrismaService) { }
+  async run() { }
   async call<T extends Seeder>(seeder: Class<T>): Promise<void> {
     const instance = new seeder();
     await instance.run();

@@ -6,7 +6,7 @@ export const validateConfig = (
   data: any,
 ) => {
   try {
-    return schema.parse(data);
+    return { [configName]: schema.parse(data) };
   } catch (error) {
     if (error instanceof ZodError) {
       throw new Error(
@@ -17,4 +17,5 @@ export const validateConfig = (
       );
     }
   }
+  return {};
 };

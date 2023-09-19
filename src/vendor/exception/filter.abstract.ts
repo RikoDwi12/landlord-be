@@ -2,6 +2,7 @@
 import { ArgumentsHost, Catch, HttpStatus, OnModuleInit } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { Request } from 'express';
+import { Class } from 'src/@types';
 
 type RenderUsing<E> = (e: E, req: Request) => { response: any; status: number };
 type ReportUsing<E> = (e: E) => void;

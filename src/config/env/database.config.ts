@@ -1,7 +1,7 @@
-import { databaseConfigSchema } from 'src/@types/config.types';
+import { databaseConfigSchema } from 'src/@types';
 import { validateConfig } from '../validator';
 
-export default () =>
+export const databaseConfig = () =>
   validateConfig('database', databaseConfigSchema, {
     url: process.env.DATABASE_URL,
   });

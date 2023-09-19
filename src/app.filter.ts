@@ -1,9 +1,13 @@
 import { Catch, HttpException, HttpStatus } from '@nestjs/common';
 import { ZodValidationException } from 'nestjs-zod';
-import { BaseFilter } from './vendor/exception/filter.abstract';
+import { BaseFilter } from './vendor/exception';
+import { AppConfigService } from './config';
 
 @Catch()
 export class AppFilter extends BaseFilter {
+  constructor(private readonly config: AppConfigService) {
+    super();
+  }
   // tambahkan type exception yang tidak ingin direport (print ke console)
   protected dontReport = [HttpException];
   register(): void {
@@ -23,6 +27,16 @@ export class AppFilter extends BaseFilter {
           status: e.getStatus(),
         },
         status: e.getStatus(),
+      };
+    });
+    this.renderable(Error, (e) => {
+      return {
+        response: {
+          message: e.message,
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          stack: this.config.root.app.debug ? e.stack : undefined,
+        },
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
       };
     });
   }

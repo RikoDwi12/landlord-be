@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService as BaseConfigService } from '@nestjs/config';
-import { rootConfig } from 'src/@types/config.types';
+import { rootConfig } from 'src/@types';
 
 @Injectable()
 export class AppConfigService extends BaseConfigService {
@@ -8,7 +8,7 @@ export class AppConfigService extends BaseConfigService {
     return new Proxy(
       {},
       {
-        get: (target, prop: keyof rootConfig) => {
+        get: (_, prop: keyof rootConfig) => {
           return this.get(prop);
         },
       },
