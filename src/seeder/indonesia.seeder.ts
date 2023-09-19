@@ -1,4 +1,4 @@
-import { Seeder } from 'src/seeder/seeder.abstract';
+import { Seeder } from './seeder.abstract';
 import * as path from 'path';
 import { gunzipSync } from 'zlib';
 import * as fs from 'fs';
@@ -20,6 +20,7 @@ export class IndonesiaSeeder extends Seeder {
       fs.readFileSync(path.join(process.cwd(), 'raw/provinces.csv.gz')),
     );
     const provinces = this.csvToArray(content.toString()) as ProvinceRaw[];
+    await this.truncate('province');
     await this.prisma.province.createMany({
       data: provinces
         .map((row) => ({
@@ -44,6 +45,7 @@ export class IndonesiaSeeder extends Seeder {
       fs.readFileSync(path.join(process.cwd(), 'raw/cities.csv.gz')),
     );
     const cities = this.csvToArray(content.toString()) as CityRaw[];
+    await this.truncate('city');
     await this.prisma.city.createMany({
       data: cities
         .map((row) => ({

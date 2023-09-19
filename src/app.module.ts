@@ -1,12 +1,24 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { SeederModule } from './seeder/seeder.module';
+import { PrismaModule } from './prisma';
+import { AppConfigModule } from './config';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { ZodValidationPipe } from 'nestjs-zod';
+import { AuthModule } from './auth';
+import { UserModule } from './user';
+import { AppFilter } from './app.filter';
+import { GroupModule } from './group';
 
 @Module({
-  imports: [PrismaModule, SeederModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule],
+  providers: [
+    {
+      provide: APP_PIPE,
+      useClass: ZodValidationPipe,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AppFilter,
+    },
+  ],
 })
 export class AppModule { }
