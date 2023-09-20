@@ -7,9 +7,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { GroupService } from './group.service';
-import { CreateGroupBodyDto, UpdateGroupBodyDto } from './dto';
+import {
+  CreateGroupBodyDto,
+  UpdateGroupBodyDto,
+  FindGroupQueryDto,
+} from './dto';
 import { JwtGuard } from 'src/auth';
 
 @UseGuards(JwtGuard)
@@ -23,8 +28,8 @@ export class GroupController {
   }
 
   @Get()
-  findAll() {
-    return this.groupService.findAll();
+  findAll(@Query() query: FindGroupQueryDto) {
+    return this.groupService.findAll(query);
   }
 
   @Get(':id')

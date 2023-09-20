@@ -1,6 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateGroupBodyDto, UpdateGroupBodyDto } from './dto';
+import {
+  CreateGroupBodyDto,
+  FindGroupQueryDto,
+  UpdateGroupBodyDto,
+} from './dto';
 import { PrismaService } from 'src/prisma';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class GroupService {
@@ -16,9 +21,54 @@ export class GroupService {
     return await this.prisma.group.create({ data });
   }
 
-  async findAll() {
+  async findAll(query: FindGroupQueryDto) {
     //TODO: short filter search dan pagination
-    return await this.prisma.group.findMany({ where: { deleted_at: null } });
+
+    let filter: Prisma.GroupWhereInput[] = [];
+    let search: Prisma.GroupWhereInput[] = [];
+    if (query.ids) {
+      filter.push({
+        id: {
+          in: query.ids,
+        },
+      });
+    }
+    if (query.search) {
+      search = [
+        {
+          name: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          properties: {
+            some: {
+              name: {
+                contains: query.search,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+      ];
+    }
+    return await this.prisma.extended.group.paginate({
+      limit: query.limit || 10,
+      page: query.page,
+      where: {
+        deleted_at: null,
+        AND: [
+          ...filter,
+          {
+            OR: search,
+          },
+        ],
+      },
+      orderBy: {
+        [query.orderBy]: query.orderDirection,
+      },
+    });
   }
 
   findOne(id: number) {
