@@ -200,15 +200,6 @@ CREATE TABLE "indonesia_cities" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
-
--- CreateIndex
-CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "groups_name_key" ON "groups"("name");
-
--- CreateIndex
 CREATE UNIQUE INDEX "indonesia_provinces_code_key" ON "indonesia_provinces"("code");
 
 -- CreateIndex

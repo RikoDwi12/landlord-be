@@ -38,6 +38,9 @@ dependencies:
   passport-jwt:
     specifier: ^4.0.1
     version: 4.0.1
+  prisma-paginate:
+    specifier: ^5.1.1
+    version: 5.1.1(@prisma/client@5.3.0)(prisma@5.3.0)
   reflect-metadata:
     specifier: ^0.1.13
     version: 0.1.13
@@ -4718,6 +4721,16 @@ packages:
       ansi-styles: 5.2.0
       react-is: 18.2.0
     dev: true
+
+  /prisma-paginate@5.1.1(@prisma/client@5.3.0)(prisma@5.3.0):
+    resolution: {integrity: sha512-G+TApUMaPz2KsZ33lMBxxncm3apTUx4gE+G8ZPOtbEm61yPDP70m918GNXMXDGoSRueh4Z0mcfR6mu8xW2voVA==}
+    peerDependencies:
+      '@prisma/client': '>=4.9.0'
+      prisma: '>=4.9.0'
+    dependencies:
+      '@prisma/client': 5.3.0(prisma@5.3.0)
+      prisma: 5.3.0
+    dev: false
 
   /prisma@5.3.0:
     resolution: {integrity: sha512-eLUR2gyKk8iRLAfy1H3Jel4SZQmjauTPTYX4UFFmwrMTrPnQzipspt48s6e45H5PKYq9zT5MQ9qWbkq9Ru4EAg==}
