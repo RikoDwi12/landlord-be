@@ -5,6 +5,7 @@ import { extension as paginate } from 'prisma-paginate';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+  private extendedClient: any;
   constructor(readonly config: AppConfigService) {
     super({
       datasources: {
@@ -13,6 +14,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     });
   }
   get extended() {
+    let prisma: ReturnType<typeof this.extendClient> = this.extendedClient;
+    if (!prisma) {
+      prisma = this.extendClient();
+    }
+    return prisma;
+  }
+  private extendClient() {
     const prisma = this.$extends({
       model: {
         $allModels: {
@@ -25,6 +33,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         },
       },
     });
+    this.extendedClient = prisma;
     return prisma;
   }
   async onModuleInit() {
