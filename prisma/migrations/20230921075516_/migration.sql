@@ -48,6 +48,7 @@ CREATE TABLE "entities" (
     "address" TEXT,
     "contact_name" TEXT,
     "contact_phone" TEXT,
+    "city_code" TEXT,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(3) NOT NULL,
     "deleted_at" TIMESTAMPTZ(3),
@@ -199,11 +200,42 @@ CREATE TABLE "indonesia_cities" (
     CONSTRAINT "indonesia_cities_pkey" PRIMARY KEY ("code")
 );
 
+-- CreateTable
+CREATE TABLE "indonesia_districts" (
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "city_code" TEXT NOT NULL,
+    "latitude" TEXT,
+    "longitude" TEXT,
+
+    CONSTRAINT "indonesia_districts_pkey" PRIMARY KEY ("code")
+);
+
+-- CreateTable
+CREATE TABLE "indonesia_subdistricts" (
+    "code" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "district_code" TEXT NOT NULL,
+    "latitude" TEXT,
+    "longitude" TEXT,
+
+    CONSTRAINT "indonesia_subdistricts_pkey" PRIMARY KEY ("code")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "indonesia_provinces_code_key" ON "indonesia_provinces"("code");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "indonesia_cities_code_key" ON "indonesia_cities"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "indonesia_districts_code_key" ON "indonesia_districts"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "indonesia_subdistricts_code_key" ON "indonesia_subdistricts"("code");
+
+-- AddForeignKey
+ALTER TABLE "entities" ADD CONSTRAINT "entities_city_code_fkey" FOREIGN KEY ("city_code") REFERENCES "indonesia_cities"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "entity_group" ADD CONSTRAINT "entity_group_entity_id_fkey" FOREIGN KEY ("entity_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -249,3 +281,9 @@ ALTER TABLE "crms" ADD CONSTRAINT "crms_prospect_client_id_fkey" FOREIGN KEY ("p
 
 -- AddForeignKey
 ALTER TABLE "indonesia_cities" ADD CONSTRAINT "indonesia_cities_province_code_fkey" FOREIGN KEY ("province_code") REFERENCES "indonesia_provinces"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "indonesia_districts" ADD CONSTRAINT "indonesia_districts_city_code_fkey" FOREIGN KEY ("city_code") REFERENCES "indonesia_cities"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "indonesia_subdistricts" ADD CONSTRAINT "indonesia_subdistricts_district_code_fkey" FOREIGN KEY ("district_code") REFERENCES "indonesia_districts"("code") ON DELETE RESTRICT ON UPDATE CASCADE;

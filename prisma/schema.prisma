@@ -53,27 +53,30 @@ enum EntityCategory {
 }
 
 model Entity {
-  id                      Int              @id @default(autoincrement())
-  categories              EntityCategory[]
-  type                    EntityType
-  name                    String
-  phone                   String?
-  email                   String?
-  nib                     String?
-  npwp                    String?
-  address                 String?          @db.Text
-  contact_name            String?
-  contact_phone           String?
+  id            Int              @id @default(autoincrement())
+  categories    EntityCategory[]
+  type          EntityType
+  name          String
+  phone         String?
+  email         String?
+  nib           String?
+  npwp          String?
+  address       String?          @db.Text
+  contact_name  String?
+  contact_phone String?
+  city_code     String?
+  created_at    DateTime         @default(now()) @db.Timestamptz(3)
+  updated_at    DateTime         @updatedAt @db.Timestamptz(3)
+  deleted_at    DateTime?        @db.Timestamptz(3)
+
+  city                    City?         @relation(fields: [city_code], references: [code])
   nop                     Nop[]
   pbb                     Pbb[]
   crm                     Crm[]
-  created_at              DateTime         @default(now()) @db.Timestamptz(3)
-  updated_at              DateTime         @updatedAt @db.Timestamptz(3)
-  deleted_at              DateTime?        @db.Timestamptz(3)
   entity_groups           EntityGroup[]
-  owner_certificates      Certificate[]    @relation(name: "owner")
-  behalf_of_certificates  Certificate[]    @relation(name: "behalf_of")
-  ajb_notary_certificates Certificate[]    @relation(name: "ajb_notary")
+  owner_certificates      Certificate[] @relation(name: "owner")
+  behalf_of_certificates  Certificate[] @relation(name: "behalf_of")
+  ajb_notary_certificates Certificate[] @relation(name: "ajb_notary")
 
   @@map("entities")
 }
@@ -240,12 +243,40 @@ model Province {
 }
 
 model City {
-  code          String   @id @unique
+  code          String  @id @unique
   name          String
-  province      Province @relation(fields: [province_code], references: [code])
   province_code String
   latitude      String?
   longitude     String?
 
+  province  Province   @relation(fields: [province_code], references: [code])
+  entities  Entity[]
+  districts District[]
+
   @@map("indonesia_cities")
+}
+
+model District {
+  code      String  @id @unique
+  name      String
+  city_code String
+  latitude  String?
+  longitude String?
+
+  city          City          @relation(fields: [city_code], references: [code])
+  sub_districts SubDistrict[]
+
+  @@map("indonesia_districts")
+}
+
+model SubDistrict {
+  code          String  @id @unique
+  name          String
+  district_code String
+  latitude      String?
+  longitude     String?
+
+  district District @relation(fields: [district_code], references: [code])
+
+  @@map("indonesia_subdistricts")
 }
