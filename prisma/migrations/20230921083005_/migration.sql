@@ -67,8 +67,10 @@ CREATE TABLE "entity_group" (
 -- CreateTable
 CREATE TABLE "nops" (
     "id" SERIAL NOT NULL,
+    "nop" TEXT NOT NULL,
     "taxpayer_id" INTEGER,
     "location" TEXT,
+    "subdistrict_code" TEXT,
     "land_area" INTEGER,
     "building_area" INTEGER,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -85,6 +87,7 @@ CREATE TABLE "properties" (
     "name" TEXT NOT NULL,
     "type" "PropertyType" NOT NULL,
     "address" TEXT NOT NULL,
+    "city_code" TEXT,
     "land_area" INTEGER NOT NULL,
     "building_area" INTEGER NOT NULL,
     "dimension" TEXT NOT NULL,
@@ -110,6 +113,7 @@ CREATE TABLE "certificates" (
     "behalf_of_id" INTEGER NOT NULL,
     "type" "CertificateType" NOT NULL,
     "no" TEXT NOT NULL,
+    "subdistrict_code" TEXT,
     "address" TEXT,
     "location_name" TEXT,
     "original_cert" TEXT,
@@ -244,10 +248,25 @@ ALTER TABLE "entity_group" ADD CONSTRAINT "entity_group_entity_id_fkey" FOREIGN 
 ALTER TABLE "entity_group" ADD CONSTRAINT "entity_group_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "nops" ADD CONSTRAINT "nops_subdistrict_code_fkey" FOREIGN KEY ("subdistrict_code") REFERENCES "indonesia_subdistricts"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "nops" ADD CONSTRAINT "nops_taxpayer_id_fkey" FOREIGN KEY ("taxpayer_id") REFERENCES "entities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "properties" ADD CONSTRAINT "properties_city_code_fkey" FOREIGN KEY ("city_code") REFERENCES "indonesia_cities"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "properties" ADD CONSTRAINT "properties_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "certificates" ADD CONSTRAINT "certificates_subdistrict_code_fkey" FOREIGN KEY ("subdistrict_code") REFERENCES "indonesia_subdistricts"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "certificates" ADD CONSTRAINT "certificates_ajb_notary_id_fkey" FOREIGN KEY ("ajb_notary_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "certificates" ADD CONSTRAINT "certificates_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "entities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "certificates" ADD CONSTRAINT "certificates_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -256,16 +275,10 @@ ALTER TABLE "certificates" ADD CONSTRAINT "certificates_property_id_fkey" FOREIG
 ALTER TABLE "certificates" ADD CONSTRAINT "certificates_behalf_of_id_fkey" FOREIGN KEY ("behalf_of_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "certificates" ADD CONSTRAINT "certificates_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "entities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "certificates" ADD CONSTRAINT "certificates_ajb_notary_id_fkey" FOREIGN KEY ("ajb_notary_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "pbbs" ADD CONSTRAINT "pbbs_taxpayer_id_fkey" FOREIGN KEY ("taxpayer_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "pbbs" ADD CONSTRAINT "pbbs_nop_id_fkey" FOREIGN KEY ("nop_id") REFERENCES "nops"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "pbbs" ADD CONSTRAINT "pbbs_taxpayer_id_fkey" FOREIGN KEY ("taxpayer_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "certificate_nop" ADD CONSTRAINT "certificate_nop_certificate_id_fkey" FOREIGN KEY ("certificate_id") REFERENCES "certificates"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -274,10 +287,10 @@ ALTER TABLE "certificate_nop" ADD CONSTRAINT "certificate_nop_certificate_id_fke
 ALTER TABLE "certificate_nop" ADD CONSTRAINT "certificate_nop_nop_id_fkey" FOREIGN KEY ("nop_id") REFERENCES "nops"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "crms" ADD CONSTRAINT "crms_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "crms" ADD CONSTRAINT "crms_prospect_client_id_fkey" FOREIGN KEY ("prospect_client_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "crms" ADD CONSTRAINT "crms_prospect_client_id_fkey" FOREIGN KEY ("prospect_client_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "crms" ADD CONSTRAINT "crms_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "indonesia_cities" ADD CONSTRAINT "indonesia_cities_province_code_fkey" FOREIGN KEY ("province_code") REFERENCES "indonesia_provinces"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
