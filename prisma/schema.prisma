@@ -297,3 +297,31 @@ model SubDistrict {
 
   @@map("indonesia_subdistricts")
 }
+
+model Media {
+  id         Int        @id @default(autoincrement())
+  directory  String
+  filename   String
+  extension  String     @db.Char(32)
+  mime_type  String     @db.Char(128)
+  size       Int
+  created_at DateTime   @default(now()) @db.Timestamptz(3)
+  updated_at DateTime   @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime?  @db.Timestamptz(3)
+  Mediable   Mediable[]
+
+  @@unique([directory, filename, extension])
+  @@map("media")
+}
+
+model Mediable {
+  id            Int    @id @default(autoincrement())
+  media_id      Int
+  mediable_type String
+  mediable_id   Int
+
+  media Media @relation(fields: [media_id], references: [id])
+
+  @@unique([media_id, mediable_type, mediable_id])
+  @@map("mediables")
+}

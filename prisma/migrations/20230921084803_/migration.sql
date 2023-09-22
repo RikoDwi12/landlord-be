@@ -226,6 +226,31 @@ CREATE TABLE "indonesia_subdistricts" (
     CONSTRAINT "indonesia_subdistricts_pkey" PRIMARY KEY ("code")
 );
 
+-- CreateTable
+CREATE TABLE "media" (
+    "id" SERIAL NOT NULL,
+    "directory" TEXT NOT NULL,
+    "filename" TEXT NOT NULL,
+    "extension" CHAR(32) NOT NULL,
+    "mime_type" CHAR(128) NOT NULL,
+    "size" INTEGER NOT NULL,
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3) NOT NULL,
+    "deleted_at" TIMESTAMPTZ(3),
+
+    CONSTRAINT "media_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "mediables" (
+    "id" SERIAL NOT NULL,
+    "media_id" INTEGER NOT NULL,
+    "mediable_type" TEXT NOT NULL,
+    "mediable_id" INTEGER NOT NULL,
+
+    CONSTRAINT "mediables_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "indonesia_provinces_code_key" ON "indonesia_provinces"("code");
 
@@ -237,6 +262,12 @@ CREATE UNIQUE INDEX "indonesia_districts_code_key" ON "indonesia_districts"("cod
 
 -- CreateIndex
 CREATE UNIQUE INDEX "indonesia_subdistricts_code_key" ON "indonesia_subdistricts"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "media_directory_filename_extension_key" ON "media"("directory", "filename", "extension");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "mediables_media_id_mediable_type_mediable_id_key" ON "mediables"("media_id", "mediable_type", "mediable_id");
 
 -- AddForeignKey
 ALTER TABLE "entities" ADD CONSTRAINT "entities_city_code_fkey" FOREIGN KEY ("city_code") REFERENCES "indonesia_cities"("code") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -300,3 +331,6 @@ ALTER TABLE "indonesia_districts" ADD CONSTRAINT "indonesia_districts_city_code_
 
 -- AddForeignKey
 ALTER TABLE "indonesia_subdistricts" ADD CONSTRAINT "indonesia_subdistricts_district_code_fkey" FOREIGN KEY ("district_code") REFERENCES "indonesia_districts"("code") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "mediables" ADD CONSTRAINT "mediables_media_id_fkey" FOREIGN KEY ("media_id") REFERENCES "media"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
