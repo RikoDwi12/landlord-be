@@ -252,6 +252,9 @@ CREATE TABLE "mediables" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "nops_nop_key" ON "nops"("nop");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "indonesia_provinces_code_key" ON "indonesia_provinces"("code");
 
 -- CreateIndex

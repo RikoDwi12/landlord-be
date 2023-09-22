@@ -95,7 +95,7 @@ model EntityGroup {
 
 model Nop {
   id               Int       @id @default(autoincrement())
-  nop              String
+  nop              String    @unique
   taxpayer_id      Int?
   location         String?   @db.Text
   subdistrict_code String?
