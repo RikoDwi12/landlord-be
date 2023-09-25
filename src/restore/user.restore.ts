@@ -1,21 +1,22 @@
 import { Seeder } from 'src/seeder';
 import * as path from 'path';
 
+interface OldUser {
+  id: number;
+  username: string;
+  name: string;
+  email: string;
+  password: string;
+  is_active: number;
+  created_at: string;
+  updated_at: string;
+}
 export class UserRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring users...');
-    const oldUsers = (await import(
-      path.join(process.cwd(), 'raw/landlordv1/users.json')
-    )) as {
-      id: number;
-      username: string;
-      name: string;
-      email: string;
-      password: string;
-      is_active: number;
-      created_at: string;
-      updated_at: string;
-    }[];
+    const oldUsers = (
+      await import(path.join(process.cwd(), 'raw/landlordv1/users.json'))
+    ).find((data: any) => data.type == 'table').data as OldUser[];
     await this.truncate('user');
     await this.prisma.user.createMany({
       data: oldUsers.map((o) => ({
