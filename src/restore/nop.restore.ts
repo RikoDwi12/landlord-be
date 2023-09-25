@@ -35,8 +35,8 @@ export class NopRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-            ? 'CV'
-            : 'PERORANGAN',
+          ? 'CV'
+          : 'PERORANGAN',
       })),
     });
     const matchedSubdistricts: Record<string, SubDistrict> = {};
@@ -44,7 +44,7 @@ export class NopRestore extends Seeder {
       let subdistrict: SubDistrict | null;
       const catchedSubdistrict =
         matchedSubdistricts[
-        `${oldNop.kota}|${oldNop.kecamatan}|${oldNop.kelurahan}`
+          `${oldNop.kota}|${oldNop.kecamatan}|${oldNop.kelurahan}`
         ];
       if (catchedSubdistrict) {
         subdistrict = catchedSubdistrict;
@@ -90,6 +90,7 @@ export class NopRestore extends Seeder {
 
     await this.prisma.nop.createMany({
       data: oldNops.map((o) => ({
+        id: Number(o.id),
         taxpayer_id:
           taxPayerNames.findIndex((name) => name == o.wajib_pajak) + 1,
         location: o.letak_op,
