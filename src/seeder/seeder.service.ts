@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Class } from 'src/@types';
 import { IndonesiaSeeder } from './indonesia.seeder';
 import { UserSeeder } from './user.seeder';
+import { SertifikatSeeder } from './sertifikat.seeder';
 
 @Injectable()
 export class SeederService {
@@ -11,6 +12,7 @@ export class SeederService {
   async seed() {
     await this.call(IndonesiaSeeder);
     await this.call(UserSeeder);
+	await this.call(SertifikatSeeder);
   }
   async call<T extends Seeder>(seeder: Class<T>): Promise<void> {
     const instance = new seeder(this.prisma);
