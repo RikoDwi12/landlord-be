@@ -114,12 +114,16 @@ model Nop {
 }
 
 enum PropertyType {
-  KANTOR
-  TANAH
-  PABRIK
   RUKO
+  TANAH
   GEDUNG
   GUDANG
+  KANTOR
+  RUMAH
+  APARTEMEN
+  BILLBOARD
+  NEONBOX
+  PABRIK
 }
 
 model Property {
