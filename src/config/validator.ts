@@ -11,9 +11,9 @@ export const validateConfig = (
     if (error instanceof ZodError) {
       throw new Error(
         'Invalid ' +
-        configName +
-        ' configuration: ' +
-        JSON.stringify(error.format(), null, 2),
+          configName +
+          ' configuration: ' +
+          JSON.stringify(error.format(), null, 2),
       );
     }
   }

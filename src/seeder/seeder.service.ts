@@ -8,11 +8,11 @@ import { SertifikatSeeder } from './sertifikat.seeder';
 
 @Injectable()
 export class SeederService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async seed() {
     await this.call(IndonesiaSeeder);
     await this.call(UserSeeder);
-	await this.call(SertifikatSeeder);
+    await this.call(SertifikatSeeder);
   }
   async call<T extends Seeder>(seeder: Class<T>): Promise<void> {
     const instance = new seeder(this.prisma);

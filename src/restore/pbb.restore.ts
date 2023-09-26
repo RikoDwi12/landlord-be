@@ -50,7 +50,7 @@ export class PbbRestore extends Seeder {
     )._max.id as number;
     await this.prisma.entity.createMany({
       data: notSavedTaxpayerNames.map((name, index) => ({
-        id: index + lastEntityId,
+        id: index + lastEntityId + 1,
         name,
         categories: ['LANDLORD'],
         type: name.toUpperCase().includes('PT')
@@ -69,7 +69,7 @@ export class PbbRestore extends Seeder {
     await this.prisma.pbb.createMany({
       data: oldPbbs.map((o) => ({
         id: Number(o.id),
-        year: o.tahun,
+        year: o.tahun.toString(),
         nop_id: Number(o.nop_id),
         stimulus: Number(o.stimulus),
         land_area: Number(o.luas_tanah),

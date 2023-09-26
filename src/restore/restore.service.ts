@@ -9,7 +9,7 @@ import { PbbRestore } from './pbb.restore';
 
 @Injectable()
 export class RestoreService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async restore() {
     await this.call(IndonesiaRestore);
     await this.call(UserRestore);

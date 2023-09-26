@@ -152,7 +152,7 @@ CREATE TABLE "pbbs" (
     "payment_fee" INTEGER NOT NULL DEFAULT 0,
     "total_payment" INTEGER,
     "payment_method" TEXT,
-    "payment_date" DATE NOT NULL,
+    "payment_date" DATE,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(3) NOT NULL,
     "deleted_at" TIMESTAMPTZ(3),

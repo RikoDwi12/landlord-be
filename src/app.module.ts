@@ -21,4 +21,4 @@ import { GroupModule } from './group';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

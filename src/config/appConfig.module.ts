@@ -14,4 +14,4 @@ import { appConfig, authConfig, databaseConfig } from './env';
   providers: [AppConfigService],
   exports: [AppConfigService],
 })
-export class AppConfigModule { }
+export class AppConfigModule {}

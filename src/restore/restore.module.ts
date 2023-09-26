@@ -7,4 +7,4 @@ import { RestoreService } from './restore.service';
   imports: [AppConfigModule, PrismaModule],
   providers: [RestoreService],
 })
-export class RestoreModule { }
+export class RestoreModule {}
