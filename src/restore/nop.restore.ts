@@ -35,19 +35,19 @@ export class NopRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-          ? 'CV'
-          : 'PERORANGAN',
+            ? 'CV'
+            : 'PERORANGAN',
       })),
     });
     const matchedSubdistricts: Record<string, SubDistrict> = {};
     for (const oldNop of oldNops) {
       let subdistrict: SubDistrict | null;
-      const catchedSubdistrict =
+      const cachedSubdistrict =
         matchedSubdistricts[
-          `${oldNop.kota}|${oldNop.kecamatan}|${oldNop.kelurahan}`
+        `${oldNop.kota}|${oldNop.kecamatan}|${oldNop.kelurahan}`
         ];
-      if (catchedSubdistrict) {
-        subdistrict = catchedSubdistrict;
+      if (cachedSubdistrict) {
+        subdistrict = cachedSubdistrict;
       } else {
         subdistrict = await this.prisma.subDistrict.findFirst({
           where: {

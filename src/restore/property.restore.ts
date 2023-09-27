@@ -1,6 +1,6 @@
 import { Seeder } from 'src/seeder';
 import * as path from 'path';
-import { PropertyType } from '@prisma/client';
+import { City, PropertyType } from '@prisma/client';
 import { Electricity, SpecificInfo, Water } from 'src/property/property.type';
 
 interface PropertyOld {
@@ -51,6 +51,38 @@ export class PropertyRestore extends Seeder {
     const oldProperties = (
       await import(path.join(process.cwd(), 'raw/landlordv1/properti.json'))
     ).find((data: any) => data.type == 'table').data as PropertyOld[];
+
+    const matchedCities: Record<string, City> = {};
+    for (const oldProperty of oldProperties) {
+      let city: City | null;
+      const cachedCity =
+        matchedCities[`${oldProperty.provinsi}|${oldProperty.kota}`];
+      if (cachedCity) {
+        city = cachedCity;
+      } else {
+        city = await this.prisma.city.findFirst({
+          where: {
+            name: {
+              contains: oldProperty.kota,
+              mode: 'insensitive',
+            },
+            province: {
+              name: {
+                contains: oldProperty.provinsi,
+                mode: 'insensitive',
+              },
+            },
+          },
+        });
+        if (!city) {
+          throw new Error(
+            'city not found:' + JSON.stringify(oldProperty, null, 2),
+          );
+        }
+        matchedCities[`${oldProperty.provinsi}|${oldProperty.kota}`] =
+          city as City;
+      }
+    }
     await this.prisma.property.createMany({
       data: oldProperties.map((o) => ({
         id: Number(o.id),
@@ -69,6 +101,7 @@ export class PropertyRestore extends Seeder {
         other_info: o.catatan,
         is_available: true,
         is_leased: Boolean(o.disewakan),
+        city_code: matchedCities[`${o.provinsi}|${o.kota}`].code,
         specific_info: this.restoreSpecificInfo(o),
         created_at: o.created_at,
         updated_at: o.updated_at,
