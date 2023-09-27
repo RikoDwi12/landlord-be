@@ -143,6 +143,7 @@ model Property {
   sell_price          Int
   desc                String?
   is_available        Boolean      @default(true)
+  is_leased           Boolean      @default(false)
   other_info          String?      @db.Text
   created_at          DateTime     @default(now()) @db.Timestamptz(3)
   updated_at          DateTime     @updatedAt @db.Timestamptz(3)

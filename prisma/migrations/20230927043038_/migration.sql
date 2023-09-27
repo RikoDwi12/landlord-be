@@ -98,6 +98,7 @@ CREATE TABLE "properties" (
     "sell_price" INTEGER NOT NULL,
     "desc" TEXT,
     "is_available" BOOLEAN NOT NULL DEFAULT true,
+    "is_leased" BOOLEAN NOT NULL DEFAULT false,
     "other_info" TEXT,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(3) NOT NULL,
