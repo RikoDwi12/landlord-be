@@ -136,6 +136,8 @@ CREATE TABLE "certificates" (
     "publish_date" DATE NOT NULL,
     "expired_date" DATE NOT NULL,
     "other_info" TEXT,
+    "documents" JSONB,
+    "document_activities" JSONB,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(3) NOT NULL,
     "deleted_at" TIMESTAMPTZ(3),

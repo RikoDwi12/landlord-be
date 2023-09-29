@@ -288,6 +288,8 @@ export class CertificateRestore extends Seeder {
           ?.id as number,
         subdistrict_code:
           matchedSubdistricts[`${o.kota}|${o.kecamatan}|${o.kelurahan}`].code,
+        document_activities: this.restoreSilsilah(o),
+        documents: this.restoreDocument(o),
         created_at: new Date(o.created_at),
         updated_at: new Date(o.updated_at),
       })),
@@ -320,5 +322,68 @@ export class CertificateRestore extends Seeder {
     }
     await this.restoreAutoincrement('certificate');
     console.log('DONE');
+  }
+
+  private restoreSilsilah(o: CertificateOld) {
+    let documentActivities: {
+      pic: string;
+      document: string;
+      date?: Date;
+      activity: string;
+    }[] = [];
+    const parsedSilsilah = JSON.parse(o.silsilah);
+    if (!Array.isArray(parsedSilsilah)) {
+      throw new Error(
+        'silsilah is not an array: ' + JSON.stringify(o, null, 2),
+      );
+    }
+    for (const silsilah of parsedSilsilah) {
+      // tipe data silsilah ada dua macam
+      // tipe yang baru ada pic, tanggal, dokumen, dan keperluan
+      if (Object.keys(silsilah).includes('pic')) {
+        documentActivities.push({
+          pic: silsilah.pic,
+          document: silsilah.dokumen,
+          date: new Date(silsilah.tanggal),
+          activity: silsilah.keperluan,
+        });
+      } else {
+        // tipe yang lama ada tanggal_keluar, dokumen, nama, keperluan, tanggal_masuk, nama, keterangan
+        // kita split jadi dua data
+        documentActivities.push({
+          pic: silsilah.nama,
+          document: silsilah.dokumen,
+          date: silsilah.tanggal_keluar
+            ? new Date(silsilah.tanggal_keluar)
+            : undefined,
+          activity: silsilah.keperluan,
+        });
+        documentActivities.push({
+          pic: silsilah.nama,
+          document: silsilah.dokumen,
+          date: silsilah.tanggal_masuk
+            ? new Date(silsilah.tanggal_masuk)
+            : undefined,
+          activity: silsilah.keterangan,
+        });
+      }
+    }
+    return documentActivities;
+  }
+
+  private restoreDocument(o: CertificateOld) {
+    let documents: {
+      document: string;
+    }[] = [];
+    const parsedDokumen = JSON.parse(o.dokumen);
+    if (!Array.isArray(parsedDokumen)) {
+      throw new Error('dokumen is not an array: ' + JSON.stringify(o, null, 2));
+    }
+    for (const dokumen of parsedDokumen) {
+      documents.push({
+        document: dokumen.dokumen,
+      });
+    }
+    return documents;
   }
 }

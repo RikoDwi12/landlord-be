@@ -174,33 +174,35 @@ enum CertificateStatus {
 }
 
 model Certificate {
-  id               Int                @id @default(autoincrement())
-  property_id      Int?
-  behalf_of_id     Int
-  group_id         Int?
-  type             CertificateType
-  no               String
-  subdistrict_code String?
-  address          String?            @db.Text
-  location_name    String?
-  original_cert    String?
-  original_doc     String?
-  copy_archive     String?
-  no_copy_archive  String?
-  ownership_status CertificateStatus?
-  owner_id         Int?
-  functional       String?
-  land_area        Float
-  ajb_notary_id    Int
-  ajb_no           String
-  ajb_date         DateTime
-  ajb_total        Int
-  publish_date     DateTime           @db.Date
-  expired_date     DateTime           @db.Date
-  other_info       String?            @db.Text
-  created_at       DateTime           @default(now()) @db.Timestamptz(3)
-  updated_at       DateTime           @updatedAt @db.Timestamptz(3)
-  deleted_at       DateTime?          @db.Timestamptz(3)
+  id                  Int                @id @default(autoincrement())
+  property_id         Int?
+  behalf_of_id        Int
+  group_id            Int?
+  type                CertificateType
+  no                  String
+  subdistrict_code    String?
+  address             String?            @db.Text
+  location_name       String?
+  original_cert       String?
+  original_doc        String?
+  copy_archive        String?
+  no_copy_archive     String?
+  ownership_status    CertificateStatus?
+  owner_id            Int?
+  functional          String?
+  land_area           Float
+  ajb_notary_id       Int
+  ajb_no              String
+  ajb_date            DateTime
+  ajb_total           Int
+  publish_date        DateTime           @db.Date
+  expired_date        DateTime           @db.Date
+  other_info          String?            @db.Text
+  documents           Json?
+  document_activities Json? //silsilah kalau di landlord v1
+  created_at          DateTime           @default(now()) @db.Timestamptz(3)
+  updated_at          DateTime           @updatedAt @db.Timestamptz(3)
+  deleted_at          DateTime?          @db.Timestamptz(3)
 
   subdistrict      SubDistrict?     @relation(fields: [subdistrict_code], references: [code])
   ajb_notary       Entity           @relation(fields: [ajb_notary_id], references: [id], name: "ajb_notary")
