@@ -182,8 +182,9 @@ CREATE TABLE "crms" (
     "id" SERIAL NOT NULL,
     "property_id" INTEGER NOT NULL,
     "date" DATE NOT NULL,
-    "prospect_client_id" INTEGER NOT NULL,
+    "prospect_client_id" INTEGER,
     "prospect_desc" TEXT NOT NULL,
+    "pic_client_id" INTEGER,
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(3) NOT NULL,
     "deleted_at" TIMESTAMPTZ(3),
@@ -332,7 +333,10 @@ ALTER TABLE "certificate_nop" ADD CONSTRAINT "certificate_nop_certificate_id_fke
 ALTER TABLE "certificate_nop" ADD CONSTRAINT "certificate_nop_nop_id_fkey" FOREIGN KEY ("nop_id") REFERENCES "nops"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "crms" ADD CONSTRAINT "crms_prospect_client_id_fkey" FOREIGN KEY ("prospect_client_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "crms" ADD CONSTRAINT "crms_prospect_client_id_fkey" FOREIGN KEY ("prospect_client_id") REFERENCES "entities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "crms" ADD CONSTRAINT "crms_pic_client_id_fkey" FOREIGN KEY ("pic_client_id") REFERENCES "entities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "crms" ADD CONSTRAINT "crms_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
