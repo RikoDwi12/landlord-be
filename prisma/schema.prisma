@@ -32,6 +32,7 @@ model Group {
 
   entity_groups EntityGroup[]
   properties    Property[]
+  Certificate   Certificate[]
 
   @@map("groups")
 }
@@ -161,40 +162,53 @@ enum CertificateType {
   SHM
   SHGB
   SHMSRS
+  LAINNYA
+}
+
+enum CertificateStatus {
+  OWNER
+  MILIK_SENDIRI
+  PINJAM_NAMA
+  KUASA_JUAL
+  LAINNYA
 }
 
 model Certificate {
-  id               Int             @id @default(autoincrement())
-  property_id      Int
+  id               Int                @id @default(autoincrement())
+  property_id      Int?
   behalf_of_id     Int
+  group_id         Int?
   type             CertificateType
   no               String
   subdistrict_code String?
-  address          String?         @db.Text
+  address          String?            @db.Text
   location_name    String?
   original_cert    String?
   original_doc     String?
   copy_archive     String?
   no_copy_archive  String?
-  ownership_status String?
+  ownership_status CertificateStatus?
   owner_id         Int?
   functional       String?
   land_area        Float
   ajb_notary_id    Int
   ajb_no           String
-  publish_date     DateTime        @db.Date
-  expired_date     DateTime        @db.Date
-  other_info       String?         @db.Text
-  created_at       DateTime        @default(now()) @db.Timestamptz(3)
-  updated_at       DateTime        @updatedAt @db.Timestamptz(3)
-  deleted_at       DateTime?       @db.Timestamptz(3)
+  ajb_date         DateTime
+  ajb_total        Int
+  publish_date     DateTime           @db.Date
+  expired_date     DateTime           @db.Date
+  other_info       String?            @db.Text
+  created_at       DateTime           @default(now()) @db.Timestamptz(3)
+  updated_at       DateTime           @updatedAt @db.Timestamptz(3)
+  deleted_at       DateTime?          @db.Timestamptz(3)
 
   subdistrict      SubDistrict?     @relation(fields: [subdistrict_code], references: [code])
   ajb_notary       Entity           @relation(fields: [ajb_notary_id], references: [id], name: "ajb_notary")
   owner            Entity?          @relation(fields: [owner_id], references: [id], name: "owner")
-  property         Property         @relation(fields: [property_id], references: [id])
+  property         Property?        @relation(fields: [property_id], references: [id])
   behalf_of        Entity           @relation(fields: [behalf_of_id], references: [id], name: "behalf_of")
   certificate_nops CertificateNop[]
+  group            Group?           @relation(fields: [group_id], references: [id])
 
   @@map("certificates")
 }
@@ -226,12 +240,12 @@ model Pbb {
 }
 
 model CertificateNop {
-  id             Int         @id @default(autoincrement())
   certificate    Certificate @relation(fields: [certificate_id], references: [id])
   certificate_id Int
   nop            Nop         @relation(fields: [nop_id], references: [id])
   nop_id         Int
 
+  @@id([certificate_id, nop_id])
   @@map("certificate_nop")
 }
 

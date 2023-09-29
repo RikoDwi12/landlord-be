@@ -8,7 +8,10 @@ CREATE TYPE "EntityCategory" AS ENUM ('BROKER', 'CLIENT', 'NOTARIS', 'LANDLORD',
 CREATE TYPE "PropertyType" AS ENUM ('RUKO', 'TANAH', 'GEDUNG', 'GUDANG', 'KANTOR', 'RUMAH', 'APARTEMEN', 'BILLBOARD', 'NEONBOX', 'PABRIK');
 
 -- CreateEnum
-CREATE TYPE "CertificateType" AS ENUM ('SHM', 'SHGB', 'SHMSRS');
+CREATE TYPE "CertificateType" AS ENUM ('SHM', 'SHGB', 'SHMSRS', 'LAINNYA');
+
+-- CreateEnum
+CREATE TYPE "CertificateStatus" AS ENUM ('OWNER', 'MILIK_SENDIRI', 'PINJAM_NAMA', 'KUASA_JUAL', 'LAINNYA');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -110,8 +113,9 @@ CREATE TABLE "properties" (
 -- CreateTable
 CREATE TABLE "certificates" (
     "id" SERIAL NOT NULL,
-    "property_id" INTEGER NOT NULL,
+    "property_id" INTEGER,
     "behalf_of_id" INTEGER NOT NULL,
+    "group_id" INTEGER,
     "type" "CertificateType" NOT NULL,
     "no" TEXT NOT NULL,
     "subdistrict_code" TEXT,
@@ -121,12 +125,14 @@ CREATE TABLE "certificates" (
     "original_doc" TEXT,
     "copy_archive" TEXT,
     "no_copy_archive" TEXT,
-    "ownership_status" TEXT,
+    "ownership_status" "CertificateStatus",
     "owner_id" INTEGER,
     "functional" TEXT,
     "land_area" DOUBLE PRECISION NOT NULL,
     "ajb_notary_id" INTEGER NOT NULL,
     "ajb_no" TEXT NOT NULL,
+    "ajb_date" TIMESTAMP(3) NOT NULL,
+    "ajb_total" INTEGER NOT NULL,
     "publish_date" DATE NOT NULL,
     "expired_date" DATE NOT NULL,
     "other_info" TEXT,
@@ -163,11 +169,10 @@ CREATE TABLE "pbbs" (
 
 -- CreateTable
 CREATE TABLE "certificate_nop" (
-    "id" SERIAL NOT NULL,
     "certificate_id" INTEGER NOT NULL,
     "nop_id" INTEGER NOT NULL,
 
-    CONSTRAINT "certificate_nop_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "certificate_nop_pkey" PRIMARY KEY ("certificate_id","nop_id")
 );
 
 -- CreateTable
@@ -304,10 +309,13 @@ ALTER TABLE "certificates" ADD CONSTRAINT "certificates_ajb_notary_id_fkey" FORE
 ALTER TABLE "certificates" ADD CONSTRAINT "certificates_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "entities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "certificates" ADD CONSTRAINT "certificates_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "certificates" ADD CONSTRAINT "certificates_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "properties"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "certificates" ADD CONSTRAINT "certificates_behalf_of_id_fkey" FOREIGN KEY ("behalf_of_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "certificates" ADD CONSTRAINT "certificates_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "pbbs" ADD CONSTRAINT "pbbs_taxpayer_id_fkey" FOREIGN KEY ("taxpayer_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

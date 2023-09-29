@@ -83,6 +83,7 @@ export class PropertyRestore extends Seeder {
           city as City;
       }
     }
+    // properti sudah ditruncate sebelumnya
     await this.prisma.property.createMany({
       data: oldProperties.map((o) => ({
         id: Number(o.id),
@@ -107,6 +108,50 @@ export class PropertyRestore extends Seeder {
         updated_at: o.updated_at,
       })),
     });
+    // link data sertifikat ke properti
+    for (const oldProperty of oldProperties) {
+      let certificateIds: number[] = [];
+      try {
+        certificateIds = JSON.parse(oldProperty.id_sertifikat).map(
+          (id: string) => Number(id),
+        );
+      } catch (e) {
+        //pass
+      }
+      if (certificateIds.length > 0) {
+        await this.prisma.certificate.updateMany({
+          where: {
+            id: {
+              in: certificateIds,
+            },
+          },
+          data: {
+            property_id: Number(oldProperty.id),
+          },
+        });
+        // update group id properti sesuai grup di sertifikat yang pertama
+        const relatedCertificate = await this.prisma.certificate.findFirst({
+          where: {
+            id: Number(certificateIds[0]),
+          },
+          select: {
+            id: true,
+            group_id: true,
+          },
+        });
+        if (relatedCertificate) {
+          await this.prisma.property.update({
+            where: {
+              id: Number(oldProperty.id),
+            },
+            data: {
+              group_id: relatedCertificate.group_id,
+            },
+          });
+        }
+      }
+    }
+    await this.restoreAutoincrement('property');
     console.log('DONE');
   }
 

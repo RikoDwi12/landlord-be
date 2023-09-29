@@ -68,13 +68,6 @@ export class NopRestore extends Seeder {
               },
             },
           },
-          include: {
-            district: {
-              include: {
-                city: true,
-              },
-            },
-          },
         });
         if (!subdistrict) {
           throw new Error(
@@ -103,6 +96,9 @@ export class NopRestore extends Seeder {
         nop: o.nop,
       })),
     });
+
+    await this.restoreAutoincrement('nop');
+    await this.restoreAutoincrement('entity');
     console.log('DONE');
   }
 

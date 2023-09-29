@@ -56,8 +56,8 @@ export class PbbRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-          ? 'CV'
-          : 'PERORANGAN',
+            ? 'CV'
+            : 'PERORANGAN',
       })),
     });
     const allEntities = await this.prisma.entity.findMany({
@@ -66,6 +66,7 @@ export class PbbRestore extends Seeder {
         name: true,
       },
     });
+    await this.truncate('pbb');
     await this.prisma.pbb.createMany({
       data: oldPbbs.map((o) => ({
         id: Number(o.id),
@@ -89,6 +90,9 @@ export class PbbRestore extends Seeder {
         updated_at: o.updated_at,
       })),
     });
+
+    await this.restoreAutoincrement('entity');
+    await this.restoreAutoincrement('pbb');
     console.log('DONE');
   }
   private calculatePbbTotal(oldPbb: PbbOld) {
