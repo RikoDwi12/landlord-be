@@ -20,7 +20,7 @@ import { JwtGuard } from 'src/auth';
 @UseGuards(JwtGuard)
 @Controller('group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) { }
+  constructor(private readonly groupService: GroupService) {}
 
   @Post()
   create(@Body() body: CreateGroupBodyDto) {

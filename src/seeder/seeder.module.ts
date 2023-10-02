@@ -7,4 +7,4 @@ import { AppConfigModule } from 'src/config';
   imports: [AppConfigModule, PrismaModule],
   providers: [SeederService],
 })
-export class SeederModule { }
+export class SeederModule {}

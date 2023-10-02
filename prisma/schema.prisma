@@ -24,13 +24,15 @@ model User {
 }
 
 model Group {
-  id            Int           @id @default(autoincrement())
-  name          String
-  created_at    DateTime      @default(now()) @db.Timestamptz(3)
-  updated_at    DateTime      @updatedAt @db.Timestamptz(3)
-  deleted_at    DateTime?     @db.Timestamptz(3)
+  id         Int       @id @default(autoincrement())
+  name       String
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime? @db.Timestamptz(3)
+
   entity_groups EntityGroup[]
   properties    Property[]
+  Certificate   Certificate[]
 
   @@map("groups")
 }
@@ -53,51 +55,60 @@ enum EntityCategory {
 }
 
 model Entity {
-  id                      Int              @id @default(autoincrement())
-  categories              EntityCategory[]
-  type                    EntityType
-  name                    String
-  phone                   String?
-  email                   String?
-  nib                     String?
-  npwp                    String?
-  address                 String?          @db.Text
-  contact_name            String?
-  contact_phone           String?
+  id            Int              @id @default(autoincrement())
+  categories    EntityCategory[]
+  type          EntityType
+  name          String
+  phone         String?
+  email         String?
+  nib           String?
+  npwp          String?
+  address       String?          @db.Text
+  contact_name  String?
+  contact_phone String?
+  city_code     String?
+  created_at    DateTime         @default(now()) @db.Timestamptz(3)
+  updated_at    DateTime         @updatedAt @db.Timestamptz(3)
+  deleted_at    DateTime?        @db.Timestamptz(3)
+
+  city                    City?         @relation(fields: [city_code], references: [code])
   nop                     Nop[]
   pbb                     Pbb[]
-  crm                     Crm[]
-  created_at              DateTime         @default(now()) @db.Timestamptz(3)
-  updated_at              DateTime         @updatedAt @db.Timestamptz(3)
-  deleted_at              DateTime?        @db.Timestamptz(3)
   entity_groups           EntityGroup[]
-  owner_certificates      Certificate[]    @relation(name: "owner")
-  behalf_of_certificates  Certificate[]    @relation(name: "behalf_of")
-  ajb_notary_certificates Certificate[]    @relation(name: "ajb_notary")
+  owner_certificates      Certificate[] @relation(name: "owner")
+  behalf_of_certificates  Certificate[] @relation(name: "behalf_of")
+  ajb_notary_certificates Certificate[] @relation(name: "ajb_notary")
+  crm_pic_clients         Crm[]         @relation(name: "pic_client")
+  crm_prospect_clients    Crm[]         @relation(name: "prospect_client")
 
   @@map("entities")
 }
 
 model EntityGroup {
-  entity    Entity @relation(fields: [entity_id], references: [id])
   entity_id Int
-  group     Group  @relation(fields: [group_id], references: [id])
   group_id  Int
+
+  entity Entity @relation(fields: [entity_id], references: [id])
+  group  Group  @relation(fields: [group_id], references: [id])
 
   @@id([entity_id, group_id])
   @@map("entity_group")
 }
 
 model Nop {
-  id               Int              @id @default(autoincrement())
-  taxpayer         Entity?          @relation(fields: [taxpayer_id], references: [id])
+  id               Int       @id @default(autoincrement())
+  nop              String    @unique
   taxpayer_id      Int?
-  location         String?          @db.Text
+  location         String?   @db.Text
+  subdistrict_code String?
   land_area        Int?
   building_area    Int?
-  created_at       DateTime         @default(now()) @db.Timestamptz(3)
-  updated_at       DateTime         @updatedAt @db.Timestamptz(3)
-  deleted_at       DateTime?        @db.Timestamptz(3)
+  created_at       DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at       DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at       DateTime? @db.Timestamptz(3)
+
+  subdistrict      SubDistrict?     @relation(fields: [subdistrict_code], references: [code])
+  taxpayer         Entity?          @relation(fields: [taxpayer_id], references: [id])
   pbbs             Pbb[]
   certificate_nops CertificateNop[]
 
@@ -105,21 +116,25 @@ model Nop {
 }
 
 enum PropertyType {
-  KANTOR
-  TANAH
-  PABRIK
   RUKO
+  TANAH
   GEDUNG
   GUDANG
+  KANTOR
+  RUMAH
+  APARTEMEN
+  BILLBOARD
+  NEONBOX
+  PABRIK
 }
 
 model Property {
-  id                  Int           @id @default(autoincrement())
-  group               Group?        @relation(fields: [group_id], references: [id])
+  id                  Int          @id @default(autoincrement())
   group_id            Int?
   name                String
   type                PropertyType
-  address             String        @db.Text
+  address             String       @db.Text
+  city_code           String?
   land_area           Int
   building_area       Int
   dimension           String
@@ -129,13 +144,17 @@ model Property {
   lease_price_yearly  Int
   sell_price          Int
   desc                String?
-  is_available        Boolean       @default(true)
-  other_info          String?       @db.Text
-  created_at          DateTime      @default(now()) @db.Timestamptz(3)
-  updated_at          DateTime      @updatedAt @db.Timestamptz(3)
-  deleted_at          DateTime?     @db.Timestamptz(3)
-  certificates        Certificate[]
-  crms                Crm[]
+  is_available        Boolean      @default(true)
+  is_leased           Boolean      @default(false)
+  other_info          String?      @db.Text
+  created_at          DateTime     @default(now()) @db.Timestamptz(3)
+  updated_at          DateTime     @updatedAt @db.Timestamptz(3)
+  deleted_at          DateTime?    @db.Timestamptz(3)
+
+  city         City?         @relation(fields: [city_code], references: [code])
+  group        Group?        @relation(fields: [group_id], references: [id])
+  certificates Certificate[]
+  crms         Crm[]
 
   @@map("properties")
 }
@@ -144,44 +163,61 @@ enum CertificateType {
   SHM
   SHGB
   SHMSRS
+  LAINNYA
+}
+
+enum CertificateStatus {
+  OWNER
+  MILIK_SENDIRI
+  PINJAM_NAMA
+  KUASA_JUAL
+  LAINNYA
 }
 
 model Certificate {
-  id               Int              @id @default(autoincrement())
-  property         Property         @relation(fields: [property_id], references: [id])
-  property_id      Int
-  behalf_of        Entity           @relation(fields: [behalf_of_id], references: [id], name: "behalf_of")
-  behalf_of_id     Int
-  type             CertificateType
-  no               String
-  address          String?          @db.Text
-  location_name    String?
-  original_cert    String?
-  original_doc     String?
-  copy_archive     String?
-  no_copy_archive  String?
-  ownership_status String?
-  owner            Entity?          @relation(fields: [owner_id], references: [id], name: "owner")
-  owner_id         Int?
-  functional       String?
-  land_area        Float
+  id                  Int                @id @default(autoincrement())
+  property_id         Int?
+  behalf_of_id        Int
+  group_id            Int?
+  type                CertificateType
+  no                  String
+  subdistrict_code    String?
+  address             String?            @db.Text
+  location_name       String?
+  original_cert       String?
+  original_doc        String?
+  copy_archive        String?
+  no_copy_archive     String?
+  ownership_status    CertificateStatus?
+  owner_id            Int?
+  functional          String?
+  land_area           Float
+  ajb_notary_id       Int
+  ajb_no              String
+  ajb_date            DateTime
+  ajb_total           Int
+  publish_date        DateTime           @db.Date
+  expired_date        DateTime           @db.Date
+  other_info          String?            @db.Text
+  documents           Json?
+  document_activities Json? //silsilah kalau di landlord v1
+  created_at          DateTime           @default(now()) @db.Timestamptz(3)
+  updated_at          DateTime           @updatedAt @db.Timestamptz(3)
+  deleted_at          DateTime?          @db.Timestamptz(3)
+
+  subdistrict      SubDistrict?     @relation(fields: [subdistrict_code], references: [code])
   ajb_notary       Entity           @relation(fields: [ajb_notary_id], references: [id], name: "ajb_notary")
-  ajb_notary_id    Int
-  ajb_no           String
-  publish_date     DateTime         @db.Date
-  expired_date     DateTime         @db.Date
-  other_info       String?          @db.Text
-  created_at       DateTime         @default(now()) @db.Timestamptz(3)
-  updated_at       DateTime         @updatedAt @db.Timestamptz(3)
-  deleted_at       DateTime?        @db.Timestamptz(3)
+  owner            Entity?          @relation(fields: [owner_id], references: [id], name: "owner")
+  property         Property?        @relation(fields: [property_id], references: [id])
+  behalf_of        Entity           @relation(fields: [behalf_of_id], references: [id], name: "behalf_of")
   certificate_nops CertificateNop[]
+  group            Group?           @relation(fields: [group_id], references: [id])
 
   @@map("certificates")
 }
 
 model Pbb {
   id             Int       @id @default(autoincrement())
-  nop            Nop       @relation(fields: [nop_id], references: [id])
   nop_id         Int
   year           String    @db.Char(4)
   land_area      Int
@@ -189,42 +225,47 @@ model Pbb {
   njop_land      Int
   njop_building  Int
   njop_no_tax    Int
-  taxpayer       Entity    @relation(fields: [taxpayer_id], references: [id])
   taxpayer_id    Int
   stimulus       Int
   multiplier     Float
   payment_fee    Int       @default(0)
   total_payment  Int?
   payment_method String?
-  payment_date   DateTime  @db.Date
+  payment_date   DateTime? @db.Date
   created_at     DateTime  @default(now()) @db.Timestamptz(3)
   updated_at     DateTime  @updatedAt @db.Timestamptz(3)
   deleted_at     DateTime? @db.Timestamptz(3)
+
+  taxpayer Entity @relation(fields: [taxpayer_id], references: [id])
+  nop      Nop    @relation(fields: [nop_id], references: [id])
 
   @@map("pbbs")
 }
 
 model CertificateNop {
-  id             Int         @id @default(autoincrement())
   certificate    Certificate @relation(fields: [certificate_id], references: [id])
   certificate_id Int
   nop            Nop         @relation(fields: [nop_id], references: [id])
   nop_id         Int
 
+  @@id([certificate_id, nop_id])
   @@map("certificate_nop")
 }
 
 model Crm {
   id                 Int       @id @default(autoincrement())
-  property           Property  @relation(fields: [property_id], references: [id])
   property_id        Int
   date               DateTime  @db.Date
-  prospect_client    Entity    @relation(fields: [prospect_client_id], references: [id])
-  prospect_client_id Int
+  prospect_client_id Int?
   prospect_desc      String    @db.Text
+  pic_client_id      Int?
   created_at         DateTime  @default(now()) @db.Timestamptz(3)
   updated_at         DateTime  @updatedAt @db.Timestamptz(3)
   deleted_at         DateTime? @db.Timestamptz(3)
+
+  prospect_client Entity?  @relation(fields: [prospect_client_id], references: [id], name: "prospect_client")
+  pic_client      Entity?  @relation(fields: [pic_client_id], references: [id], name: "pic_client")
+  property        Property @relation(fields: [property_id], references: [id])
 
   @@map("crms")
 }
@@ -240,12 +281,71 @@ model Province {
 }
 
 model City {
-  code          String   @id @unique
+  code          String  @id @unique
   name          String
-  province      Province @relation(fields: [province_code], references: [code])
   province_code String
   latitude      String?
   longitude     String?
 
+  province  Province   @relation(fields: [province_code], references: [code])
+  entities  Entity[]
+  districts District[]
+  Property  Property[]
+
   @@map("indonesia_cities")
+}
+
+model District {
+  code      String  @id @unique
+  name      String
+  city_code String
+  latitude  String?
+  longitude String?
+
+  city         City          @relation(fields: [city_code], references: [code])
+  subdistricts SubDistrict[]
+
+  @@map("indonesia_districts")
+}
+
+model SubDistrict {
+  code          String  @id @unique
+  name          String
+  district_code String
+  latitude      String?
+  longitude     String?
+
+  district    District      @relation(fields: [district_code], references: [code])
+  Certificate Certificate[]
+  Nop         Nop[]
+
+  @@map("indonesia_subdistricts")
+}
+
+model Media {
+  id         Int        @id @default(autoincrement())
+  directory  String
+  filename   String
+  extension  String     @db.Char(32)
+  mime_type  String     @db.Char(128)
+  size       Int
+  created_at DateTime   @default(now()) @db.Timestamptz(3)
+  updated_at DateTime   @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime?  @db.Timestamptz(3)
+  Mediable   Mediable[]
+
+  @@unique([directory, filename, extension])
+  @@map("media")
+}
+
+model Mediable {
+  id            Int    @id @default(autoincrement())
+  media_id      Int
+  mediable_type String
+  mediable_id   Int
+
+  media Media @relation(fields: [media_id], references: [id])
+
+  @@unique([media_id, mediable_type, mediable_id])
+  @@map("mediables")
 }

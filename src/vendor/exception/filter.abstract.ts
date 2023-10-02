@@ -17,12 +17,13 @@ interface ReportCallback<E> {
 @Catch()
 export abstract class BaseFilter
   extends BaseExceptionFilter
-  implements OnModuleInit {
+  implements OnModuleInit
+{
   protected renderCallbacks: RenderCallback<any>[] = [];
   protected reportCallbacks: ReportCallback<any>[] = [];
   protected dontReport: Class<Error>[] = [];
 
-  register() { }
+  register() {}
   public renderable<E = Error>(
     exception: Class<E>,
     renderUsing: RenderUsing<E>,
