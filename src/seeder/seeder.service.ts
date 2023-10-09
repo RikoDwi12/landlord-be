@@ -15,18 +15,18 @@ import { PropertiesSeeder } from './properties.seeder';
 
 @Injectable()
 export class SeederService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
   async seed() {
     await this.call(IndonesiaSeeder);
     await this.call(UserSeeder);
-	await this.call(PropertiesSeeder);
+    await this.call(EntitiesSeeder);
+    await this.call(GroupSeeder);
+    await this.call(PropertiesSeeder);
     await this.call(SertifikatSeeder);
-	await this.call(CrmSeeder);
-	await this.call(EntitiesSeeder);
-	await this.call(EntityGroupSeeder);
-	await this.call(GroupSeeder);
-	await this.call(NopSeeder);
-	await this.call(PbbSeeder);
+    await this.call(CrmSeeder);
+    await this.call(EntityGroupSeeder);
+    await this.call(NopSeeder);
+    await this.call(PbbSeeder);
   }
   async call<T extends Seeder>(seeder: Class<T>): Promise<void> {
     const instance = new seeder(this.prisma);
