@@ -7,9 +7,10 @@ import { AuthModule } from './auth';
 import { UserModule } from './user';
 import { AppFilter } from './app.filter';
 import { GroupModule } from './group';
+import { EntityModule } from './entity/entity.module';
 
 @Module({
-  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule],
+  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, EntityModule],
   providers: [
     {
       provide: APP_PIPE,
