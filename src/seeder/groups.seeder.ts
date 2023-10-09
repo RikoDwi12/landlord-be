@@ -6,14 +6,17 @@ export class GroupSeeder extends Seeder {
     await this.prisma.group.createMany({
       data: [
         {
-          name: 'Group 1',
+          name: 'Hidajats',
         },
         {
-          name: 'Group 2',
+          name: 'SLH',
         },
         {
-          name: 'Group 3',
+          name: 'JSS',
         },
+		{
+		  name: 'Leon'
+		},
       ],
     });
   }

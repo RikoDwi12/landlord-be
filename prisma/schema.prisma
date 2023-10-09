@@ -142,7 +142,7 @@ model Property {
   specific_info       Json?
   lease_price_monthly Int
   lease_price_yearly  Int
-  sell_price          Int
+  sell_price          BigInt
   desc                String?
   is_available        Boolean      @default(true)
   is_leased           Boolean      @default(false)

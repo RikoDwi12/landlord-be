@@ -98,7 +98,7 @@ CREATE TABLE "properties" (
     "specific_info" JSONB,
     "lease_price_monthly" INTEGER NOT NULL,
     "lease_price_yearly" INTEGER NOT NULL,
-    "sell_price" INTEGER NOT NULL,
+    "sell_price" BIGINT NOT NULL,
     "desc" TEXT,
     "is_available" BOOLEAN NOT NULL DEFAULT true,
     "is_leased" BOOLEAN NOT NULL DEFAULT false,
