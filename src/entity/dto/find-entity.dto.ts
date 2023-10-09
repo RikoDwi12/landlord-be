@@ -1,6 +1,7 @@
-import { EntityCategory, EntityType } from '@prisma/client';
+import { Entity, EntityCategory, EntityType } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
+import { QueryableDto, SchemaDto } from 'src/@types/dto.types';
 const findEntityQuerySchema = z.object({
   search: z.string().optional(),
   orderBy: z
@@ -14,5 +15,5 @@ const findEntityQuerySchema = z.object({
   //pagination
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
-});
+} satisfies SchemaDto<Entity, QueryableDto>);
 export class FindEntityQueryDto extends createZodDto(findEntityQuerySchema) { }

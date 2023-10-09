@@ -9,9 +9,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { EntityService } from './entity.service';
-import { FindEntityQueryDto } from './dto/find-entity.dto';
-import { CreateEntityBodyDto } from './dto/create-entity.dto';
-import { UpdateEntityBodyDto } from './dto/update-entity.dto';
+import {
+  FindEntityQueryDto,
+  CreateEntityBodyDto,
+  UpdateEntityBodyDto,
+} from './dto';
 
 @Controller('entity')
 export class EntityController {

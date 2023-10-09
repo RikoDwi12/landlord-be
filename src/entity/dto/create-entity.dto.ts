@@ -1,6 +1,7 @@
 import { Entity, EntityCategory, EntityType } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
+import { SchemaDto } from 'src/@types/dto.types';
 const createEntityBodySchema = z.object({
   categories: z.array(z.nativeEnum(EntityCategory)),
   type: z.nativeEnum(EntityType),
@@ -15,5 +16,5 @@ const createEntityBodySchema = z.object({
   city_code: z.string().optional(),
 
   // agar rule validasi sesuai denga schema prisma
-} satisfies Partial<Record<keyof Entity, z.ZodType>>);
+} satisfies SchemaDto<Entity>);
 export class CreateEntityBodyDto extends createZodDto(createEntityBodySchema) { }

@@ -9,7 +9,7 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class GroupService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
   async create(data: CreateGroupBodyDto) {
     if (
       await this.prisma.group.findFirst({
@@ -26,10 +26,10 @@ export class GroupService {
 
     let filter: Prisma.GroupWhereInput[] = [];
     let search: Prisma.GroupWhereInput[] = [];
-    if (query.ids) {
+    if (query.id) {
       filter.push({
         id: {
-          in: query.ids,
+          in: query.id,
         },
       });
     }

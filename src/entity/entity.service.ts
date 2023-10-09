@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { UpdateEntityBodyDto } from './dto/update-entity.dto';
 import { Prisma } from '@prisma/client';
-import { FindEntityQueryDto } from './dto/find-entity.dto';
 import { PrismaService } from 'src/prisma';
-import { CreateEntityBodyDto } from './dto/create-entity.dto';
+import {
+  FindEntityQueryDto,
+  CreateEntityBodyDto,
+  UpdateEntityBodyDto,
+} from './dto';
 
 @Injectable()
 export class EntityService {
@@ -14,7 +16,10 @@ export class EntityService {
         where: { name: data.name, deleted_at: null },
       })
     ) {
-      throw new HttpException('Entity name already exists', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'Entity name already exists',
+        HttpStatus.CONFLICT,
+      );
     }
     return await this.prisma.entity.create({ data });
   }
@@ -81,7 +86,10 @@ export class EntityService {
         where: { name: data.name, id: { not: id }, deleted_at: null },
       })
     ) {
-      throw new HttpException('Entity name already exists', HttpStatus.CONFLICT);
+      throw new HttpException(
+        'Entity name already exists',
+        HttpStatus.CONFLICT,
+      );
     }
     return await this.prisma.entity.update({ where: { id }, data });
   }
