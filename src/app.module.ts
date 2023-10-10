@@ -9,9 +9,10 @@ import { AppFilter } from './app.filter';
 import { GroupModule } from './group';
 import { EntityModule } from './entity/entity.module';
 import { NopModule } from './nop/nop.module';
+import { PbbModule } from './pbb/pbb.module';
 
 @Module({
-  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, EntityModule, NopModule],
+  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, EntityModule, NopModule, PbbModule],
   providers: [
     {
       provide: APP_PIPE,
