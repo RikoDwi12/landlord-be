@@ -16,6 +16,7 @@ import {
   FindGroupQueryDto,
 } from './dto';
 import { JwtGuard } from 'src/auth';
+import { success } from 'src/http';
 
 @UseGuards(JwtGuard)
 @Controller('group')
@@ -23,27 +24,30 @@ export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
   @Post()
-  create(@Body() body: CreateGroupBodyDto) {
-    return this.groupService.create(body);
+  async create(@Body() body: CreateGroupBodyDto) {
+    return success(await this.groupService.create(body));
   }
 
   @Get()
-  findAll(@Query() query: FindGroupQueryDto) {
-    return this.groupService.findAll(query);
+  async findAll(@Query() query: FindGroupQueryDto) {
+    return success(await this.groupService.findAll(query));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return success(await this.groupService.findOne(+id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupBodyDto) {
-    return this.groupService.update(+id, updateGroupDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateGroupDto: UpdateGroupBodyDto,
+  ) {
+    return success(await this.groupService.update(+id, updateGroupDto));
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return success(await this.groupService.remove(+id));
   }
 }

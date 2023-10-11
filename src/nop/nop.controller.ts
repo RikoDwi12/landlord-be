@@ -10,33 +10,34 @@ import {
 } from '@nestjs/common';
 import { NopService } from './nop.service';
 import { FindNopQueryDto, CreateNopBodyDto, UpdateNopBodyDto } from './dto';
+import { success } from 'src/http';
 
 @Controller('nop')
 export class NopController {
-  constructor(private readonly nopService: NopService) { }
+  constructor(private readonly nopService: NopService) {}
 
   @Post()
-  create(@Body() body: CreateNopBodyDto) {
-    return this.nopService.create(body);
+  async create(@Body() body: CreateNopBodyDto) {
+    return success(await this.nopService.create(body));
   }
 
   @Get()
-  findAll(@Query() query: FindNopQueryDto) {
-    return this.nopService.findAll(query);
+  async findAll(@Query() query: FindNopQueryDto) {
+    return success(await this.nopService.findAll(query));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.nopService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return success(await this.nopService.findOne(+id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateNopBodyDto) {
-    return this.nopService.update(+id, body);
+  async update(@Param('id') id: string, @Body() body: UpdateNopBodyDto) {
+    return success(await this.nopService.update(+id, body));
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.nopService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return success(await this.nopService.remove(+id));
   }
 }
