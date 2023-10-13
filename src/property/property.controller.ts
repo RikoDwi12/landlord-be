@@ -14,33 +14,34 @@ import {
   CreatePropertyBodyDto,
   UpdatePropertyBodyDto,
 } from './dto';
+import { success } from 'src/http';
 
 @Controller('property')
 export class PropertyController {
   constructor(private readonly propertyService: PropertyService) { }
 
   @Post()
-  create(@Body() body: CreatePropertyBodyDto) {
-    return this.propertyService.create(body);
+  async create(@Body() body: CreatePropertyBodyDto) {
+    return success(await this.propertyService.create(body));
   }
 
   @Get()
-  findAll(@Query() query: FindPropertyQueryDto) {
-    return this.propertyService.findAll(query);
+  async findAll(@Query() query: FindPropertyQueryDto) {
+    return success(await this.propertyService.findAll(query));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.propertyService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return success(await this.propertyService.findOne(+id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdatePropertyBodyDto) {
-    return this.propertyService.update(+id, body);
+  async update(@Param('id') id: string, @Body() body: UpdatePropertyBodyDto) {
+    return success(await this.propertyService.update(+id, body));
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.propertyService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return success(await this.propertyService.remove(+id));
   }
 }
