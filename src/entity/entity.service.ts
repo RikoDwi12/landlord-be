@@ -85,6 +85,13 @@ export class EntityService {
       orderBy: {
         [query.orderBy]: query.orderDirection,
       },
+      include: {
+        entity_groups: {
+          include: {
+            group: true,
+          },
+        },
+      },
     });
   }
 

@@ -14,33 +14,34 @@ import {
   CreateEntityBodyDto,
   UpdateEntityBodyDto,
 } from './dto';
+import { success } from 'src/http';
 
 @Controller('entity')
 export class EntityController {
   constructor(private readonly entityService: EntityService) { }
 
   @Post()
-  create(@Body() body: CreateEntityBodyDto) {
-    return this.entityService.create(body);
+  async create(@Body() body: CreateEntityBodyDto) {
+    return success(await this.entityService.create(body));
   }
 
   @Get()
-  findAll(@Query() query: FindEntityQueryDto) {
-    return this.entityService.findAll(query);
+  async findAll(@Query() query: FindEntityQueryDto) {
+    return success(await this.entityService.findAll(query));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.entityService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return success(await this.entityService.findOne(+id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateEntityBodyDto) {
-    return this.entityService.update(+id, body);
+  async update(@Param('id') id: string, @Body() body: UpdateEntityBodyDto) {
+    return success(await this.entityService.update(+id, body));
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.entityService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return success(await this.entityService.remove(+id));
   }
 }
