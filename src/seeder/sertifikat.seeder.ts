@@ -35,7 +35,6 @@ export class SertifikatSeeder extends Seeder {
 
 		for (let i = 0; i <= numberOfIndex; i++) {
 			const entry = {
-				id: i + 1,
 				property_id:
 					propertiIds[
 					faker.number.int({ min: 0, max: propertiIds.length - 1 })
@@ -81,7 +80,7 @@ export class SertifikatSeeder extends Seeder {
 				other_info: 'none',
 				documents: 'none',
 				document_activities: 'none',
-			} as Prisma.CertificateCreateManyInput;
+			};
 
 			data.push(entry);
 		}

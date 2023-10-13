@@ -11,9 +11,10 @@ import { EntityModule } from './entity/entity.module';
 import { NopModule } from './nop/nop.module';
 import { PbbModule } from './pbb/pbb.module';
 import { IndonesiaModule } from './indonesia/indonesia.module';
+import { PropertyModule } from './property/property.module';
 
 @Module({
-  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, EntityModule, NopModule, PbbModule, IndonesiaModule],
+  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, PropertyModule, EntityModule, NopModule, PbbModule, IndonesiaModule],
   providers: [
     {
       provide: APP_PIPE,
