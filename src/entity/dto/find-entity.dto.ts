@@ -12,6 +12,7 @@ const findEntityQuerySchema = z.object({
   //filterable
   type: z.array(z.nativeEnum(EntityType)).optional(),
   categories: z.array(z.nativeEnum(EntityCategory)).optional(),
+  group_id: z.array(z.number({ coerce: true })).optional(),
   //pagination
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),

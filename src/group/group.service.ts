@@ -68,11 +68,21 @@ export class GroupService {
       orderBy: {
         [query.orderBy]: query.orderDirection,
       },
+      include: {
+        // dibutuhkan di FE untuk menampilkan jumlah entity
+        entity_groups: {
+          select: {
+            entity_id: true,
+          },
+        },
+      },
     });
   }
 
   findOne(id: number) {
-    return this.prisma.group.findFirst({ where: { id, deleted_at: null } });
+    return this.prisma.group.findFirst({
+      where: { id, deleted_at: null },
+    });
   }
 
   async update(id: number, data: UpdateGroupBodyDto) {

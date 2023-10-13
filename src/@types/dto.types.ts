@@ -1,7 +1,7 @@
 import { z } from 'nestjs-zod/z';
 
 export type SchemaDto<T, K = undefined> = Partial<
-  Record<K extends string ? keyof T | K : keyof T, z.ZodType>
+  Record<(K extends string ? keyof T | K : keyof T) | (string & {}), z.ZodType>
 >;
 export type QueryableDto =
   | 'search'

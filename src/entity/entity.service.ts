@@ -41,6 +41,18 @@ export class EntityService {
         },
       });
     }
+    if (query.group_id?.length) {
+      filter.push({
+        entity_groups: {
+          some: {
+            group_id: {
+              in: query.group_id,
+            },
+          },
+        },
+      });
+    }
+
     if (query.search) {
       // TODO: tambahkan yang bisa disearch apa saja
       search = [
