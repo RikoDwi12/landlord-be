@@ -12,9 +12,10 @@ import { NopModule } from './nop/nop.module';
 import { PbbModule } from './pbb/pbb.module';
 import { IndonesiaModule } from './indonesia/indonesia.module';
 import { PropertyModule } from './property/property.module';
+import { CrmModule } from './crm/crm.module';
 
 @Module({
-  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, PropertyModule, EntityModule, NopModule, PbbModule, IndonesiaModule],
+  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, PropertyModule, EntityModule, NopModule, PbbModule, CrmModule, IndonesiaModule],
   providers: [
     {
       provide: APP_PIPE,
