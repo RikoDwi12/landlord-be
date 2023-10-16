@@ -18,7 +18,7 @@ import { success } from 'src/http';
 
 @Controller('entity')
 export class EntityController {
-  constructor(private readonly entityService: EntityService) { }
+  constructor(private readonly entityService: EntityService) {}
 
   @Post()
   async create(@Body() body: CreateEntityBodyDto) {
@@ -28,6 +28,16 @@ export class EntityController {
   @Get()
   async findAll(@Query() query: FindEntityQueryDto) {
     return success(await this.entityService.findAll(query));
+  }
+
+  @Get('category')
+  category() {
+    return success(this.entityService.categoryOption());
+  }
+
+  @Get('type')
+  type() {
+    return success(this.entityService.typeOption());
   }
 
   @Get(':id')

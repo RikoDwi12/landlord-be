@@ -6,10 +6,12 @@ import {
   CreateEntityBodyDto,
   UpdateEntityBodyDto,
 } from './dto';
+import { constToOption } from 'src/utils/option';
+import { ENTITY_CATEGORIES, ENTITY_TYPES } from './entity.const';
 
 @Injectable()
 export class EntityService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async create(data: CreateEntityBodyDto) {
     if (
       await this.prisma.entity.findFirst({
@@ -96,7 +98,16 @@ export class EntityService {
   }
 
   findOne(id: number) {
-    return this.prisma.entity.findFirst({ where: { id, deleted_at: null } });
+    return this.prisma.entity.findFirst({
+      where: { id, deleted_at: null },
+      include: {
+        city: {
+          select: {
+            province_code: true,
+          },
+        },
+      },
+    });
   }
 
   async update(id: number, data: UpdateEntityBodyDto) {
@@ -120,5 +131,13 @@ export class EntityService {
         deleted_at: new Date(),
       },
     });
+  }
+
+  categoryOption() {
+    return constToOption(ENTITY_CATEGORIES);
+  }
+
+  typeOption() {
+    return constToOption(ENTITY_TYPES);
   }
 }
