@@ -11,8 +11,8 @@ import { ENTITY_CATEGORIES, ENTITY_TYPES } from './entity.const';
 
 @Injectable()
 export class EntityService {
-  constructor(private readonly prisma: PrismaService) {}
-  async create(data: CreateEntityBodyDto) {
+  constructor(private readonly prisma: PrismaService) { }
+  async create({ group_ids, ...data }: CreateEntityBodyDto) {
     if (
       await this.prisma.entity.findFirst({
         where: { name: data.name, deleted_at: null },
@@ -23,7 +23,18 @@ export class EntityService {
         HttpStatus.CONFLICT,
       );
     }
-    return await this.prisma.entity.create({ data });
+    const newEntity = await this.prisma.entity.create({
+      data,
+    });
+
+    // connect group id
+    await this.prisma.entityGroup.createMany({
+      data:
+        group_ids?.map((group_id) => ({
+          group_id,
+          entity_id: newEntity.id,
+        })) || [],
+    });
   }
 
   async findAll(query: FindEntityQueryDto) {
@@ -106,6 +117,11 @@ export class EntityService {
             province_code: true,
           },
         },
+        entity_groups: {
+          select: {
+            group_id: true,
+          },
+        },
       },
     });
   }
@@ -121,6 +137,22 @@ export class EntityService {
         HttpStatus.CONFLICT,
       );
     }
+    const groupIds = data.group_ids || [];
+    delete data.group_ids;
+
+    // delete old connected group
+    await this.prisma.entityGroup.deleteMany({
+      where: {
+        entity_id: id,
+      },
+    });
+    // create new pivot
+    await this.prisma.entityGroup.updateMany({
+      data: groupIds.map((group_id) => ({
+        group_id,
+        entity_id: id,
+      })),
+    });
     return await this.prisma.entity.update({ where: { id }, data });
   }
 

@@ -14,6 +14,10 @@ export const createEntityBodySchema = z.object({
   contact_name: z.string().optional(),
   contact_phone: z.string().optional(),
   city_code: z.string().optional(),
+  group_ids: z
+    .array(z.number({ coerce: true }))
+    .default([])
+    .optional(),
 
   // agar rule validasi sesuai denga schema prisma
 } satisfies SchemaDto<Entity>);
