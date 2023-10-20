@@ -332,7 +332,7 @@ model Media {
   created_at DateTime   @default(now()) @db.Timestamptz(3)
   updated_at DateTime   @updatedAt @db.Timestamptz(3)
   deleted_at DateTime?  @db.Timestamptz(3)
-  Mediable   Mediable[]
+  mediable   Mediable[]
 
   @@unique([directory, filename, extension])
   @@map("media")

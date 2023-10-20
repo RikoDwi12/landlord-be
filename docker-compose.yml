@@ -9,10 +9,24 @@ services:
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: landlord-nest
     networks:
-      - madnessnet
+      landlordnet:
     volumes:
       - 'postgres:/data/postgres'
+  landlord-minio:
+    image: minio/minio:latest
+    ports:
+      - 9010:9000
+      - 9011:9090
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    networks:
+      landlordnet:
+    volumes:
+      - 'minio:/data/minio'
+    command: minio server /data/minio --console-address ":9090"
 networks:
-  madnessnet:
+  landlordnet:
 volumes:
   postgres:
+  minio:
