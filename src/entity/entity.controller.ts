@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { EntityService } from './entity.service';
 import {
@@ -15,6 +17,8 @@ import {
   UpdateEntityBodyDto,
 } from './dto';
 import { success } from '../http';
+import { FindMediaQueryDto } from 'src/media';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('entity')
 export class EntityController {
@@ -53,5 +57,19 @@ export class EntityController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return success(await this.entityService.remove(+id));
+  }
+
+  @Get(':id/media')
+  async getMedia(@Param('id') id: string, @Query() query: FindMediaQueryDto) {
+    return success(await this.entityService.getMediaById(+id, query));
+  }
+
+  @Post(':id/media')
+  @UseInterceptors(FilesInterceptor('files[]'))
+  async attachMedia(
+    @Param('id') id: string,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    return this.entityService.attachMediaForId(+id, files);
   }
 }

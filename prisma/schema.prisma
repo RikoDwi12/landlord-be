@@ -32,7 +32,7 @@ model Group {
 
   entity_groups EntityGroup[]
   properties    Property[]
-  Certificate   Certificate[]
+  certificates  Certificate[]
 
   @@map("groups")
 }
@@ -80,6 +80,7 @@ model Entity {
   ajb_notary_certificates Certificate[] @relation(name: "ajb_notary")
   crm_pic_clients         Crm[]         @relation(name: "pic_client")
   crm_prospect_clients    Crm[]         @relation(name: "prospect_client")
+  entityMedia             EntityMedia[]
 
   @@map("entities")
 }
@@ -323,29 +324,30 @@ model SubDistrict {
 }
 
 model Media {
-  id         Int        @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   directory  String
   filename   String
-  extension  String     @db.Char(32)
-  mime_type  String     @db.Char(128)
+  extension  String    @db.Char(32)
+  mime_type  String    @db.Char(128)
   size       Int
-  created_at DateTime   @default(now()) @db.Timestamptz(3)
-  updated_at DateTime   @updatedAt @db.Timestamptz(3)
-  deleted_at DateTime?  @db.Timestamptz(3)
-  mediable   Mediable[]
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime? @db.Timestamptz(3)
+
+  entityMedia EntityMedia[]
 
   @@unique([directory, filename, extension])
   @@map("media")
 }
 
-model Mediable {
-  id            Int    @id @default(autoincrement())
-  media_id      Int
-  mediable_type String
-  mediable_id   Int
+model EntityMedia {
+  id        Int @id @default(autoincrement())
+  entity_id Int
+  media_id  Int
 
-  media Media @relation(fields: [media_id], references: [id])
+  media  Media  @relation(fields: [media_id], references: [id])
+  entity Entity @relation(fields: [entity_id], references: [id])
 
-  @@unique([media_id, mediable_type, mediable_id])
-  @@map("mediables")
+  @@unique([media_id, entity_id])
+  @@map("entity_media")
 }

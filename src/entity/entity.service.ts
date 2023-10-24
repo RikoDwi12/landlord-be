@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Entity, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import {
   FindEntityQueryDto,
@@ -8,10 +8,15 @@ import {
 } from './dto';
 import { constToOption } from '../utils/option';
 import { ENTITY_CATEGORIES, ENTITY_TYPES } from './entity.const';
+import { MediaService, FindMediaQueryDto } from 'src/media';
+import type { HasMedia } from 'src/@types';
 
 @Injectable()
-export class EntityService {
-  constructor(private readonly prisma: PrismaService) { }
+export class EntityService implements HasMedia<Entity> {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly media: MediaService,
+  ) { }
   async create({ group_ids, ...data }: CreateEntityBodyDto) {
     if (
       await this.prisma.entity.findFirst({
@@ -163,6 +168,16 @@ export class EntityService {
         deleted_at: new Date(),
       },
     });
+  }
+
+  async getMediaById(id: number, query: FindMediaQueryDto) {
+    return await this.media.findAll(query, 'entity', id);
+  }
+  async attachMediaForId(
+    id: number,
+    files: Express.Multer.File[],
+  ): Promise<any> {
+    console.log({ id, files });
   }
 
   categoryOption() {
