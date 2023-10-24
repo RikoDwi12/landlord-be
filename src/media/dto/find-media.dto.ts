@@ -1,7 +1,7 @@
 import { Media } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
-import { QueryableDto, SchemaDto } from 'src/@types/dto.types';
+import { QueryableDto, SchemaDto } from '../../@types/dto.types';
 import { MediableType } from '../media.enum';
 const findMediaQuerySchema = z.object({
   type: z.nativeEnum(MediableType),

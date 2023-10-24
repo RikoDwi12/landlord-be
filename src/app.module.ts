@@ -14,9 +14,10 @@ import { IndonesiaModule } from './indonesia/indonesia.module';
 import { PropertyModule } from './property/property.module';
 import { CrmModule } from './crm/crm.module';
 import { MediaModule } from './media/media.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
-  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, PropertyModule, EntityModule, NopModule, PbbModule, CrmModule, IndonesiaModule, MediaModule],
+  imports: [AppConfigModule, PrismaModule, AuthModule, UserModule, GroupModule, PropertyModule, EntityModule, NopModule, PbbModule, CrmModule, IndonesiaModule, MediaModule, StorageModule],
   providers: [
     {
       provide: APP_PIPE,

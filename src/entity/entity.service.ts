@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma';
+import { PrismaService } from '../prisma';
 import {
   FindEntityQueryDto,
   CreateEntityBodyDto,
   UpdateEntityBodyDto,
 } from './dto';
-import { constToOption } from 'src/utils/option';
+import { constToOption } from '../utils/option';
 import { ENTITY_CATEGORIES, ENTITY_TYPES } from './entity.const';
 
 @Injectable()

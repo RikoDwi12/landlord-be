@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
-import { AppConfigService } from 'src/config';
+import { AppConfigService } from '../config';
 import { extension as paginate } from 'prisma-paginate';
 
 @Injectable()

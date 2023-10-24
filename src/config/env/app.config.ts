@@ -1,4 +1,4 @@
-import { appConfigSchema } from 'src/@types';
+import { appConfigSchema } from '../../@types';
 import { validateConfig } from '../validator';
 
 export const appConfig = () =>

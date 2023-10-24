@@ -2,7 +2,7 @@
 import { ArgumentsHost, Catch, HttpStatus, OnModuleInit } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { Request } from 'express';
-import { Class } from 'src/@types';
+import { Class } from '../../@types';
 
 type RenderUsing<E> = (e: E, req: Request) => { response: any; status: number };
 type ReportUsing<E> = (e: E) => void;
@@ -17,13 +17,12 @@ interface ReportCallback<E> {
 @Catch()
 export abstract class BaseFilter
   extends BaseExceptionFilter
-  implements OnModuleInit
-{
+  implements OnModuleInit {
   protected renderCallbacks: RenderCallback<any>[] = [];
   protected reportCallbacks: ReportCallback<any>[] = [];
   protected dontReport: Class<Error>[] = [];
 
-  register() {}
+  register() { }
   public renderable<E = Error>(
     exception: Class<E>,
     renderUsing: RenderUsing<E>,

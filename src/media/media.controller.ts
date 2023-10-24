@@ -10,7 +10,7 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { MediaService } from './media.service';
-import { success } from 'src/http';
+import { success } from '../http';
 import { FindMediaQueryDto } from './dto/find-media.dto';
 import { CreateMediaBodyDto } from './dto/create-media.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';

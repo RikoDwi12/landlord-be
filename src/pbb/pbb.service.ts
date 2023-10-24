@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma';
+import { PrismaService } from '../prisma';
 import { FindPbbQueryDto, CreatePbbBodyDto, UpdatePbbBodyDto } from './dto';
 
 @Injectable()

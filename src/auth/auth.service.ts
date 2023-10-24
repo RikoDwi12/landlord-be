@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { AuthCredential } from 'src/@types/auth.types';
-import { AppConfigService } from 'src/config';
-import { PrismaService } from 'src/prisma';
+import { AuthCredential } from '../@types/auth.types';
+import { AppConfigService } from '../config';
+import { PrismaService } from '../prisma';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 
@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private readonly configService: AppConfigService,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   async login(credentials: AuthCredential) {
     const user = await this.prisma.user.findFirst({

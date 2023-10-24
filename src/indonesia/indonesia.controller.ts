@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { IndonesiaService } from './indonesia.service';
-import { success } from 'src/http';
+import { success } from '../http';
 import { FindCityQueryDto } from './dto/find-city.dto';
 import { FindDistrictQueryDto } from './dto/find-district.dto';
 import { FindSubDistrictQueryDto } from './dto/find-subdistrict.dto';

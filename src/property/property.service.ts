@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma';
+import { PrismaService } from '../prisma';
 import {
   FindPropertyQueryDto,
   CreatePropertyBodyDto,
@@ -51,22 +51,22 @@ export class PropertyService {
         },
       ];
     }
-	const aa = await this.prisma.extended.property.paginate({
-		limit: query.limit || 10,
-		page: query.page,
-		where: {
-		  deleted_at: null,
-		  AND: [
-			...filter,
-			{
-			  OR: search,
-			},
-		  ],
-		},
-		orderBy: {
-		  [query.orderBy]: query.orderDirection,
-		},
-	  });
+    const aa = await this.prisma.extended.property.paginate({
+      limit: query.limit || 10,
+      page: query.page,
+      where: {
+        deleted_at: null,
+        AND: [
+          ...filter,
+          {
+            OR: search,
+          },
+        ],
+      },
+      orderBy: {
+        [query.orderBy]: query.orderDirection,
+      },
+    });
     return await this.prisma.extended.property.paginate({
       limit: query.limit || 10,
       page: query.page,

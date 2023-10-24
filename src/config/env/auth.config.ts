@@ -1,4 +1,4 @@
-import { authConfigSchema } from 'src/@types';
+import { authConfigSchema } from '../../@types';
 import { validateConfig } from '../validator';
 
 export const authConfig = () =>

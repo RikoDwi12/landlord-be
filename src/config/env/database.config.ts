@@ -1,4 +1,4 @@
-import { databaseConfigSchema } from 'src/@types';
+import { databaseConfigSchema } from '../../@types';
 import { validateConfig } from '../validator';
 
 export const databaseConfig = () =>

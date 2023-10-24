@@ -1,9 +1,9 @@
-import { ZodError, ZodSchema } from 'nestjs-zod/z';
+import { ZodError, ZodSchema, z } from 'nestjs-zod/z';
 
-export const validateConfig = (
+export const validateConfig = <T extends ZodSchema>(
   configName: string,
-  schema: ZodSchema,
-  data: any,
+  schema: T,
+  data: Record<keyof z.infer<T>, any>,
 ) => {
   try {
     return { [configName]: schema.parse(data) };
@@ -11,9 +11,9 @@ export const validateConfig = (
     if (error instanceof ZodError) {
       throw new Error(
         'Invalid ' +
-          configName +
-          ' configuration: ' +
-          JSON.stringify(error.format(), null, 2),
+        configName +
+        ' configuration: ' +
+        JSON.stringify(error.format(), null, 2),
       );
     }
   }

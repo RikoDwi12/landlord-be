@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma';
+import { PrismaService } from '../prisma';
 import { FindCityQueryDto } from './dto/find-city.dto';
 import { FindDistrictQueryDto } from './dto/find-district.dto';
 import { FindSubDistrictQueryDto } from './dto/find-subdistrict.dto';

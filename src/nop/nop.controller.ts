@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { NopService } from './nop.service';
 import { FindNopQueryDto, CreateNopBodyDto, UpdateNopBodyDto } from './dto';
-import { success } from 'src/http';
+import { success } from '../http';
 
 @Controller('nop')
 export class NopController {
-  constructor(private readonly nopService: NopService) {}
+  constructor(private readonly nopService: NopService) { }
 
   @Post()
   async create(@Body() body: CreateNopBodyDto) {

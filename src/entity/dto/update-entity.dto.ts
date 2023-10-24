@@ -1,6 +1,6 @@
 import { Entity } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
-import { SchemaDto } from 'src/@types/dto.types';
+import { SchemaDto } from '../../@types/dto.types';
 import { createEntityBodySchema } from './create-entity.dto';
 const updateEntityBodySchema = createEntityBodySchema.extend({
   // agar rule validasi sesuai denga schema prisma

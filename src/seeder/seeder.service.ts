@@ -1,7 +1,7 @@
-import { PrismaService } from 'src/prisma';
+import { PrismaService } from '../prisma';
 import { Seeder } from './seeder.abstract';
 import { Injectable } from '@nestjs/common';
-import { Class } from 'src/@types';
+import { Class } from '../@types';
 import { IndonesiaSeeder } from './indonesia.seeder';
 import { UserSeeder } from './user.seeder';
 import { SertifikatSeeder } from './sertifikat.seeder';

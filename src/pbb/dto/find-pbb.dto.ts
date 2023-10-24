@@ -1,7 +1,7 @@
 import { Pbb } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
-import { QueryableDto, SchemaDto } from 'src/@types/dto.types';
+import { QueryableDto, SchemaDto } from '../../@types/dto.types';
 const findPbbQuerySchema = z.object({
   search: z.string().optional(),
   orderBy: z

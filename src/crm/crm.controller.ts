@@ -9,12 +9,8 @@ import {
   Query,
 } from '@nestjs/common';
 import { CrmService } from './crm.service';
-import {
-  FindCrmQueryDto,
-  CreateCrmBodyDto,
-  UpdateCrmBodyDto,
-} from './dto';
-import { success } from 'src/http';
+import { FindCrmQueryDto, CreateCrmBodyDto, UpdateCrmBodyDto } from './dto';
+import { success } from '../http';
 
 @Controller('crm')
 export class CrmController {

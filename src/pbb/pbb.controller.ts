@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { PbbService } from './pbb.service';
 import { FindPbbQueryDto, CreatePbbBodyDto, UpdatePbbBodyDto } from './dto';
-import { success } from 'src/http';
+import { success } from '../http';
 
 @Controller('pbb')
 export class PbbController {
-  constructor(private readonly pbbService: PbbService) {}
+  constructor(private readonly pbbService: PbbService) { }
 
   @Post()
   async create(@Body() body: CreatePbbBodyDto) {

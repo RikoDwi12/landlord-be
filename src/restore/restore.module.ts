@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/prisma';
-import { AppConfigModule } from 'src/config';
+import { PrismaModule } from '../prisma';
+import { AppConfigModule } from '../config';
 import { RestoreService } from './restore.service';
 
 @Module({
   imports: [AppConfigModule, PrismaModule],
   providers: [RestoreService],
 })
-export class RestoreModule {}
+export class RestoreModule { }

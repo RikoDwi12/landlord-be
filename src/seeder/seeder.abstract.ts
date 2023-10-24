@@ -1,5 +1,5 @@
-import { Class } from 'src/@types';
-import { PrismaService } from 'src/prisma';
+import { Class } from '../@types';
+import { PrismaService } from '../prisma';
 
 export abstract class Seeder {
   constructor(protected prisma: PrismaService) { }

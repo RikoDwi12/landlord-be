@@ -18,6 +18,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@kodepandai/flydrive": "3.0.0-next.2",
+    "@kodepandai/flydrive-s3": "3.0.0-next.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
@@ -60,7 +62,7 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.1.3"
+    "typescript": "^5.2.2"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -68,7 +70,10 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "./",
+    "modulePaths": [
+      "<rootDir>"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

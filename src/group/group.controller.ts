@@ -15,13 +15,13 @@ import {
   UpdateGroupBodyDto,
   FindGroupQueryDto,
 } from './dto';
-import { JwtGuard } from 'src/auth';
-import { success } from 'src/http';
+import { JwtGuard } from '../auth';
+import { success } from '../http';
 
 @UseGuards(JwtGuard)
 @Controller('group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) {}
+  constructor(private readonly groupService: GroupService) { }
 
   @Post()
   async create(@Body() body: CreateGroupBodyDto) {

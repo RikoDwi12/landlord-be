@@ -10,6 +10,7 @@ services:
       POSTGRES_DB: landlord-nest
     networks:
       landlordnet:
+        ipv4_address: 192.168.1.100
     volumes:
       - 'postgres:/data/postgres'
   landlord-minio:
@@ -22,11 +23,17 @@ services:
       MINIO_ROOT_PASSWORD: minioadminpassword
     networks:
       landlordnet:
+        ipv4_address: 192.168.1.101
     volumes:
       - 'minio:/data/minio'
     command: minio server /data/minio --console-address ":9090"
 networks:
   landlordnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
 volumes:
   postgres:
   minio:

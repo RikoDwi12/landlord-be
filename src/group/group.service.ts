@@ -4,7 +4,7 @@ import {
   FindGroupQueryDto,
   UpdateGroupBodyDto,
 } from './dto';
-import { PrismaService } from 'src/prisma';
+import { PrismaService } from '../prisma';
 import { Prisma } from '@prisma/client';
 
 @Injectable()

@@ -14,7 +14,7 @@ import {
   CreatePropertyBodyDto,
   UpdatePropertyBodyDto,
 } from './dto';
-import { success } from 'src/http';
+import { success } from '../http';
 
 @Controller('property')
 export class PropertyController {

@@ -14,7 +14,7 @@ import {
   CreateCertificateBodyDto,
   UpdateCertificateBodyDto,
 } from './dto';
-import { success } from 'src/http';
+import { success } from '../http';
 
 @Controller('certificate')
 export class CertificateController {
@@ -36,7 +36,10 @@ export class CertificateController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() body: UpdateCertificateBodyDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() body: UpdateCertificateBodyDto,
+  ) {
     return success(await this.certificateService.update(+id, body));
   }
 

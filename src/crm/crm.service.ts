@@ -1,11 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma';
-import {
-  FindCrmQueryDto,
-  CreateCrmBodyDto,
-  UpdateCrmBodyDto,
-} from './dto';
+import { PrismaService } from '../prisma';
+import { FindCrmQueryDto, CreateCrmBodyDto, UpdateCrmBodyDto } from './dto';
 
 @Injectable()
 export class CrmService {

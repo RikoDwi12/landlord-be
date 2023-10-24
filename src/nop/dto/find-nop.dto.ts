@@ -1,7 +1,7 @@
 import { Nop } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
-import { QueryableDto, SchemaDto } from 'src/@types/dto.types';
+import { QueryableDto, SchemaDto } from '../../@types/dto.types';
 const findNopQuerySchema = z.object({
   search: z.string().optional(),
   orderBy: z.enum(['id', 'nop', 'created_at']).optional().default('created_at'),

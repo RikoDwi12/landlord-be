@@ -1,6 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma';
+import { PrismaService } from '../prisma';
 import {
   FindCertificateQueryDto,
   CreateCertificateBodyDto,
@@ -78,7 +78,9 @@ export class CertificateService {
   }
 
   findOne(id: number) {
-    return this.prisma.certificate.findFirst({ where: { id, deleted_at: null } });
+    return this.prisma.certificate.findFirst({
+      where: { id, deleted_at: null },
+    });
   }
 
   async update(id: number, data: UpdateCertificateBodyDto) {

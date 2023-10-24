@@ -1,4 +1,4 @@
-import { Seeder } from 'src/seeder';
+import { Seeder } from '../seeder';
 import * as path from 'path';
 import {
   CertificateStatus,

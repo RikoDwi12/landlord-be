@@ -1,8 +1,8 @@
-import { PrismaService } from 'src/prisma';
-import { Seeder } from 'src/seeder';
+import { PrismaService } from '../prisma';
+import { Seeder } from '../seeder';
 import { Injectable } from '@nestjs/common';
-import { Class } from 'src/@types';
-import { IndonesiaSeeder as IndonesiaRestore } from 'src/seeder/indonesia.seeder';
+import { Class } from '../@types';
+import { IndonesiaSeeder as IndonesiaRestore } from '../seeder/indonesia.seeder';
 import { UserRestore } from './user.restore';
 import { NopRestore } from './nop.restore';
 import { PbbRestore } from './pbb.restore';

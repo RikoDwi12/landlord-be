@@ -1,7 +1,7 @@
-import { Seeder } from 'src/seeder';
+import { Seeder } from '../seeder';
 import * as path from 'path';
 import { City, PropertyType } from '@prisma/client';
-import { Electricity, SpecificInfo, Water } from 'src/property/property.type';
+import { Electricity, SpecificInfo, Water } from '../property/property.type';
 
 interface PropertyOld {
   id: number;

@@ -14,11 +14,11 @@ import {
   CreateEntityBodyDto,
   UpdateEntityBodyDto,
 } from './dto';
-import { success } from 'src/http';
+import { success } from '../http';
 
 @Controller('entity')
 export class EntityController {
-  constructor(private readonly entityService: EntityService) {}
+  constructor(private readonly entityService: EntityService) { }
 
   @Post()
   async create(@Body() body: CreateEntityBodyDto) {
