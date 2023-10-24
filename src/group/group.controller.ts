@@ -17,8 +17,10 @@ import {
 } from './dto';
 import { JwtGuard } from '../auth';
 import { success } from '../http';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @UseGuards(JwtGuard)
+@ApiBearerAuth()
 @Controller('group')
 export class GroupController {
   constructor(private readonly groupService: GroupService) { }
