@@ -237,8 +237,9 @@ model Pbb {
   updated_at     DateTime  @updatedAt @db.Timestamptz(3)
   deleted_at     DateTime? @db.Timestamptz(3)
 
-  taxpayer Entity @relation(fields: [taxpayer_id], references: [id])
-  nop      Nop    @relation(fields: [nop_id], references: [id])
+  taxpayer Entity     @relation(fields: [taxpayer_id], references: [id])
+  nop      Nop        @relation(fields: [nop_id], references: [id])
+  PbbMedia PbbMedia[]
 
   @@map("pbbs")
 }
@@ -335,6 +336,7 @@ model Media {
   deleted_at DateTime? @db.Timestamptz(3)
 
   entityMedia EntityMedia[]
+  pbbMedia    PbbMedia[]
 
   @@unique([directory, filename, extension])
   @@map("media")
@@ -350,4 +352,16 @@ model EntityMedia {
 
   @@unique([media_id, entity_id])
   @@map("entity_media")
+}
+
+model PbbMedia {
+  id       Int @id @default(autoincrement())
+  pbb_id   Int
+  media_id Int
+
+  media Media @relation(fields: [media_id], references: [id])
+  pbb   Pbb   @relation(fields: [pbb_id], references: [id])
+
+  @@unique([media_id, pbb_id])
+  @@map("pbb_media")
 }

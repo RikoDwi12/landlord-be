@@ -5,13 +5,13 @@ import { PrismaService } from '../prisma';
 import { StorageService } from 'src/storage/storage.service';
 import { AmazonWebServicesS3Storage } from '@kodepandai/flydrive-s3';
 
-type Model = 'entity'; // TODO:tambahkan model yang punya media
+type Model = 'entity' | 'pbb'; // TODO:tambahkan model yang punya media
 @Injectable()
 export class MediaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
-  ) { }
+  ) {}
 
   async attachMedia(
     files: Express.Multer.File[],
@@ -19,7 +19,7 @@ export class MediaService {
     modelId: number,
   ) {
     // make sure the model is exists
-    const modelInstance = await this.prisma[model].findFirstOrThrow({
+    const modelInstance = await (this.prisma[model] as any).findFirstOrThrow({
       where: {
         id: modelId,
       },
@@ -129,7 +129,7 @@ export class MediaService {
           },
         },
       });
-      await trx.entityMedia.deleteMany({
+      await trx[model + 'Media'].deleteMany({
         where: {
           media_id: mediaId,
         },

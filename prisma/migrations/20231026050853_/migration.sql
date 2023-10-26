@@ -259,6 +259,15 @@ CREATE TABLE "entity_media" (
     CONSTRAINT "entity_media_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "pbb_media" (
+    "id" SERIAL NOT NULL,
+    "pbb_id" INTEGER NOT NULL,
+    "media_id" INTEGER NOT NULL,
+
+    CONSTRAINT "pbb_media_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "nops_nop_key" ON "nops"("nop");
 
@@ -279,6 +288,9 @@ CREATE UNIQUE INDEX "media_directory_filename_extension_key" ON "media"("directo
 
 -- CreateIndex
 CREATE UNIQUE INDEX "entity_media_media_id_entity_id_key" ON "entity_media"("media_id", "entity_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "pbb_media_media_id_pbb_id_key" ON "pbb_media"("media_id", "pbb_id");
 
 -- AddForeignKey
 ALTER TABLE "entities" ADD CONSTRAINT "entities_city_code_fkey" FOREIGN KEY ("city_code") REFERENCES "indonesia_cities"("code") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -354,3 +366,9 @@ ALTER TABLE "entity_media" ADD CONSTRAINT "entity_media_media_id_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "entity_media" ADD CONSTRAINT "entity_media_entity_id_fkey" FOREIGN KEY ("entity_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pbb_media" ADD CONSTRAINT "pbb_media_media_id_fkey" FOREIGN KEY ("media_id") REFERENCES "media"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "pbb_media" ADD CONSTRAINT "pbb_media_pbb_id_fkey" FOREIGN KEY ("pbb_id") REFERENCES "pbbs"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
