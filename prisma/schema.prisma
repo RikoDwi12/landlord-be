@@ -152,10 +152,11 @@ model Property {
   updated_at          DateTime     @updatedAt @db.Timestamptz(3)
   deleted_at          DateTime?    @db.Timestamptz(3)
 
-  city         City?         @relation(fields: [city_code], references: [code])
-  group        Group?        @relation(fields: [group_id], references: [id])
-  certificates Certificate[]
-  crms         Crm[]
+  city          City?           @relation(fields: [city_code], references: [code])
+  group         Group?          @relation(fields: [group_id], references: [id])
+  certificates  Certificate[]
+  crms          Crm[]
+  PropertyMedia PropertyMedia[]
 
   @@map("properties")
 }
@@ -206,13 +207,14 @@ model Certificate {
   updated_at          DateTime           @updatedAt @db.Timestamptz(3)
   deleted_at          DateTime?          @db.Timestamptz(3)
 
-  subdistrict      SubDistrict?     @relation(fields: [subdistrict_code], references: [code])
-  ajb_notary       Entity           @relation(fields: [ajb_notary_id], references: [id], name: "ajb_notary")
-  owner            Entity?          @relation(fields: [owner_id], references: [id], name: "owner")
-  property         Property?        @relation(fields: [property_id], references: [id])
-  behalf_of        Entity           @relation(fields: [behalf_of_id], references: [id], name: "behalf_of")
+  subdistrict      SubDistrict?       @relation(fields: [subdistrict_code], references: [code])
+  ajb_notary       Entity             @relation(fields: [ajb_notary_id], references: [id], name: "ajb_notary")
+  owner            Entity?            @relation(fields: [owner_id], references: [id], name: "owner")
+  property         Property?          @relation(fields: [property_id], references: [id])
+  behalf_of        Entity             @relation(fields: [behalf_of_id], references: [id], name: "behalf_of")
   certificate_nops CertificateNop[]
-  group            Group?           @relation(fields: [group_id], references: [id])
+  group            Group?             @relation(fields: [group_id], references: [id])
+  certificateMedia CertificateMedia[]
 
   @@map("certificates")
 }
@@ -335,8 +337,10 @@ model Media {
   updated_at DateTime  @updatedAt @db.Timestamptz(3)
   deleted_at DateTime? @db.Timestamptz(3)
 
-  entityMedia EntityMedia[]
-  pbbMedia    PbbMedia[]
+  entityMedia      EntityMedia[]
+  pbbMedia         PbbMedia[]
+  certificateMedia CertificateMedia[]
+  PropertyMedia    PropertyMedia[]
 
   @@unique([directory, filename, extension])
   @@map("media")
@@ -364,4 +368,28 @@ model PbbMedia {
 
   @@unique([media_id, pbb_id])
   @@map("pbb_media")
+}
+
+model CertificateMedia {
+  id             Int @id @default(autoincrement())
+  certificate_id Int
+  media_id       Int
+
+  media       Media       @relation(fields: [media_id], references: [id])
+  certificate Certificate @relation(fields: [certificate_id], references: [id])
+
+  @@unique([media_id, certificate_id])
+  @@map("certificate_media")
+}
+
+model PropertyMedia {
+  id          Int @id @default(autoincrement())
+  property_id Int
+  media_id    Int
+
+  media    Media    @relation(fields: [media_id], references: [id])
+  property Property @relation(fields: [property_id], references: [id])
+
+  @@unique([media_id, property_id])
+  @@map("property_media")
 }

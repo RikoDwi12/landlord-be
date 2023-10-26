@@ -5,13 +5,13 @@ import { PrismaService } from '../prisma';
 import { StorageService } from 'src/storage/storage.service';
 import { AmazonWebServicesS3Storage } from '@kodepandai/flydrive-s3';
 
-type Model = 'entity' | 'pbb'; // TODO:tambahkan model yang punya media
+type Model = 'entity' | 'pbb' | 'certificate'; // TODO:tambahkan model yang punya media
 @Injectable()
 export class MediaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
-  ) {}
+  ) { }
 
   async attachMedia(
     files: Express.Multer.File[],
