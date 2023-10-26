@@ -17,10 +17,12 @@ import {
   UpdateEntityBodyDto,
 } from './dto';
 import { success } from '../http';
-import { FindMediaQueryDto } from 'src/media';
+import { CreateMediaBodyDto, FindMediaQueryDto } from 'src/media';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('entity')
+@ApiBearerAuth()
 export class EntityController {
   constructor(private readonly entityService: EntityService) { }
 
@@ -65,11 +67,18 @@ export class EntityController {
   }
 
   @Post(':id/media')
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FilesInterceptor('files[]'))
   async attachMedia(
     @Param('id') id: string,
+    @Body() _: CreateMediaBodyDto,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    return this.entityService.attachMediaForId(+id, files);
+    return success(await this.entityService.attachMediaForId(+id, files));
+  }
+
+  @Delete('media/:id')
+  async deleteMedia(@Param('id') mediaId: number) {
+    return success(await this.entityService.deleteMedia(+mediaId));
   }
 }

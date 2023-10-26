@@ -10,11 +10,13 @@ const LoginBodyShema = z.object({
 export class LoginBodyDto extends createZodDto(LoginBodyShema) {
   @ApiProperty({
     required: true,
+    example: 'leon@mail.com',
   })
   email!: string;
 
   @ApiProperty({
     required: true,
+    example: 'password',
   })
   password!: string;
 }
