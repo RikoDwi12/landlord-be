@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma';
 import { StorageService } from 'src/storage/storage.service';
 import { AmazonWebServicesS3Storage } from '@kodepandai/flydrive-s3';
 
-type Model = 'entity' | 'pbb' | 'certificate' | 'property'; // TODO:tambahkan model yang punya media
+type Model = 'entity' | 'pbb' | 'certificate' | 'property' | 'lease'; // TODO:tambahkan model yang punya media
 @Injectable()
 export class MediaService {
   constructor(
