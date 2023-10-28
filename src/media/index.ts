@@ -1,3 +1,3 @@
 export * from './dto';
-export * from './media.module';
+export * from './file.module';
 export * from './media.service';

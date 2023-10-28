@@ -6,15 +6,10 @@ import {
   CreatePropertyBodyDto,
   UpdatePropertyBodyDto,
 } from './dto';
-import { HasMedia } from 'src/@types';
-import { FindMediaQueryDto, MediaService } from 'src/media';
 
 @Injectable()
-export class PropertyService implements HasMedia {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly media: MediaService,
-  ) {}
+export class PropertyService {
+  constructor(private readonly prisma: PrismaService) { }
   async create(data: CreatePropertyBodyDto) {
     if (
       await this.prisma.property.findFirst({
@@ -115,16 +110,5 @@ export class PropertyService implements HasMedia {
         deleted_at: new Date(),
       },
     });
-  }
-
-  async getMediaById(id: number, query: FindMediaQueryDto) {
-    return this.media.findAll(query, 'property', id);
-  }
-  attachMediaForId(id: number, files: Express.Multer.File[]): Promise<void> {
-    return this.media.attachMedia(files, 'property', id);
-  }
-
-  deleteMedia(mediaId: number): Promise<void> {
-    return this.media.deleteMedia(mediaId, 'property');
   }
 }

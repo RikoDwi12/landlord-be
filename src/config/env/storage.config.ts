@@ -9,4 +9,5 @@ export const storageConfig = () =>
     bucket: process.env.STORAGE_BUCKET,
     driver: process.env.STORAGE_DRIVER,
     endpoint: process.env.STORAGE_ENDPOINT,
+    tmpPath: process.env.STORAGE_TMP_PATH,
   });

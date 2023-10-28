@@ -1,4 +1,5 @@
 import { z } from 'nestjs-zod/z';
+import { tmpdir } from 'os';
 
 export const appConfigSchema = z.object({
   port: z.number({ coerce: true }),
@@ -18,6 +19,7 @@ export const storageConfigSchema = z.object({
   region: z.string().optional(),
   bucket: z.string(),
   driver: z.enum(['minio', 's3']),
+  tmpPath: z.string().optional().default(tmpdir()),
 });
 
 export const rootConfigSchema = z.object({

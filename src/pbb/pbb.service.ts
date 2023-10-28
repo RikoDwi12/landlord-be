@@ -2,15 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { FindPbbQueryDto, CreatePbbBodyDto, UpdatePbbBodyDto } from './dto';
-import { HasMedia } from 'src/@types';
-import { FindMediaQueryDto, MediaService } from 'src/media';
 
 @Injectable()
-export class PbbService implements HasMedia {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly media: MediaService,
-  ) {}
+export class PbbService {
+  constructor(private readonly prisma: PrismaService) { }
   async create(data: CreatePbbBodyDto) {
     if (
       await this.prisma.pbb.findFirst({
@@ -107,15 +102,5 @@ export class PbbService implements HasMedia {
         deleted_at: new Date(),
       },
     });
-  }
-  async getMediaById(id: number, query: FindMediaQueryDto) {
-    return this.media.findAll(query, 'pbb', id);
-  }
-  attachMediaForId(id: number, files: Express.Multer.File[]): Promise<void> {
-    return this.media.attachMedia(files, 'pbb', id);
-  }
-
-  deleteMedia(mediaId: number): Promise<void> {
-    return this.media.deleteMedia(mediaId, 'pbb');
   }
 }

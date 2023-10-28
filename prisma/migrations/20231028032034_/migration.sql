@@ -13,6 +13,9 @@ CREATE TYPE "CertificateType" AS ENUM ('SHM', 'SHGB', 'SHMSRS', 'LAINNYA');
 -- CreateEnum
 CREATE TYPE "CertificateStatus" AS ENUM ('OWNER', 'MILIK_SENDIRI', 'PINJAM_NAMA', 'KUASA_JUAL', 'LAINNYA');
 
+-- CreateEnum
+CREATE TYPE "MediaTag" AS ENUM ('ATTACHMENT');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
@@ -243,6 +246,7 @@ CREATE TABLE "media" (
     "extension" CHAR(32) NOT NULL,
     "mime_type" CHAR(128) NOT NULL,
     "size" INTEGER NOT NULL,
+    "tags" "MediaTag"[],
     "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(3) NOT NULL,
     "deleted_at" TIMESTAMPTZ(3),

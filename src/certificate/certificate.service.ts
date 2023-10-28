@@ -6,15 +6,10 @@ import {
   CreateCertificateBodyDto,
   UpdateCertificateBodyDto,
 } from './dto';
-import { HasMedia } from 'src/@types';
-import { FindMediaQueryDto, MediaService } from 'src/media';
 
 @Injectable()
-export class CertificateService implements HasMedia {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly media: MediaService,
-  ) { }
+export class CertificateService {
+  constructor(private readonly prisma: PrismaService) { }
   async create(data: CreateCertificateBodyDto) {
     // if (
     //   await this.prisma.certificate.findFirst({
@@ -109,16 +104,5 @@ export class CertificateService implements HasMedia {
         deleted_at: new Date(),
       },
     });
-  }
-
-  async getMediaById(id: number, query: FindMediaQueryDto) {
-    return this.media.findAll(query, 'certificate', id);
-  }
-  attachMediaForId(id: number, files: Express.Multer.File[]): Promise<void> {
-    return this.media.attachMedia(files, 'certificate', id);
-  }
-
-  deleteMedia(mediaId: number): Promise<void> {
-    return this.media.deleteMedia(mediaId, 'certificate');
   }
 }

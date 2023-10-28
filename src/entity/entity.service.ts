@@ -8,15 +8,15 @@ import {
 } from './dto';
 import { constToOption } from '../utils/option';
 import { ENTITY_CATEGORIES, ENTITY_TYPES } from './entity.const';
-import { MediaService, FindMediaQueryDto } from 'src/media';
-import type { HasMedia } from 'src/@types';
+import { MediaService } from 'src/media';
+import { Mediable } from 'src/media/media.const';
 
 @Injectable()
-export class EntityService implements HasMedia {
+export class EntityService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
-  ) { }
+  ) {}
   async create({ group_ids, ...data }: CreateEntityBodyDto) {
     if (
       await this.prisma.entity.findFirst({
@@ -113,8 +113,8 @@ export class EntityService implements HasMedia {
     });
   }
 
-  findOne(id: number) {
-    return this.prisma.entity.findFirst({
+  async findOne(id: number) {
+    const rows = await this.prisma.entity.findFirst({
       where: { id, deleted_at: null },
       include: {
         city: {
@@ -129,6 +129,13 @@ export class EntityService implements HasMedia {
         },
       },
     });
+    return {
+      ...rows,
+      media: await this.media.findAll({
+        mediable_id: id,
+        mediable_type: Mediable.Entity,
+      }),
+    };
   }
 
   async update(id: number, data: UpdateEntityBodyDto) {
@@ -168,17 +175,6 @@ export class EntityService implements HasMedia {
         deleted_at: new Date(),
       },
     });
-  }
-
-  async getMediaById(id: number, query: FindMediaQueryDto) {
-    return this.media.findAll(query, 'entity', id);
-  }
-  attachMediaForId(id: number, files: Express.Multer.File[]): Promise<void> {
-    return this.media.attachMedia(files, 'entity', id);
-  }
-
-  deleteMedia(mediaId: number): Promise<void> {
-    return this.media.deleteMedia(mediaId, 'entity');
   }
 
   categoryOption() {

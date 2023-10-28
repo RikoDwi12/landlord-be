@@ -4,8 +4,8 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { StorageService } from 'src/storage/storage.service';
 import { AmazonWebServicesS3Storage } from '@kodepandai/flydrive-s3';
+import { CreateMediaBodyDto, DeleteMediaBodyDto } from './dto';
 
-type Model = 'entity' | 'pbb' | 'certificate' | 'property' | 'lease'; // TODO:tambahkan model yang punya media
 @Injectable()
 export class MediaService {
   constructor(
@@ -13,20 +13,16 @@ export class MediaService {
     private readonly storage: StorageService,
   ) {}
 
-  async attachMedia(
-    files: Express.Multer.File[],
-    model: Model,
-    modelId: number,
-  ) {
-    // make sure the model is exists
-    const modelInstance = await (this.prisma[model] as any).findFirstOrThrow({
+  async attachMedia(files: Express.Multer.File[], body: CreateMediaBodyDto) {
+    // make sure the mediable is exists
+    await (this.prisma[body.mediable_type] as any).findFirstOrThrow({
       where: {
-        id: modelId,
+        id: body.mediable_id,
       },
     });
     // upload media ke storage
     const uploaded: Prisma.MediaCreateInput[] = [];
-    const directory = `${model}/${modelInstance.id}`;
+    const directory = `${body.mediable_type}/${body.mediable_id}`;
     await Promise.all(
       files.map(async (file) => {
         const location = `${directory}/${file.originalname}`;
@@ -53,43 +49,31 @@ export class MediaService {
           directory,
         },
       });
-      await trx[model + 'Media'].createMany({
+      await trx[body.mediable_type + 'Media'].createMany({
         data: relatedMedia.map((media) => ({
           media_id: media.id,
-          [model + '_id']: modelId,
+          [body.mediable_type + '_id']: body.mediable_id,
         })),
         skipDuplicates: true,
       });
     });
   }
 
-  async findAll(query: FindMediaQueryDto, model: Model, modelId?: number) {
+  async findAll(query: FindMediaQueryDto) {
     let filter: Prisma.MediaWhereInput[] = [];
     let search: Prisma.MediaWhereInput[] = [];
 
-    if (query.search) {
-      search = [
-        {
-          filename: {
-            contains: query.search,
-            mode: 'insensitive',
-          },
-        },
-      ];
-    }
-    if (modelId) {
+    if (query.mediable_type && query.mediable_id) {
       filter.push({
-        entityMedia: {
-          some: {
-            [model + '_id']: modelId,
+        [query.mediable_type + 'Media']: {
+          every: {
+            [query.mediable_type + '_id']: query.mediable_id,
           },
         },
       });
     }
-    return await this.prisma.extended.media
-      .paginate({
-        limit: query.limit || 10,
-        page: query.page,
+    return await this.prisma.media
+      .findMany({
         where: {
           deleted_at: null,
           AND: [
@@ -99,13 +83,10 @@ export class MediaService {
             },
           ],
         },
-        orderBy: {
-          [query.orderBy]: query.orderDirection,
-        },
       })
       .then(async (res) => {
-        res.result = await Promise.all(
-          res.result.map(async (media) => ({
+        res = await Promise.all(
+          res.map(async (media) => ({
             ...media,
             url: (
               await this.storage
@@ -117,19 +98,19 @@ export class MediaService {
         return res;
       });
   }
-  deleteMedia(mediaId: number, model: Model) {
+  deleteMedia(mediaId: number, body: DeleteMediaBodyDto) {
     return this.prisma.$transaction(async (trx) => {
       const media = await trx.media.findFirstOrThrow({
         where: {
           id: mediaId,
-          [model + 'Media']: {
+          [body.mediable_type + 'Media']: {
             some: {
               media_id: mediaId,
             },
           },
         },
       });
-      await trx[model + 'Media'].deleteMany({
+      await trx[body.mediable_type + 'Media'].deleteMany({
         where: {
           media_id: mediaId,
         },

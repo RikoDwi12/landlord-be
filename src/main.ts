@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AppConfigService } from './config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { patchNestJsSwagger } from 'nestjs-zod';
 
 // Result dari prisma terkadang ada yang tipe BigInt
 // saat direturn, maka nestJS akan stringify menggunakan JSON.stringify
@@ -10,6 +11,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
   const int = Number.parseInt(this.toString());
   return int ?? this.toString();
 };
+
+patchNestJsSwagger();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

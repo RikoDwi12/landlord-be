@@ -326,16 +326,22 @@ model SubDistrict {
   @@map("indonesia_subdistricts")
 }
 
+enum MediaTag {
+  ATTACHMENT
+  // TODO: barangkali ada type media yang lain
+}
+
 model Media {
-  id         Int       @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   directory  String
   filename   String
-  extension  String    @db.Char(32)
-  mime_type  String    @db.Char(128)
+  extension  String     @db.Char(32)
+  mime_type  String     @db.Char(128)
   size       Int
-  created_at DateTime  @default(now()) @db.Timestamptz(3)
-  updated_at DateTime  @updatedAt @db.Timestamptz(3)
-  deleted_at DateTime? @db.Timestamptz(3)
+  tags       MediaTag[]
+  created_at DateTime   @default(now()) @db.Timestamptz(3)
+  updated_at DateTime   @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime?  @db.Timestamptz(3)
 
   entityMedia      EntityMedia[]
   pbbMedia         PbbMedia[]
