@@ -3,7 +3,7 @@ import {
   MulterModuleOptions,
   MulterOptionsFactory,
 } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
+import type { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { existsSync, mkdirSync } from 'fs';
 import { AppConfigService } from 'src/config';
@@ -12,7 +12,7 @@ import { tmpdir } from 'os';
 
 @Injectable()
 export class MulterConfigService implements MulterOptionsFactory {
-  constructor(private config: AppConfigService) { }
+  constructor(private config: AppConfigService) {}
   createMulterOptions(): MulterModuleOptions {
     const dirPath = join(this.config.root.storage.tmpPath);
     return {
