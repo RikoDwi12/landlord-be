@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { MediaTag, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import {
   FindEntityQueryDto,
@@ -131,9 +131,10 @@ export class EntityService {
     });
     return {
       ...rows,
-      media: await this.media.findAll({
+      attachments: await this.media.findAll({
         mediable_id: id,
         mediable_type: Mediable.Entity,
+        tags: [MediaTag.ATTACHMENT],
       }),
     };
   }

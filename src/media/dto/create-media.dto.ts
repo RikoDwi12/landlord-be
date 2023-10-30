@@ -8,4 +8,10 @@ const createMediaBodySchema = z.object({
   mediable_id: z.number({ coerce: true }),
 } satisfies SchemaDto<Media, QueryableDto>);
 
-export class CreateMediaBodyDto extends createZodDto(createMediaBodySchema) { }
+export class CreateMediaBodyDto extends createZodDto(createMediaBodySchema) {}
+
+// ini digunakan di module yang punya media attachments
+// tinggal di extends
+export const attachMediaBodySchema = z.object({
+  attachments: z.array(z.string()),
+});

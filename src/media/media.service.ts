@@ -72,6 +72,13 @@ export class MediaService {
         },
       });
     }
+    if (query.tags.length) {
+      filter.push({
+        tags: {
+          hasSome: query.tags,
+        },
+      });
+    }
     return await this.prisma.media
       .findMany({
         where: {
