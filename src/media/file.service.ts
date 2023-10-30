@@ -10,7 +10,7 @@ export class FileService {
     return { key: file.filename };
   }
 
-  async streamTmpFile(res: Response, filename: string, userId: number) {
-    return this.storage.streamTmpFile(res, filename, userId);
+  async streamTmpFile(res: Response, userId: number, fileName: string) {
+    return this.storage.streamTmpFile(res, userId, fileName);
   }
 }

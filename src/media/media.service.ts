@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FindMediaQueryDto } from './dto/find-media.dto';
-import { Prisma } from '@prisma/client';
+import { Media, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { StorageService } from 'src/storage/storage.service';
 import { AmazonWebServicesS3Storage } from '@kodepandai/flydrive-s3';
@@ -13,14 +13,24 @@ export class MediaService {
     private readonly storage: StorageService,
   ) {}
 
-  async attachMedia(files: Express.Multer.File[], body: CreateMediaBodyDto) {
+  async attachMedia(
+    trx: Prisma.TransactionClient,
+    userId: number,
+    fileNames: string[],
+    body: CreateMediaBodyDto,
+  ) {
+    const prisma = trx ?? this.prisma;
     // make sure the mediable is exists
-    await (this.prisma[body.mediable_type] as any).findFirstOrThrow({
+    await (prisma[body.mediable_type] as any).findFirstOrThrow({
       where: {
         id: body.mediable_id,
       },
     });
-    // upload media ke storage
+    const files = await Promise.all(
+      fileNames.map((fileName) => this.storage.getTmpFile(userId, fileName)),
+    );
+
+    // upload media to main storage
     const uploaded: Prisma.MediaCreateInput[] = [];
     const directory = `${body.mediable_type}/${body.mediable_id}`;
     await Promise.all(
@@ -28,38 +38,49 @@ export class MediaService {
         const location = `${directory}/${file.originalname}`;
         await this.storage
           .disk<AmazonWebServicesS3Storage>()
-          .put(location, file.buffer, { ContentType: file.mimetype });
+          .put(location, file.buffer, { ContentType: file.mime });
         uploaded.push({
           size: file.size,
           filename: file.originalname,
           directory,
-          extension: ('.' + file.originalname.split('.').pop()) as string,
-          mime_type: file.mimetype,
+          extension: file.ext,
+          mime_type: file.mime,
+          tags: body.tags,
         });
       }),
     );
 
-    // insert uploaded media ke tabel Media
-    await this.prisma.$transaction(async (trx) => {
-      await trx.media.createMany({
-        data: uploaded,
-      });
-      const relatedMedia = await trx.media.findMany({
-        where: {
-          directory,
-        },
-      });
-      await trx[body.mediable_type + 'Media'].createMany({
-        data: relatedMedia.map((media) => ({
-          media_id: media.id,
-          [body.mediable_type + '_id']: body.mediable_id,
-        })),
-        skipDuplicates: true,
-      });
+    // save to db
+    await trx.media.createMany({
+      data: uploaded,
     });
+    const relatedMedia = await trx.media.findMany({
+      where: {
+        directory,
+      },
+    });
+    await trx[body.mediable_type + 'Media'].createMany({
+      data: relatedMedia.map((media) => ({
+        media_id: media.id,
+        [body.mediable_type + '_id']: body.mediable_id,
+      })),
+      skipDuplicates: true,
+    });
+
+    // return uploded media with signedUrl
+    return await trx.media
+      .findMany({
+        where: {
+          filename: {
+            in: uploaded.map((u) => u.filename),
+          },
+        },
+      })
+      .then(this.loadMediaUrl.bind(this));
   }
 
-  async findAll(query: FindMediaQueryDto) {
+  async findAll(query: FindMediaQueryDto, trx?: Prisma.TransactionClient) {
+    const prisma = trx ?? this.prisma;
     let filter: Prisma.MediaWhereInput[] = [];
     let search: Prisma.MediaWhereInput[] = [];
 
@@ -79,7 +100,7 @@ export class MediaService {
         },
       });
     }
-    return await this.prisma.media
+    return await prisma.media
       .findMany({
         where: {
           deleted_at: null,
@@ -91,43 +112,54 @@ export class MediaService {
           ],
         },
       })
-      .then(async (res) => {
-        res = await Promise.all(
-          res.map(async (media) => ({
-            ...media,
-            url: (
-              await this.storage
-                .disk()
-                .getSignedUrl(`${media.directory}/${media.filename}`)
-            ).signedUrl,
-          })),
-        );
-        return res;
-      });
+      .then(this.loadMediaUrl.bind(this));
   }
-  deleteMedia(mediaId: number, body: DeleteMediaBodyDto) {
-    return this.prisma.$transaction(async (trx) => {
-      const media = await trx.media.findFirstOrThrow({
-        where: {
-          id: mediaId,
-          [body.mediable_type + 'Media']: {
-            some: {
-              media_id: mediaId,
-            },
-          },
+  async deleteMedia(
+    trx: Prisma.TransactionClient,
+    media: Media[],
+    body: DeleteMediaBodyDto,
+  ) {
+    // delete pivot record
+    await trx[body.mediable_type + 'Media'].deleteMany({
+      where: {
+        media_id: {
+          in: media.map((m) => m.id),
         },
-      });
-      await trx[body.mediable_type + 'Media'].deleteMany({
-        where: {
-          media_id: mediaId,
-        },
-      });
-      await trx.media.delete({
-        where: {
-          id: mediaId,
-        },
-      });
-      await this.storage.disk().delete(`${media.directory}/${media.filename}`);
+      },
     });
+    // delete media
+    await trx.media.deleteMany({
+      where: {
+        id: {
+          in: media.map((m) => m.id),
+        },
+      },
+    });
+    // delete files
+    await Promise.all(
+      media.map((m) =>
+        this.storage.disk().delete(`${m.directory}/${m.filename}`),
+      ),
+    );
+  }
+
+  // remove temporary files
+  cleanTmp(userId: number, fileNames: string[]) {
+    return Promise.all(
+      fileNames.map((fileName) => this.storage.removeTmpFile(userId, fileName)),
+    );
+  }
+
+  private async loadMediaUrl(media: Media[]) {
+    return await Promise.all(
+      media.map(async (media) => ({
+        ...media,
+        url: (
+          await this.storage
+            .disk()
+            .getSignedUrl(`${media.directory}/${media.filename}`)
+        ).signedUrl,
+      })),
+    );
   }
 }

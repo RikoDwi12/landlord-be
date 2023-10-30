@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import {
   StorageManager as BaseStorageManager,
+  FileNotFound,
   LocalFileSystemStorageConfig,
 } from '@kodepandai/flydrive';
 import {
@@ -9,7 +10,7 @@ import {
 } from '@kodepandai/flydrive-s3';
 import { AppConfigService } from '../config';
 import type { Response } from 'express';
-import { join } from 'path';
+import { extname, join } from 'path';
 import { lookup } from 'mime-types';
 
 @Injectable()
@@ -39,7 +40,7 @@ export class StorageService extends BaseStorageManager {
           driver: 's3', // minio compatible dengan driver s3
           config: {
             ...s3Config,
-            // forcePathStyle: true, // required for minio
+            forcePathStyle: true, // required for minio
           } satisfies AmazonWebServicesS3StorageConfig,
         },
       },
@@ -47,12 +48,43 @@ export class StorageService extends BaseStorageManager {
     this.registerDriver('s3', AmazonWebServicesS3Storage);
   }
 
-  async streamTmpFile(res: Response, filename: string, userId: number) {
-    const filePath = join('admin', userId.toString(), filename);
-    const mimeType = lookup(join(this.config.root.storage.tmpPath, filePath));
+  async streamTmpFile(res: Response, userId: number, filename: string) {
+    const filePath = this.getFilePath(userId, filename);
+    const mimeType = this.getMimeType(filePath);
     if (!mimeType) throw new HttpException('unrecognized file type', 400);
     const read = await this.disk('local').getStream(filePath);
     res.setHeader('Content-Type', mimeType);
     return read.pipe(res);
+  }
+
+  async getTmpFile(userId: number, fileName: string) {
+    try {
+      const filePath = this.getFilePath(userId, fileName);
+      const buffer = await this.disk('local').getBuffer(filePath);
+      return {
+        originalname: fileName,
+        buffer: buffer.content,
+        mime: this.getMimeType(filePath) || 'application/octet-stream',
+        size: Buffer.byteLength(buffer.content),
+        ext: extname(filePath),
+      };
+    } catch (e: unknown) {
+      if (e instanceof FileNotFound) {
+        throw new HttpException('file not found: ' + fileName, 404);
+      }
+      throw e;
+    }
+  }
+
+  removeTmpFile(userId: number, filename: string) {
+    const filePath = this.getFilePath(userId, filename);
+    return this.disk('local').delete(filePath);
+  }
+
+  private getFilePath(userId: number, fileName: string) {
+    return join('admin', userId.toString(), fileName);
+  }
+  private getMimeType(filePath: string) {
+    return lookup(join(this.config.root.storage.tmpPath, filePath));
   }
 }

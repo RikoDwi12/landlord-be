@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { EntityService } from './entity.service';
 import {
@@ -16,15 +17,20 @@ import {
 } from './dto';
 import { success } from '../http';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { CurrentUser, JwtGuard } from 'src/auth';
 
 @Controller('entity')
 @ApiBearerAuth()
+@UseGuards(JwtGuard)
 export class EntityController {
   constructor(private readonly entityService: EntityService) {}
 
   @Post()
-  async create(@Body() body: CreateEntityBodyDto) {
-    return success(await this.entityService.create(body));
+  async create(
+    @Body() body: CreateEntityBodyDto,
+    @CurrentUser('id') userId: number,
+  ) {
+    return success(await this.entityService.create(body, userId));
   }
 
   @Get()
@@ -48,8 +54,12 @@ export class EntityController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() body: UpdateEntityBodyDto) {
-    return success(await this.entityService.update(+id, body));
+  async update(
+    @Param('id') id: string,
+    @Body() body: UpdateEntityBodyDto,
+    @CurrentUser('id') userId: number,
+  ) {
+    return success(await this.entityService.update(+id, body, userId));
   }
 
   @Delete(':id')

@@ -32,6 +32,6 @@ export class FileController {
     @Param('filename') filename: string,
     @CurrentUser('id') userId: number,
   ) {
-    return this.file.streamTmpFile(response, filename, userId);
+    return this.file.streamTmpFile(response, userId, filename);
   }
 }

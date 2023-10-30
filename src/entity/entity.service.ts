@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { MediaTag, Prisma } from '@prisma/client';
+import { Entity, Media, MediaTag, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import {
   FindEntityQueryDto,
@@ -17,7 +17,10 @@ export class EntityService {
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
   ) {}
-  async create({ group_ids, ...data }: CreateEntityBodyDto) {
+  async create(
+    { group_ids, attachments, ...data }: CreateEntityBodyDto,
+    userId: number,
+  ) {
     if (
       await this.prisma.entity.findFirst({
         where: { name: data.name, deleted_at: null },
@@ -28,17 +31,40 @@ export class EntityService {
         HttpStatus.CONFLICT,
       );
     }
-    const newEntity = await this.prisma.entity.create({
-      data,
-    });
+    await this.makeSureValidCityCode(data.city_code);
+    attachments = attachments.filter(
+      (x) => typeof x == 'string' && !x.includes('http'),
+    );
 
-    // connect group id
-    await this.prisma.entityGroup.createMany({
-      data:
-        group_ids?.map((group_id) => ({
-          group_id,
-          entity_id: newEntity.id,
-        })) || [],
+    return await this.prisma.$transaction(async (trx) => {
+      const newEntity = await trx.entity.create({
+        data,
+      });
+      // connect group id
+      await trx.entityGroup.createMany({
+        data:
+          group_ids?.map((group_id) => ({
+            group_id,
+            entity_id: newEntity.id,
+          })) || [],
+      });
+      // attach media
+      const newAttachments = await this.media.attachMedia(
+        trx,
+        userId,
+        attachments as string[],
+        {
+          mediable_id: newEntity.id,
+          mediable_type: Mediable.Entity,
+          tags: [MediaTag.ATTACHMENT],
+        },
+      );
+      // cleanup temporary uploaded attachments
+      await this.media.cleanTmp(userId, attachments as string[]);
+      return {
+        ...newEntity,
+        attachments: newAttachments,
+      };
     });
   }
 
@@ -139,7 +165,11 @@ export class EntityService {
     };
   }
 
-  async update(id: number, data: UpdateEntityBodyDto) {
+  async update(
+    id: number,
+    { group_ids, attachments, ...data }: UpdateEntityBodyDto,
+    userId: number,
+  ) {
     if (
       await this.prisma.entity.findFirst({
         where: { name: data.name, id: { not: id }, deleted_at: null },
@@ -150,23 +180,73 @@ export class EntityService {
         HttpStatus.CONFLICT,
       );
     }
-    const groupIds = data.group_ids || [];
-    delete data.group_ids;
 
-    // delete old connected group
-    await this.prisma.entityGroup.deleteMany({
-      where: {
-        entity_id: id,
-      },
+    await this.makeSureValidCityCode(data.city_code);
+
+    const newAttachmentNames = attachments.filter(
+      (x) => typeof x == 'string' && !x.includes('http'),
+    );
+    const keepAttachments = attachments.filter((x) => typeof x == 'object');
+
+    return await this.prisma.$transaction(async (trx) => {
+      // upload new attachments
+      await this.media.attachMedia(
+        trx,
+        userId,
+        newAttachmentNames as string[],
+        {
+          mediable_id: id,
+          mediable_type: Mediable.Entity,
+          tags: [MediaTag.ATTACHMENT],
+        },
+      );
+
+      // remove attachment yang tidak dikeep
+      const deletedAttachments = await trx.media.findMany({
+        where: {
+          id: {
+            notIn: keepAttachments.map((x) => (x as Media).id),
+          },
+        },
+      });
+      await this.media.deleteMedia(trx, deletedAttachments, {
+        mediable_type: Mediable.Entity,
+      });
+
+      // delete old connected group
+      await trx.entityGroup.deleteMany({
+        where: {
+          entity_id: id,
+        },
+      });
+      // create new pivot
+      await trx.entityGroup.createMany({
+        data:
+          group_ids?.map((group_id) => ({
+            group_id,
+            entity_id: id,
+          })) || [],
+      });
+      // cleanup temporary uploaded attachments
+      await this.media.cleanTmp(userId, newAttachmentNames as string[]);
+
+      // return result with new attachments
+      return await trx.entity
+        .update({ where: { id }, data })
+        .then(async (entity) => {
+          return {
+            ...entity,
+            attachments: await this.media.findAll(
+              {
+                tags: [MediaTag.ATTACHMENT],
+                mediable_id: id,
+                mediable_type: Mediable.Entity,
+              },
+              trx,
+            ),
+          };
+        });
     });
-    // create new pivot
-    await this.prisma.entityGroup.updateMany({
-      data: groupIds.map((group_id) => ({
-        group_id,
-        entity_id: id,
-      })),
-    });
-    return await this.prisma.entity.update({ where: { id }, data });
   }
 
   async remove(id: number) {
@@ -184,5 +264,15 @@ export class EntityService {
 
   typeOption() {
     return constToOption(ENTITY_TYPES);
+  }
+  private async makeSureValidCityCode(city_code?: string) {
+    if (!city_code) return;
+    if (
+      !(await this.prisma.city.findFirst({
+        where: { code: city_code },
+      }))
+    ) {
+      throw new HttpException('City code not found', HttpStatus.NOT_FOUND);
+    }
   }
 }
