@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FindMediaQueryDto } from './dto/find-media.dto';
-import { Media, Prisma } from '@prisma/client';
+import { Media, Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { StorageService } from 'src/storage/storage.service';
 import { AmazonWebServicesS3Storage } from '@kodepandai/flydrive-s3';
@@ -11,11 +11,11 @@ export class MediaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
-  ) {}
+  ) { }
 
   async attachMedia(
     trx: Prisma.TransactionClient,
-    userId: number,
+    user: User,
     fileNames: string[],
     body: CreateMediaBodyDto,
   ) {
@@ -27,7 +27,7 @@ export class MediaService {
       },
     });
     const files = await Promise.all(
-      fileNames.map((fileName) => this.storage.getTmpFile(userId, fileName)),
+      fileNames.map((fileName) => this.storage.getTmpFile(user, fileName)),
     );
 
     // upload media to main storage
@@ -144,9 +144,9 @@ export class MediaService {
   }
 
   // remove temporary files
-  cleanTmp(userId: number, fileNames: string[]) {
+  cleanTmp(user: User, fileNames: string[]) {
     return Promise.all(
-      fileNames.map((fileName) => this.storage.removeTmpFile(userId, fileName)),
+      fileNames.map((fileName) => this.storage.removeTmpFile(user, fileName)),
     );
   }
 

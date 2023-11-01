@@ -18,19 +18,17 @@ import {
 import { success } from '../http';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser, JwtGuard } from 'src/auth';
+import { User } from '@prisma/client';
 
 @Controller('entity')
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 export class EntityController {
-  constructor(private readonly entityService: EntityService) {}
+  constructor(private readonly entityService: EntityService) { }
 
   @Post()
-  async create(
-    @Body() body: CreateEntityBodyDto,
-    @CurrentUser('id') userId: number,
-  ) {
-    return success(await this.entityService.create(body, userId));
+  async create(@Body() body: CreateEntityBodyDto, @CurrentUser() user: User) {
+    return success(await this.entityService.create(body, user));
   }
 
   @Get()
@@ -57,9 +55,9 @@ export class EntityController {
   async update(
     @Param('id') id: string,
     @Body() body: UpdateEntityBodyDto,
-    @CurrentUser('id') userId: number,
+    @CurrentUser() user: User,
   ) {
-    return success(await this.entityService.update(+id, body, userId));
+    return success(await this.entityService.update(+id, body, user));
   }
 
   @Delete(':id')

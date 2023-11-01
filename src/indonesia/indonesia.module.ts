@@ -4,6 +4,7 @@ import { IndonesiaController } from './indonesia.controller';
 
 @Module({
   controllers: [IndonesiaController],
-  providers: [IndonesiaService]
+  providers: [IndonesiaService],
+  exports: [IndonesiaService],
 })
-export class IndonesiaModule {}
+export class IndonesiaModule { }

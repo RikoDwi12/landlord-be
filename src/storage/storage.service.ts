@@ -12,6 +12,7 @@ import { AppConfigService } from '../config';
 import type { Response } from 'express';
 import { extname, join } from 'path';
 import { lookup } from 'mime-types';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class StorageService extends BaseStorageManager {
@@ -48,8 +49,8 @@ export class StorageService extends BaseStorageManager {
     this.registerDriver('s3', AmazonWebServicesS3Storage);
   }
 
-  async streamTmpFile(res: Response, userId: number, filename: string) {
-    const filePath = this.getFilePath(userId, filename);
+  async streamTmpFile(res: Response, user: User, filename: string) {
+    const filePath = this.getFilePath(user, filename);
     const mimeType = this.getMimeType(filePath);
     if (!mimeType) throw new HttpException('unrecognized file type', 400);
     const read = await this.disk('local').getStream(filePath);
@@ -57,9 +58,9 @@ export class StorageService extends BaseStorageManager {
     return read.pipe(res);
   }
 
-  async getTmpFile(userId: number, fileName: string) {
+  async getTmpFile(user: User, fileName: string) {
     try {
-      const filePath = this.getFilePath(userId, fileName);
+      const filePath = this.getFilePath(user, fileName);
       const buffer = await this.disk('local').getBuffer(filePath);
       return {
         originalname: fileName,
@@ -76,13 +77,13 @@ export class StorageService extends BaseStorageManager {
     }
   }
 
-  removeTmpFile(userId: number, filename: string) {
-    const filePath = this.getFilePath(userId, filename);
+  removeTmpFile(user: User, filename: string) {
+    const filePath = this.getFilePath(user, filename);
     return this.disk('local').delete(filePath);
   }
 
-  private getFilePath(userId: number, fileName: string) {
-    return join('admin', userId.toString(), fileName);
+  private getFilePath(user: User, fileName: string) {
+    return join('admin', user.id.toString(), fileName);
   }
   private getMimeType(filePath: string) {
     return lookup(join(this.config.root.storage.tmpPath, filePath));

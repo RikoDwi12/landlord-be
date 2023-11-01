@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Entity, Media, MediaTag, Prisma } from '@prisma/client';
+import { Media, MediaTag, Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import {
   FindEntityQueryDto,
@@ -10,16 +10,18 @@ import { constToOption } from '../utils/option';
 import { ENTITY_CATEGORIES, ENTITY_TYPES } from './entity.const';
 import { MediaService } from 'src/media';
 import { Mediable } from 'src/media/media.const';
+import { IndonesiaService } from 'src/indonesia/indonesia.service';
 
 @Injectable()
 export class EntityService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
-  ) {}
+    private readonly indo: IndonesiaService,
+  ) { }
   async create(
     { group_ids, attachments, ...data }: CreateEntityBodyDto,
-    userId: number,
+    user: User,
   ) {
     if (
       await this.prisma.entity.findFirst({
@@ -31,7 +33,7 @@ export class EntityService {
         HttpStatus.CONFLICT,
       );
     }
-    await this.makeSureValidCityCode(data.city_code);
+    await this.indo.validateCityCode(data.city_code);
     attachments = attachments.filter(
       (x) => typeof x == 'string' && !x.includes('http'),
     );
@@ -51,7 +53,7 @@ export class EntityService {
       // attach media
       const newAttachments = await this.media.attachMedia(
         trx,
-        userId,
+        user,
         attachments as string[],
         {
           mediable_id: newEntity.id,
@@ -60,7 +62,7 @@ export class EntityService {
         },
       );
       // cleanup temporary uploaded attachments
-      await this.media.cleanTmp(userId, attachments as string[]);
+      await this.media.cleanTmp(user, attachments as string[]);
       return {
         ...newEntity,
         attachments: newAttachments,
@@ -168,7 +170,7 @@ export class EntityService {
   async update(
     id: number,
     { group_ids, attachments, ...data }: UpdateEntityBodyDto,
-    userId: number,
+    user: User,
   ) {
     if (
       await this.prisma.entity.findFirst({
@@ -181,7 +183,7 @@ export class EntityService {
       );
     }
 
-    await this.makeSureValidCityCode(data.city_code);
+    await this.indo.validateCityCode(data.city_code);
 
     const newAttachmentNames = attachments.filter(
       (x) => typeof x == 'string' && !x.includes('http'),
@@ -190,16 +192,11 @@ export class EntityService {
 
     return await this.prisma.$transaction(async (trx) => {
       // upload new attachments
-      await this.media.attachMedia(
-        trx,
-        userId,
-        newAttachmentNames as string[],
-        {
-          mediable_id: id,
-          mediable_type: Mediable.Entity,
-          tags: [MediaTag.ATTACHMENT],
-        },
-      );
+      await this.media.attachMedia(trx, user, newAttachmentNames as string[], {
+        mediable_id: id,
+        mediable_type: Mediable.Entity,
+        tags: [MediaTag.ATTACHMENT],
+      });
 
       // remove attachment yang tidak dikeep
       const deletedAttachments = await trx.media.findMany({
@@ -228,7 +225,7 @@ export class EntityService {
           })) || [],
       });
       // cleanup temporary uploaded attachments
-      await this.media.cleanTmp(userId, newAttachmentNames as string[]);
+      await this.media.cleanTmp(user, newAttachmentNames as string[]);
 
       // return result with new attachments
       return await trx.entity
@@ -264,15 +261,5 @@ export class EntityService {
 
   typeOption() {
     return constToOption(ENTITY_TYPES);
-  }
-  private async makeSureValidCityCode(city_code?: string) {
-    if (!city_code) return;
-    if (
-      !(await this.prisma.city.findFirst({
-        where: { code: city_code },
-      }))
-    ) {
-      throw new HttpException('City code not found', HttpStatus.NOT_FOUND);
-    }
   }
 }

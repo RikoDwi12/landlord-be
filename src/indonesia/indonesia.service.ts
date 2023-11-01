@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma';
 import { FindCityQueryDto } from './dto/find-city.dto';
 import { FindDistrictQueryDto } from './dto/find-district.dto';
@@ -33,5 +33,29 @@ export class IndonesiaService {
         district_code: query.district_code,
       },
     });
+  }
+
+  async validateCityCode(city_code?: string) {
+    if (!city_code) return;
+    if (
+      !(await this.prisma.city.findFirst({
+        where: { code: city_code },
+      }))
+    ) {
+      throw new HttpException('City code not found', HttpStatus.NOT_FOUND);
+    }
+  }
+  async validateSubDistrictCode(subdistrict_code?: string) {
+    if (!subdistrict_code) return;
+    if (
+      !(await this.prisma.subDistrict.findFirst({
+        where: { code: subdistrict_code },
+      }))
+    ) {
+      throw new HttpException(
+        'SubDistrict code not found',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }
