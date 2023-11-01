@@ -27,6 +27,15 @@ services:
     volumes:
       - 'minio:/data/minio'
     command: minio server /data/minio --console-address ":9090"
+  # landlord-dev:
+  #   build: .
+  #   ports:
+  #     - '3030:3030'
+  #   environment:
+  #     NODE_ENV: development
+  #   networks:
+  #     landlordnet:
+  #       ipv4_address: 192.168.1.102
 networks:
   landlordnet:
     driver: bridge
