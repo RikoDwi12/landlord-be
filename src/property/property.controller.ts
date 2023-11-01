@@ -15,14 +15,16 @@ import {
   UpdatePropertyBodyDto,
 } from './dto';
 import { success } from '../http';
+import { CurrentUser } from 'src/auth';
+import { User } from '@prisma/client';
 
 @Controller('property')
 export class PropertyController {
   constructor(private readonly propertyService: PropertyService) { }
 
   @Post()
-  async create(@Body() body: CreatePropertyBodyDto) {
-    return success(await this.propertyService.create(body));
+  async create(@Body() body: CreatePropertyBodyDto, @CurrentUser() user: User) {
+    return success(await this.propertyService.create(body, user));
   }
 
   @Get()
@@ -36,8 +38,12 @@ export class PropertyController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() body: UpdatePropertyBodyDto) {
-    return success(await this.propertyService.update(+id, body));
+  async update(
+    @Param('id') id: string,
+    @Body() body: UpdatePropertyBodyDto,
+    @CurrentUser() user: User,
+  ) {
+    return success(await this.propertyService.update(+id, body, user));
   }
 
   @Delete(':id')

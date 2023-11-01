@@ -2,7 +2,8 @@ import { Property, PropertyType } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 import { SchemaDto } from '../../@types/dto.types';
-const createPropertyBodySchema = z.object({
+import { attachMediaBodySchema } from 'src/media';
+export const createPropertyBodySchema = attachMediaBodySchema.extend({
   group_id: z.number({ coerce: true }).int().optional(),
   name: z.string(),
   type: z.nativeEnum(PropertyType),
