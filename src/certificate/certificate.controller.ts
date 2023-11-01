@@ -15,14 +15,19 @@ import {
   UpdateCertificateBodyDto,
 } from './dto';
 import { success } from '../http';
+import { CurrentUser } from 'src/auth';
+import { User } from '@prisma/client';
 
 @Controller('certificate')
 export class CertificateController {
   constructor(private readonly certificateService: CertificateService) { }
 
   @Post()
-  async create(@Body() body: CreateCertificateBodyDto) {
-    return success(await this.certificateService.create(body));
+  async create(
+    @Body() body: CreateCertificateBodyDto,
+    @CurrentUser() user: User,
+  ) {
+    return success(await this.certificateService.create(body, user));
   }
 
   @Get()
@@ -39,8 +44,9 @@ export class CertificateController {
   async update(
     @Param('id') id: string,
     @Body() body: UpdateCertificateBodyDto,
+    @CurrentUser() user: User,
   ) {
-    return success(await this.certificateService.update(+id, body));
+    return success(await this.certificateService.update(+id, body, user));
   }
 
   @Delete(':id')

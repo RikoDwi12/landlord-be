@@ -6,7 +6,8 @@ import {
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 import { SchemaDto } from '../../@types/dto.types';
-const createCertificateBodySchema = z.object({
+import { attachMediaBodySchema } from 'src/media';
+export const createCertificateBodySchema = attachMediaBodySchema.extend({
   property_id: z.number({ coerce: true }).int().optional(),
   behalf_of_id: z.number({ coerce: true }).int(),
   group_id: z.number({ coerce: true }).int().optional(),
