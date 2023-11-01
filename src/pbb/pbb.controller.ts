@@ -11,14 +11,16 @@ import {
 import { PbbService } from './pbb.service';
 import { FindPbbQueryDto, CreatePbbBodyDto, UpdatePbbBodyDto } from './dto';
 import { success } from '../http';
+import { User } from '@prisma/client';
+import { CurrentUser } from 'src/auth';
 
 @Controller('pbb')
 export class PbbController {
   constructor(private readonly pbbService: PbbService) { }
 
   @Post()
-  async create(@Body() body: CreatePbbBodyDto) {
-    return success(await this.pbbService.create(body));
+  async create(@Body() body: CreatePbbBodyDto, @CurrentUser() user: User) {
+    return success(await this.pbbService.create(body, user));
   }
 
   @Get()
@@ -32,8 +34,12 @@ export class PbbController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() body: UpdatePbbBodyDto) {
-    return success(await this.pbbService.update(+id, body));
+  async update(
+    @Param('id') id: string,
+    @Body() body: UpdatePbbBodyDto,
+    @CurrentUser() user: User,
+  ) {
+    return success(await this.pbbService.update(+id, body, user));
   }
 
   @Delete(':id')

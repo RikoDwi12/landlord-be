@@ -1,12 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Media, MediaTag, Prisma, User } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { FindPbbQueryDto, CreatePbbBodyDto, UpdatePbbBodyDto } from './dto';
+import { MediaService } from 'src/media';
+import { Mediable } from 'src/media/media.const';
 
 @Injectable()
 export class PbbService {
-  constructor(private readonly prisma: PrismaService) { }
-  async create(data: CreatePbbBodyDto) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly media: MediaService,
+  ) { }
+  async create({ attachments, ...data }: CreatePbbBodyDto, user: User) {
     if (
       await this.prisma.pbb.findFirst({
         where: { year: data.year, nop_id: data.nop_id, deleted_at: null },
@@ -14,7 +19,26 @@ export class PbbService {
     ) {
       throw new HttpException('Pbb already exists', HttpStatus.CONFLICT);
     }
-    return await this.prisma.pbb.create({ data });
+    attachments = attachments.filter(
+      (x) => typeof x == 'string' && !x.includes('http'),
+    );
+    return this.prisma.$transaction(async (trx) => {
+      const newPbb = await trx.pbb.create({ data });
+      const newAttachments = await this.media.attachMedia(
+        trx,
+        user,
+        attachments as string[],
+        {
+          mediable_id: newPbb.id,
+          mediable_type: Mediable.PBB,
+          tags: [MediaTag.ATTACHMENT],
+        },
+      );
+      return {
+        ...newPbb,
+        attachments: newAttachments,
+      };
+    });
   }
 
   async findAll(query: FindPbbQueryDto) {
@@ -79,7 +103,11 @@ export class PbbService {
     });
   }
 
-  async update(id: number, data: UpdatePbbBodyDto) {
+  async update(
+    id: number,
+    { attachments, ...data }: UpdatePbbBodyDto,
+    user: User,
+  ) {
     if (
       await this.prisma.pbb.findFirst({
         where: {
@@ -92,7 +120,43 @@ export class PbbService {
     ) {
       throw new HttpException('Pbb already exists', HttpStatus.CONFLICT);
     }
-    return await this.prisma.pbb.update({ where: { id }, data });
+
+    const newAttachmentNames = attachments.filter(
+      (x) => typeof x == 'string' && !x.includes('http'),
+    );
+    const keepAttachments = attachments.filter((x) => typeof x == 'object');
+    return this.prisma.$transaction(async (trx) => {
+      // upload new attachments
+      await this.media.attachMedia(trx, user, newAttachmentNames as string[], {
+        mediable_id: id,
+        mediable_type: Mediable.PBB,
+        tags: [MediaTag.ATTACHMENT],
+      });
+
+      // remove attachment yang tidak dikeep
+      const deletedAttachments = await trx.media.findMany({
+        where: {
+          id: {
+            notIn: keepAttachments.map((x) => (x as Media).id),
+          },
+        },
+      });
+      await this.media.deleteMedia(trx, deletedAttachments, {
+        mediable_type: Mediable.PBB,
+      });
+
+      return await trx.pbb.update({ where: { id }, data }).then(async (pbb) => {
+        return {
+          ...pbb,
+          attachments: await this.media.findAll({
+            mediable_id: pbb.id,
+            mediable_type: Mediable.PBB,
+            tags: [MediaTag.ATTACHMENT],
+          }),
+          trx,
+        };
+      });
+    });
   }
 
   async remove(id: number) {

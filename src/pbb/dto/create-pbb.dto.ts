@@ -2,7 +2,8 @@ import { Pbb } from '@prisma/client';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'nestjs-zod/z';
 import { SchemaDto } from '../../@types/dto.types';
-const createPbbBodySchema = z.object({
+import { attachMediaBodySchema } from 'src/media';
+export const createPbbBodySchema = attachMediaBodySchema.extend({
   year: z.string().length(4),
   nop_id: z.number().int(),
   land_area: z.number({ coerce: true }),
