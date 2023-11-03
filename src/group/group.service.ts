@@ -53,7 +53,7 @@ export class GroupService {
         },
       ];
     }
-    return await this.prisma.extended.group.paginate({
+    const res = await this.prisma.extended.group.paginate({
       limit: query.limit || 10,
       page: query.page,
       where: {
@@ -77,6 +77,10 @@ export class GroupService {
         },
       },
     });
+    return {
+      ...res,
+      hasNextPage: res.hasNextPage,
+    };
   }
 
   findOne(id: number) {
