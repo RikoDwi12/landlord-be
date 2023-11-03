@@ -44,7 +44,7 @@ export class NopService {
         },
       ];
     }
-    return await this.prisma.extended.nop.paginate({
+    const res = await this.prisma.extended.nop.paginate({
       limit: query.limit || 10,
       page: query.page,
       where: {
@@ -60,6 +60,10 @@ export class NopService {
         [query.orderBy]: query.orderDirection,
       },
     });
+    return {
+      ...res,
+      hasNextPage: res.hasNextPage,
+    };
   }
 
   findOne(id: number) {

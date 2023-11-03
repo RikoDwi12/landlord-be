@@ -80,7 +80,7 @@ export class PropertyService {
         },
       ];
     }
-    const aa = await this.prisma.extended.property.paginate({
+    const res = await this.prisma.extended.property.paginate({
       limit: query.limit || 10,
       page: query.page,
       where: {
@@ -96,22 +96,10 @@ export class PropertyService {
         [query.orderBy]: query.orderDirection,
       },
     });
-    return await this.prisma.extended.property.paginate({
-      limit: query.limit || 10,
-      page: query.page,
-      where: {
-        deleted_at: null,
-        AND: [
-          ...filter,
-          {
-            OR: search,
-          },
-        ],
-      },
-      orderBy: {
-        [query.orderBy]: query.orderDirection,
-      },
-    });
+    return {
+      ...res,
+      hasNextPage: res.hasNextPage,
+    };
   }
 
   async findOne(id: number) {

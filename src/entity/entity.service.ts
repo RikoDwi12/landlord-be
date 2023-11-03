@@ -116,7 +116,7 @@ export class EntityService {
         },
       ];
     }
-    return await this.prisma.extended.entity.paginate({
+    const res = await this.prisma.extended.entity.paginate({
       limit: query.limit || 10,
       page: query.page,
       where: {
@@ -139,6 +139,10 @@ export class EntityService {
         },
       },
     });
+    return {
+      ...res,
+      hasNextPage: res.hasNextPage,
+    };
   }
 
   async findOne(id: number) {

@@ -35,7 +35,7 @@ export class CrmService {
         },
       ];
     }
-    return await this.prisma.extended.crm.paginate({
+    const res = await this.prisma.extended.crm.paginate({
       limit: query.limit || 10,
       page: query.page,
       where: {
@@ -51,6 +51,10 @@ export class CrmService {
         [query.orderBy]: query.orderDirection,
       },
     });
+    return {
+      ...res,
+      hasNextPage: res.hasNextPage,
+    };
   }
 
   findOne(id: number) {

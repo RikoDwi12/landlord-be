@@ -78,7 +78,7 @@ export class CertificateService {
         },
       ];
     }
-    return await this.prisma.extended.certificate.paginate({
+    const res = await this.prisma.extended.certificate.paginate({
       limit: query.limit || 10,
       page: query.page,
       where: {
@@ -94,6 +94,10 @@ export class CertificateService {
         [query.orderBy]: query.orderDirection,
       },
     });
+    return {
+      ...res,
+      hasNextPage: res.hasNextPage,
+    };
   }
 
   findOne(id: number) {

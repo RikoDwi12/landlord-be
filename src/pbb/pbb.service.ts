@@ -71,7 +71,7 @@ export class PbbService {
         },
       ];
     }
-    return await this.prisma.extended.pbb.paginate({
+    const res = await this.prisma.extended.pbb.paginate({
       limit: query.limit || 10,
       page: query.page,
       where: {
@@ -94,6 +94,10 @@ export class PbbService {
         },
       },
     });
+    return {
+      ...res,
+      hasNextPage: res.hasNextPage,
+    };
   }
 
   findOne(id: number) {
