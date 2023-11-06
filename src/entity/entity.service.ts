@@ -18,7 +18,7 @@ export class EntityService {
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
     private readonly indo: IndonesiaService,
-  ) { }
+  ) {}
   async create(
     { group_ids, attachments, ...data }: CreateEntityBodyDto,
     user: User,
@@ -80,10 +80,10 @@ export class EntityService {
         },
       });
     }
-    if (query.categories?.length) {
+    if (query.category?.length) {
       filter.push({
         categories: {
-          hasSome: query.categories,
+          hasSome: query.category,
         },
       });
     }

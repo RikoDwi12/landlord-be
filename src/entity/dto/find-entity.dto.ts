@@ -11,10 +11,10 @@ const findEntityQuerySchema = z.object({
   orderDirection: z.enum(['asc', 'desc']).optional().default('desc'),
   //filterable
   type: z.array(z.nativeEnum(EntityType)).optional(),
-  categories: z.array(z.nativeEnum(EntityCategory)).optional(),
+  category: z.array(z.nativeEnum(EntityCategory)).optional(),
   group_id: z.array(z.number({ coerce: true })).optional(),
   //pagination
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Entity, QueryableDto>);
-export class FindEntityQueryDto extends createZodDto(findEntityQuerySchema) { }
+export class FindEntityQueryDto extends createZodDto(findEntityQuerySchema) {}
