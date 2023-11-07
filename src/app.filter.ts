@@ -54,6 +54,9 @@ export class AppFilter extends BaseFilter {
       }
       return [key, this.zodFlattenError(value)];
     });
+    if (Number.isInteger(Number(mappedError[0][0]))) {
+      return mappedError.map(([_, value]) => value);
+    }
     return Object.fromEntries(mappedError);
   }
 }
