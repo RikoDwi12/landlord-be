@@ -16,6 +16,7 @@ import { CrmModule } from './crm/crm.module';
 import { StorageModule } from './storage/storage.module';
 import { FileModule } from './media/file.module';
 import { MediaModule } from './media/media.module';
+import { LegalModule } from './legal/legal.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { MediaModule } from './media/media.module';
     StorageModule,
     MediaModule,
     FileModule,
+    LegalModule,
   ],
   providers: [
     {

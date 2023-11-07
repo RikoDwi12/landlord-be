@@ -14,6 +14,12 @@ CREATE TYPE "CertificateType" AS ENUM ('SHM', 'SHGB', 'SHMSRS', 'LAINNYA');
 CREATE TYPE "CertificateStatus" AS ENUM ('OWNER', 'MILIK_SENDIRI', 'PINJAM_NAMA', 'KUASA_JUAL', 'LAINNYA');
 
 -- CreateEnum
+CREATE TYPE "LegalType" AS ENUM ('NOTARIIL', 'BAWAH_TANGAN', 'BAWAH_TANGAN_LEGALISASI', 'BAWAH_TANGAN_WAARMERKING', 'DRAFT_BAWAH_TANGAN');
+
+-- CreateEnum
+CREATE TYPE "LegalPartyType" AS ENUM ('FIRST_PARTY', 'SECOND_PARTY');
+
+-- CreateEnum
 CREATE TYPE "MediaTag" AS ENUM ('ATTACHMENT');
 
 -- CreateTable
@@ -193,6 +199,47 @@ CREATE TABLE "crms" (
     "deleted_at" TIMESTAMPTZ(3),
 
     CONSTRAINT "crms_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "legals" (
+    "id" SERIAL NOT NULL,
+    "type" "LegalType" NOT NULL,
+    "title" TEXT NOT NULL,
+    "no" TEXT NOT NULL,
+    "date" DATE NOT NULL,
+    "legalization_no" TEXT,
+    "legalization_date" DATE,
+    "detail" TEXT,
+    "storage_cabinet" TEXT,
+    "storage_rax" TEXT,
+    "storage_row" TEXT,
+    "storage_map" TEXT,
+    "notary_id" INTEGER,
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3) NOT NULL,
+    "deleted_at" TIMESTAMPTZ(3),
+
+    CONSTRAINT "legals_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "legal_parties" (
+    "id" SERIAL NOT NULL,
+    "legal_id" INTEGER NOT NULL,
+    "entity_id" INTEGER NOT NULL,
+    "type" "LegalPartyType",
+
+    CONSTRAINT "legal_parties_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "legal_witnesses" (
+    "id" SERIAL NOT NULL,
+    "legal_id" INTEGER NOT NULL,
+    "entity_id" INTEGER NOT NULL,
+
+    CONSTRAINT "legal_witnesses_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -379,6 +426,15 @@ ALTER TABLE "crms" ADD CONSTRAINT "crms_pic_client_id_fkey" FOREIGN KEY ("pic_cl
 
 -- AddForeignKey
 ALTER TABLE "crms" ADD CONSTRAINT "crms_property_id_fkey" FOREIGN KEY ("property_id") REFERENCES "properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "legals" ADD CONSTRAINT "legals_notary_id_fkey" FOREIGN KEY ("notary_id") REFERENCES "entities"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "legal_parties" ADD CONSTRAINT "legal_parties_legal_id_fkey" FOREIGN KEY ("legal_id") REFERENCES "legals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "legal_witnesses" ADD CONSTRAINT "legal_witnesses_legal_id_fkey" FOREIGN KEY ("legal_id") REFERENCES "legals"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "indonesia_cities" ADD CONSTRAINT "indonesia_cities_province_code_fkey" FOREIGN KEY ("province_code") REFERENCES "indonesia_provinces"("code") ON DELETE RESTRICT ON UPDATE CASCADE;

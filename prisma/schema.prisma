@@ -81,6 +81,7 @@ model Entity {
   crm_pic_clients         Crm[]         @relation(name: "pic_client")
   crm_prospect_clients    Crm[]         @relation(name: "prospect_client")
   entityMedia             EntityMedia[]
+  legals                  Legal[]
 
   @@map("entities")
 }
@@ -272,6 +273,68 @@ model Crm {
   property        Property @relation(fields: [property_id], references: [id])
 
   @@map("crms")
+}
+
+enum LegalType {
+  NOTARIIL
+  BAWAH_TANGAN
+  BAWAH_TANGAN_LEGALISASI
+  BAWAH_TANGAN_WAARMERKING
+  DRAFT_BAWAH_TANGAN
+}
+
+model Legal {
+  id                Int       @id @default(autoincrement())
+  type              LegalType
+  title             String
+  no                String
+  date              DateTime  @db.Date
+  legalization_no   String?
+  legalization_date DateTime? @db.Date
+  detail            String?
+  storage_cabinet   String?
+  storage_rax       String?
+  storage_row       String?
+  storage_map       String?
+  notary_id         Int?
+
+  notary    Entity?        @relation(fields: [notary_id], references: [id])
+  parties   LegalParty[] // pihak
+  witnesses LegalWitness[] // saksi
+
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime? @db.Timestamptz(3)
+
+  @@map("legals")
+}
+
+// untuk menyimpan pihak2 yang terlibat di akta legal
+enum LegalPartyType {
+  FIRST_PARTY
+  SECOND_PARTY
+}
+
+model LegalParty {
+  id        Int             @id @default(autoincrement())
+  legal_id  Int
+  entity_id Int
+  type      LegalPartyType? // jika null nanti masuk ke parapihak
+
+  legal Legal @relation(fields: [legal_id], references: [id])
+
+  @@map("legal_parties")
+}
+
+// untuk menyimpan saksi yang terlibat di akta legal
+model LegalWitness {
+  id        Int @id @default(autoincrement())
+  legal_id  Int
+  entity_id Int
+
+  legal Legal @relation(fields: [legal_id], references: [id])
+
+  @@map("legal_witnesses")
 }
 
 model Province {

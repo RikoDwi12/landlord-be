@@ -3,4 +3,5 @@ export enum Mediable {
   Property = 'property',
   Certificate = 'certificate',
   PBB = 'pbb',
+  Legal = 'legal',
 }
