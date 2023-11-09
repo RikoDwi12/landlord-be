@@ -16,7 +16,7 @@ export class PropertyService {
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
     private readonly indo: IndonesiaService,
-  ) { }
+  ) {}
   async create({ attachments, ...data }: CreatePropertyBodyDto, user: User) {
     if (
       await this.prisma.property.findFirst({
@@ -105,6 +105,13 @@ export class PropertyService {
   async findOne(id: number) {
     const rows = await this.prisma.property.findFirst({
       where: { id, deleted_at: null },
+      include: {
+        city: {
+          select: {
+            province_code: true,
+          },
+        },
+      },
     });
     return {
       ...rows,
