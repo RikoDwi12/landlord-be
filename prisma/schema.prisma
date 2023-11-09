@@ -409,7 +409,7 @@ model Media {
   entityMedia      EntityMedia[]
   pbbMedia         PbbMedia[]
   certificateMedia CertificateMedia[]
-  PropertyMedia    PropertyMedia[]
+  propertyMedia    PropertyMedia[]
 
   @@unique([directory, filename, extension])
   @@map("media")
