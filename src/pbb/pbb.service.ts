@@ -10,7 +10,7 @@ export class PbbService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
-  ) { }
+  ) {}
   async create({ attachments, ...data }: CreatePbbBodyDto, user: User) {
     if (
       await this.prisma.pbb.findFirst({
@@ -20,14 +20,14 @@ export class PbbService {
       throw new HttpException('Pbb already exists', HttpStatus.CONFLICT);
     }
     attachments = attachments.filter(
-      (x) => typeof x == 'string' && !x.includes('http'),
+      ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
     return this.prisma.$transaction(async (trx) => {
       const newPbb = await trx.pbb.create({ data });
       const newAttachments = await this.media.attachMedia(
         trx,
         user,
-        attachments as string[],
+        attachments,
         {
           mediable_id: newPbb.id,
           mediable_type: Mediable.PBB,
@@ -126,12 +126,12 @@ export class PbbService {
     }
 
     const newAttachmentNames = attachments.filter(
-      (x) => typeof x == 'string' && !x.includes('http'),
+      ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
     const keepAttachments = attachments.filter((x) => typeof x == 'object');
     return this.prisma.$transaction(async (trx) => {
       // upload new attachments
-      await this.media.attachMedia(trx, user, newAttachmentNames as string[], {
+      await this.media.attachMedia(trx, user, newAttachmentNames, {
         mediable_id: id,
         mediable_type: Mediable.PBB,
         tags: [MediaTag.ATTACHMENT],

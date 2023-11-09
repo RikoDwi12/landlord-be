@@ -11,12 +11,12 @@ export class MediaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly storage: StorageService,
-  ) { }
+  ) {}
 
   async attachMedia(
     trx: Prisma.TransactionClient,
     user: User,
-    fileNames: string[],
+    fileNames: { id: string | number }[],
     body: CreateMediaBodyDto,
   ) {
     const prisma = trx ?? this.prisma;
@@ -27,7 +27,7 @@ export class MediaService {
       },
     });
     const files = await Promise.all(
-      fileNames.map((fileName) => this.storage.getTmpFile(user, fileName)),
+      fileNames.map(({ id }) => this.storage.getTmpFile(user, id.toString())),
     );
 
     // upload media to main storage
@@ -144,9 +144,11 @@ export class MediaService {
   }
 
   // remove temporary files
-  cleanTmp(user: User, fileNames: string[]) {
+  cleanTmp(user: User, fileNames: { id: string | number }[]) {
     return Promise.all(
-      fileNames.map((fileName) => this.storage.removeTmpFile(user, fileName)),
+      fileNames.map(({ id }) =>
+        this.storage.removeTmpFile(user, id.toString()),
+      ),
     );
   }
 

@@ -16,18 +16,18 @@ export class CertificateService {
     private readonly prisma: PrismaService,
     private readonly indo: IndonesiaService,
     private readonly media: MediaService,
-  ) { }
+  ) {}
   async create({ attachments, ...data }: CreateCertificateBodyDto, user: User) {
     await this.indo.validateSubDistrictCode(data.subdistrict_code);
     attachments = attachments.filter(
-      (x) => typeof x == 'string' && !x.includes('http'),
+      ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
     return await this.prisma.$transaction(async (trx) => {
       const newCertificate = await trx.certificate.create({ data });
       const newAttachments = await this.media.attachMedia(
         trx,
         user,
-        attachments as string[],
+        attachments,
         {
           mediable_id: newCertificate.id,
           mediable_type: Mediable.Certificate,
@@ -35,7 +35,7 @@ export class CertificateService {
         },
       );
       // cleanup temporary uploaded attachments
-      await this.media.cleanTmp(user, attachments as string[]);
+      await this.media.cleanTmp(user, attachments);
       return {
         ...newCertificate,
         attachments: newAttachments,
@@ -113,12 +113,12 @@ export class CertificateService {
   ) {
     await this.indo.validateSubDistrictCode(data.subdistrict_code);
     const newAttachmentNames = attachments.filter(
-      (x) => typeof x == 'string' && !x.includes('http'),
+      ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
     const keepAttachments = attachments.filter((x) => typeof x == 'object');
     return this.prisma.$transaction(async (trx) => {
       // upload new attachments
-      await this.media.attachMedia(trx, user, newAttachmentNames as string[], {
+      await this.media.attachMedia(trx, user, newAttachmentNames, {
         mediable_id: id,
         mediable_type: Mediable.Certificate,
         tags: [MediaTag.ATTACHMENT],

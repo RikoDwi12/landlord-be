@@ -19,7 +19,7 @@ export class LegalService {
   ) {
     await this.validateRelationData(data, parties, witnesses);
     attachments = attachments.filter(
-      (x) => typeof x == 'string' && !x.includes('http'),
+      ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
     return await this.prisma.$transaction(async (trx) => {
       const newLegal = await trx.legal.create({ data });
@@ -47,7 +47,7 @@ export class LegalService {
       const newAttachments = await this.media.attachMedia(
         trx,
         user,
-        attachments as string[],
+        attachments,
         {
           mediable_id: newLegal.id,
           mediable_type: Mediable.Entity,
@@ -55,7 +55,7 @@ export class LegalService {
         },
       );
       // cleanup temporary uploaded attachments
-      await this.media.cleanTmp(user, attachments as string[]);
+      await this.media.cleanTmp(user, attachments);
       return {
         ...newLegal,
         attachments: newAttachments,
@@ -160,7 +160,7 @@ export class LegalService {
 
     // handle attachments
     const newAttachmentNames = attachments.filter(
-      (x) => typeof x == 'string' && !x.includes('http'),
+      ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
     const keepAttachments = attachments.filter((x) => typeof x == 'object');
 
@@ -198,7 +198,7 @@ export class LegalService {
       });
 
       // upload new attachments
-      await this.media.attachMedia(trx, user, newAttachmentNames as string[], {
+      await this.media.attachMedia(trx, user, newAttachmentNames, {
         mediable_id: id,
         mediable_type: Mediable.Legal,
         tags: [MediaTag.ATTACHMENT],
@@ -216,7 +216,7 @@ export class LegalService {
         mediable_type: Mediable.Legal,
       });
       // cleanup temporary uploaded attachments
-      await this.media.cleanTmp(user, newAttachmentNames as string[]);
+      await this.media.cleanTmp(user, newAttachmentNames);
       // return result with new attachments
       return await trx.legal
         .update({ where: { id }, data })

@@ -5,10 +5,10 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class FileService {
-  constructor(private readonly storage: StorageService) { }
+  constructor(private readonly storage: StorageService) {}
 
   upload(file: Express.Multer.File) {
-    return { key: file.filename };
+    return { id: file.filename };
   }
 
   async streamTmpFile(res: Response, user: User, fileName: string) {

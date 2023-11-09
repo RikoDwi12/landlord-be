@@ -35,7 +35,7 @@ export class EntityService {
     }
     await this.indo.validateCityCode(data.city_code);
     attachments = attachments.filter(
-      (x) => typeof x == 'string' && !x.includes('http'),
+      ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
 
     return await this.prisma.$transaction(async (trx) => {
@@ -54,7 +54,7 @@ export class EntityService {
       const newAttachments = await this.media.attachMedia(
         trx,
         user,
-        attachments as string[],
+        attachments,
         {
           mediable_id: newEntity.id,
           mediable_type: Mediable.Entity,
@@ -62,7 +62,7 @@ export class EntityService {
         },
       );
       // cleanup temporary uploaded attachments
-      await this.media.cleanTmp(user, attachments as string[]);
+      await this.media.cleanTmp(user, attachments);
       return {
         ...newEntity,
         attachments: newAttachments,
@@ -190,13 +190,13 @@ export class EntityService {
     await this.indo.validateCityCode(data.city_code);
 
     const newAttachmentNames = attachments.filter(
-      (x) => typeof x == 'string' && !x.includes('http'),
+      ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
     const keepAttachments = attachments.filter((x) => typeof x == 'object');
 
     return await this.prisma.$transaction(async (trx) => {
       // upload new attachments
-      await this.media.attachMedia(trx, user, newAttachmentNames as string[], {
+      await this.media.attachMedia(trx, user, newAttachmentNames, {
         mediable_id: id,
         mediable_type: Mediable.Entity,
         tags: [MediaTag.ATTACHMENT],
@@ -229,7 +229,7 @@ export class EntityService {
           })) || [],
       });
       // cleanup temporary uploaded attachments
-      await this.media.cleanTmp(user, newAttachmentNames as string[]);
+      await this.media.cleanTmp(user, newAttachmentNames);
 
       // return result with new attachments
       return await trx.entity

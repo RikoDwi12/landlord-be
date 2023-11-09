@@ -15,6 +15,6 @@ export class CreateMediaBodyDto extends createZodDto(createMediaBodySchema) {}
 // tinggal di extends
 export const attachMediaBodySchema = z.object({
   attachments: z.array(
-    z.union([z.string().min(1), z.object({ id: z.number({ coerce: true }) })]),
+    z.object({ id: z.union([z.number({ coerce: true }), z.string()]) }),
   ),
 });
