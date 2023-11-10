@@ -1,6 +1,6 @@
 import { Legal } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { createZodDto } from '@anatine/zod-nestjs';
+import { z } from 'zod';
 import { QueryableDto, SchemaDto } from '../../@types/dto.types';
 const findLegalQuerySchema = z.object({
   search: z.string().optional(),
@@ -22,4 +22,4 @@ const findLegalQuerySchema = z.object({
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Legal, QueryableDto>);
-export class FindLegalQueryDto extends createZodDto(findLegalQuerySchema) {}
+export class FindLegalQueryDto extends createZodDto(findLegalQuerySchema) { }

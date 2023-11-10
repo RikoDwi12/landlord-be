@@ -1,5 +1,5 @@
 import { Legal } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
+import { createZodDto } from '@anatine/zod-nestjs';
 import { SchemaDto } from '../../@types/dto.types';
 import { createLegalBodySchema } from './create-legal.dto';
 

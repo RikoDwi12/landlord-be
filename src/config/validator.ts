@@ -1,4 +1,4 @@
-import { ZodError, ZodSchema, z } from 'nestjs-zod/z';
+import { ZodError, ZodSchema, z } from 'zod';
 
 export const validateConfig = <T extends ZodSchema>(
   configName: string,

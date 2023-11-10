@@ -1,7 +1,7 @@
 import { Catch, HttpException, HttpStatus } from '@nestjs/common';
-import { ZodValidationException } from 'nestjs-zod';
-import { BaseFilter } from './vendor/exception';
+import { BaseFilter } from 'src/vendor/exception';
 import { AppConfigService } from './config';
+import { ZodError } from 'zod';
 
 @Catch()
 export class AppFilter extends BaseFilter {
@@ -11,11 +11,11 @@ export class AppFilter extends BaseFilter {
   // tambahkan type exception yang tidak ingin direport (print ke console)
   protected dontReport = [HttpException];
   register(): void {
-    this.renderable(ZodValidationException, (e) => {
+    this.renderable(ZodError, (e) => {
       return {
         response: {
           message: 'Unprocessable Entity',
-          errors: this.zodFlattenError(e.getZodError().format()),
+          errors: this.zodFlattenError(e.format()),
         },
         status: HttpStatus.UNPROCESSABLE_ENTITY,
       };

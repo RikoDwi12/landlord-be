@@ -1,6 +1,6 @@
 import { Nop } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { createZodDto } from '@anatine/zod-nestjs';
+import { z } from 'zod';
 import { SchemaDto } from '../../@types/dto.types';
 const createNopBodySchema = z.object({
   nop: z.string().nonempty(),

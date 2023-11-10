@@ -1,6 +1,6 @@
 import { Entity, EntityCategory, EntityType } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { createZodDto } from '@anatine/zod-nestjs';
+import { z } from 'zod';
 import { SchemaDto } from '../../@types/dto.types';
 import { attachMediaBodySchema } from 'src/media';
 
@@ -24,4 +24,4 @@ export const createEntityBodySchema = attachMediaBodySchema.extend({
   // agar rule validasi sesuai denga schema prisma
 } satisfies SchemaDto<Entity>);
 
-export class CreateEntityBodyDto extends createZodDto(createEntityBodySchema) {}
+export class CreateEntityBodyDto extends createZodDto(createEntityBodySchema) { }

@@ -1,4 +1,4 @@
-import { z } from 'nestjs-zod/z';
+import { z } from 'zod';
 import { tmpdir } from 'os';
 
 export const appConfigSchema = z.object({

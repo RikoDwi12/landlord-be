@@ -1,6 +1,6 @@
 import { Pbb } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { createZodDto } from '@anatine/zod-nestjs';
+import { z } from 'zod';
 import { SchemaDto } from '../../@types/dto.types';
 import { attachMediaBodySchema } from 'src/media';
 export const createPbbBodySchema = attachMediaBodySchema.extend({

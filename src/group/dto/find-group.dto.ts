@@ -1,6 +1,6 @@
 import { Group } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { createZodDto } from '@anatine/zod-nestjs';
+import { z } from 'zod';
 import { QueryableDto, SchemaDto } from '../../@types/dto.types';
 export const findGroupQuerySchema = z.object({
   search: z.string().optional(),

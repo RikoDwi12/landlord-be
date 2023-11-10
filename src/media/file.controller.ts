@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { success } from '../http';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { CurrentUser, JwtGuard } from 'src/auth';
 import type { Response } from 'express';
 import { FileService } from './file.service';
@@ -22,6 +22,19 @@ import { User } from '@prisma/client';
 export class FileController {
   constructor(private readonly file: FileService) { }
   @Post('upload')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: 'object',
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
   @UseInterceptors(FileInterceptor('file'))
   upload(@UploadedFile() file: Express.Multer.File) {
     return success(this.file.upload(file));

@@ -1,6 +1,6 @@
 import { Legal, LegalPartyType, LegalType } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { createZodDto } from '@anatine/zod-nestjs';
+import { z } from 'zod';
 import { SchemaDto } from '../../@types/dto.types';
 import { attachMediaBodySchema } from 'src/media';
 
@@ -40,4 +40,4 @@ export const createLegalBodySchema = attachMediaBodySchema.extend({
     .optional(),
 } satisfies SchemaDto<Legal>);
 
-export class CreateLegalBodyDto extends createZodDto(createLegalBodySchema) {}
+export class CreateLegalBodyDto extends createZodDto(createLegalBodySchema) { }

@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AppConfigService } from './config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { patchNestJsSwagger } from 'nestjs-zod';
+import { patchNestjsSwagger } from '@anatine/zod-nestjs';
 
 // Result dari prisma terkadang ada yang tipe BigInt
 // saat direturn, maka nestJS akan stringify menggunakan JSON.stringify
@@ -12,7 +12,8 @@ import { patchNestJsSwagger } from 'nestjs-zod';
   return int ?? this.toString();
 };
 
-patchNestJsSwagger();
+// patch nestjs agar swagger bisa menampilkan zod schema
+patchNestjsSwagger();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

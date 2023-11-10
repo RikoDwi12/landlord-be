@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma';
 import { AppConfigModule } from './config';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { ZodValidationPipe } from 'nestjs-zod';
+import { ZodValidationPipe } from 'src/vendor/nest-zod';
 import { AuthModule } from './auth';
 import { UserModule } from './user';
 import { AppFilter } from './app.filter';
@@ -47,4 +47,4 @@ import { LegalModule } from './legal/legal.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

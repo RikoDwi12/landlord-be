@@ -1,5 +1,5 @@
 import { Property } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
+import { createZodDto } from '@anatine/zod-nestjs';
 import { SchemaDto } from '../../@types/dto.types';
 import { createPropertyBodySchema } from './create-property.dto';
 const updatePropertyBodySchema = createPropertyBodySchema.extend(

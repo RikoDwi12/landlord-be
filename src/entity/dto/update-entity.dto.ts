@@ -1,5 +1,5 @@
 import { Entity } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
+import { createZodDto } from '@anatine/zod-nestjs';
 import { SchemaDto } from '../../@types/dto.types';
 import { createEntityBodySchema } from './create-entity.dto';
 const updateEntityBodySchema = createEntityBodySchema.extend({

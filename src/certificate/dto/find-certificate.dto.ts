@@ -3,8 +3,8 @@ import {
   CertificateStatus,
   CertificateType,
 } from '@prisma/client';
-import { createZodDto } from 'nestjs-zod';
-import { z } from 'nestjs-zod/z';
+import { createZodDto } from '@anatine/zod-nestjs';
+import { z } from 'zod';
 import { QueryableDto, SchemaDto } from '../../@types/dto.types';
 const findCertificateQuerySchema = z.object({
   search: z.string().optional(),
