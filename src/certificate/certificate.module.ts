@@ -9,4 +9,4 @@ import { MediaModule } from 'src/media/media.module';
   controllers: [CertificateController],
   providers: [CertificateService],
 })
-export class EntityModule { }
+export class CertificateModule { }

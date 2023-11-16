@@ -17,6 +17,7 @@ import { StorageModule } from './storage/storage.module';
 import { FileModule } from './media/file.module';
 import { MediaModule } from './media/media.module';
 import { LegalModule } from './legal/legal.module';
+import { CertificateModule } from './certificate/certificate.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { LegalModule } from './legal/legal.module';
     NopModule,
     PbbModule,
     CrmModule,
+    CertificateModule,
     IndonesiaModule,
     StorageModule,
     MediaModule,
