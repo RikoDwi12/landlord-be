@@ -1,4 +1,4 @@
-import { Entity, EntityCategory, EntityType } from '@prisma/client';
+import { Entity, EntityType } from '@prisma/client';
 import { createZodDto } from '@anatine/zod-nestjs';
 import { z } from 'zod';
 import { QueryableDto, SchemaDto } from '../../@types/dto.types';
@@ -10,8 +10,8 @@ const findEntityQuerySchema = z.object({
     .default('created_at'),
   orderDirection: z.enum(['asc', 'desc']).optional().default('desc'),
   //filterable
-  type: z.array(z.nativeEnum(EntityType)).optional(),
-  category: z.array(z.nativeEnum(EntityCategory)).optional(),
+  type: z.array(z.string().min(1)).optional(),
+  category: z.array(z.string()).optional(),
   group_id: z.array(z.number({ coerce: true })).optional(),
   //pagination
   limit: z.number({ coerce: true }).optional(),

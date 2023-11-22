@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateLegalBodyDto } from './dto/create-legal.dto';
 import { updateLegalBodyDto } from './dto/update-legal.dto';
 import { PrismaService } from 'src/prisma';
-import { EntityCategory, Media, MediaTag, Prisma, User } from '@prisma/client';
+import { Media, MediaTag, Prisma, User } from '@prisma/client';
 import { MediaService } from 'src/media';
 import { Mediable } from 'src/media/media.const';
 import { FindLegalQueryDto } from './dto';
@@ -257,7 +257,7 @@ export class LegalService {
         where: {
           id: data.notary_id,
           categories: {
-            hasSome: [EntityCategory.NOTARIS],
+            hasSome: ['NOTARIS'],
           },
         },
       }))
@@ -289,7 +289,7 @@ export class LegalService {
             in: witnesses.map((x) => x.entity_id),
           },
           categories: {
-            hasSome: [EntityCategory.SAKSI],
+            hasSome: ['SAKSI'],
           },
         },
       });

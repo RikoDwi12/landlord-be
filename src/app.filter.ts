@@ -9,7 +9,7 @@ export class AppFilter extends BaseFilter {
     super();
   }
   // tambahkan type exception yang tidak ingin direport (print ke console)
-  protected dontReport = [HttpException];
+  protected dontReport = [HttpException, ZodError];
   register(): void {
     this.renderable(ZodError, (e) => {
       return {

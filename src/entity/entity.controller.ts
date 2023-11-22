@@ -36,14 +36,19 @@ export class EntityController {
     return success(await this.entityService.findAll(query));
   }
 
-  @Get('category')
-  category() {
-    return success(this.entityService.categoryOption());
+  @Get('option/category')
+  async category() {
+    return success(await this.entityService.categoryOption());
   }
 
-  @Get('type')
-  type() {
-    return success(this.entityService.typeOption());
+  @Get('option/type')
+  async type() {
+    return success(await this.entityService.typeOption());
+  }
+
+  @Get('option/group')
+  async group() {
+    return success(await this.entityService.groupOption());
   }
 
   @Get(':id')

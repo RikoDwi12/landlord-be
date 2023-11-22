@@ -70,9 +70,9 @@ export class GroupService {
       },
       include: {
         // dibutuhkan di FE untuk menampilkan jumlah entity
-        entity_groups: {
+        entities: {
           select: {
-            entity_id: true,
+            id: true,
           },
         },
       },

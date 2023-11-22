@@ -6,8 +6,6 @@ import {
   CreateEntityBodyDto,
   UpdateEntityBodyDto,
 } from './dto';
-import { constToOption } from '../utils/option';
-import { ENTITY_CATEGORIES, ENTITY_TYPES } from './entity.const';
 import { MediaService } from 'src/media';
 import { Mediable } from 'src/media/media.const';
 import { IndonesiaService } from 'src/indonesia/indonesia.service';
@@ -18,11 +16,8 @@ export class EntityService {
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
     private readonly indo: IndonesiaService,
-  ) {}
-  async create(
-    { group_ids, attachments, ...data }: CreateEntityBodyDto,
-    user: User,
-  ) {
+  ) { }
+  async create({ attachments, ...data }: CreateEntityBodyDto, user: User) {
     if (
       await this.prisma.entity.findFirst({
         where: { name: data.name, deleted_at: null },
@@ -41,14 +36,6 @@ export class EntityService {
     return await this.prisma.$transaction(async (trx) => {
       const newEntity = await trx.entity.create({
         data,
-      });
-      // connect group id
-      await trx.entityGroup.createMany({
-        data:
-          group_ids?.map((group_id) => ({
-            group_id,
-            entity_id: newEntity.id,
-          })) || [],
       });
       // attach media
       const newAttachments = await this.media.attachMedia(
@@ -89,12 +76,8 @@ export class EntityService {
     }
     if (query.group_id?.length) {
       filter.push({
-        entity_groups: {
-          some: {
-            group_id: {
-              in: query.group_id,
-            },
-          },
+        group_id: {
+          in: query.group_id,
         },
       });
     }
@@ -132,11 +115,7 @@ export class EntityService {
         [query.orderBy]: query.orderDirection,
       },
       include: {
-        entity_groups: {
-          include: {
-            group: true,
-          },
-        },
+        group: true,
       },
     });
     return {
@@ -154,11 +133,7 @@ export class EntityService {
             province_code: true,
           },
         },
-        entity_groups: {
-          select: {
-            group_id: true,
-          },
-        },
+        group: true,
       },
     });
     return {
@@ -173,7 +148,7 @@ export class EntityService {
 
   async update(
     id: number,
-    { group_ids, attachments, ...data }: UpdateEntityBodyDto,
+    { attachments, ...data }: UpdateEntityBodyDto,
     user: User,
   ) {
     if (
@@ -214,20 +189,6 @@ export class EntityService {
         mediable_type: Mediable.Entity,
       });
 
-      // delete old connected group
-      await trx.entityGroup.deleteMany({
-        where: {
-          entity_id: id,
-        },
-      });
-      // create new pivot
-      await trx.entityGroup.createMany({
-        data:
-          group_ids?.map((group_id) => ({
-            group_id,
-            entity_id: id,
-          })) || [],
-      });
       // cleanup temporary uploaded attachments
       await this.media.cleanTmp(user, newAttachmentNames);
 
@@ -260,10 +221,40 @@ export class EntityService {
   }
 
   categoryOption() {
-    return constToOption(ENTITY_CATEGORIES);
+    return this.prisma.entityCategory.findMany({
+      select: {
+        label: true,
+        value: true,
+      },
+    });
   }
 
   typeOption() {
-    return constToOption(ENTITY_TYPES);
+    return this.prisma.entityType.findMany({
+      select: {
+        label: true,
+        value: true,
+      },
+    });
+  }
+  async groupOption(){
+    const entityGroups = await this.prisma.group.findMany({
+      where: {
+        entities: {
+          some: {
+            deleted_at:null
+          }
+        }
+      },
+      select: {
+        id:true,
+        name:true
+      }
+    });
+
+    return entityGroups.map((x) => ({
+      label: x.name,
+      value: x.id
+    }))
   }
 }

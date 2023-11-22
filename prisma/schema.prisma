@@ -30,51 +30,56 @@ model Group {
   updated_at DateTime  @updatedAt @db.Timestamptz(3)
   deleted_at DateTime? @db.Timestamptz(3)
 
-  entity_groups EntityGroup[]
-  properties    Property[]
-  certificates  Certificate[]
+  properties   Property[]
+  certificates Certificate[]
+  entities     Entity[]
 
   @@map("groups")
 }
 
-enum EntityType {
-  PT
-  CV
-  FIRMA
-  PERORANGAN
+model EntityType {
+  id         Int       @id @default(autoincrement())
+  label      String
+  value      String    @unique() // dalam bentuk uppercase
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime? @db.Timestamptz(3)
+
+  @@map("entity_types")
 }
 
-enum EntityCategory {
-  BROKER
-  CLIENT
-  NOTARIS
-  LANDLORD
-  PIC
-  SAKSI
-  OTHER
+model EntityCategory {
+  id         Int       @id @default(autoincrement())
+  label      String
+  value      String    @unique() // dalam bentuk uppercase
+  created_at DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime? @db.Timestamptz(3)
+
+  @@map("entity_categories")
 }
 
 model Entity {
-  id            Int              @id @default(autoincrement())
-  categories    EntityCategory[]
-  type          EntityType
+  id            Int       @id @default(autoincrement())
+  group_id      Int?
+  categories    String[] // divalidasi, harus sesuai dengan entityCategory
+  type          String // divalidasi, harus sesuai dengan entityType
   name          String
   phone         String?
   email         String?
   nib           String?
   npwp          String?
-  address       String?          @db.Text
+  address       String?   @db.Text
   contact_name  String?
   contact_phone String?
   city_code     String?
-  created_at    DateTime         @default(now()) @db.Timestamptz(3)
-  updated_at    DateTime         @updatedAt @db.Timestamptz(3)
-  deleted_at    DateTime?        @db.Timestamptz(3)
+  created_at    DateTime  @default(now()) @db.Timestamptz(3)
+  updated_at    DateTime  @updatedAt @db.Timestamptz(3)
+  deleted_at    DateTime? @db.Timestamptz(3)
 
   city                    City?         @relation(fields: [city_code], references: [code])
   nop                     Nop[]
   pbb                     Pbb[]
-  entity_groups           EntityGroup[]
   owner_certificates      Certificate[] @relation(name: "owner")
   behalf_of_certificates  Certificate[] @relation(name: "behalf_of")
   ajb_notary_certificates Certificate[] @relation(name: "ajb_notary")
@@ -82,19 +87,9 @@ model Entity {
   crm_prospect_clients    Crm[]         @relation(name: "prospect_client")
   entityMedia             EntityMedia[]
   legals                  Legal[]
+  group                   Group?        @relation(fields: [group_id], references: [id])
 
   @@map("entities")
-}
-
-model EntityGroup {
-  entity_id Int
-  group_id  Int
-
-  entity Entity @relation(fields: [entity_id], references: [id])
-  group  Group  @relation(fields: [group_id], references: [id])
-
-  @@id([entity_id, group_id])
-  @@map("entity_group")
 }
 
 model Nop {

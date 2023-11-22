@@ -1,4 +1,3 @@
-import { EntityCategory, EntityType } from '@prisma/client';
 
 export const ENTITY_CATEGORIES = {
   LANDLORD: 'Landlord',
@@ -8,11 +7,11 @@ export const ENTITY_CATEGORIES = {
   BROKER: 'Broker',
   CLIENT: 'Client',
   NOTARIS: 'Notaris',
-} satisfies Record<EntityCategory, string>;
+} satisfies Record<string, string>;
 
 export const ENTITY_TYPES = {
   CV: 'CV',
   PT: 'PT',
   FIRMA: 'Firma',
   PERORANGAN: 'Perorangan',
-} satisfies Record<EntityType, string>;
+} satisfies Record<string, string>;

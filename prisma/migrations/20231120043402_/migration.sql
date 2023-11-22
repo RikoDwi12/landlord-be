@@ -1,10 +1,4 @@
 -- CreateEnum
-CREATE TYPE "EntityType" AS ENUM ('PT', 'CV', 'FIRMA', 'PERORANGAN');
-
--- CreateEnum
-CREATE TYPE "EntityCategory" AS ENUM ('BROKER', 'CLIENT', 'NOTARIS', 'LANDLORD', 'PIC', 'SAKSI', 'OTHER');
-
--- CreateEnum
 CREATE TYPE "PropertyType" AS ENUM ('RUKO', 'TANAH', 'GEDUNG', 'GUDANG', 'KANTOR', 'RUMAH', 'APARTEMEN', 'BILLBOARD', 'NEONBOX', 'PABRIK');
 
 -- CreateEnum
@@ -48,10 +42,35 @@ CREATE TABLE "groups" (
 );
 
 -- CreateTable
+CREATE TABLE "entity_types" (
+    "id" SERIAL NOT NULL,
+    "label" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3) NOT NULL,
+    "deleted_at" TIMESTAMPTZ(3),
+
+    CONSTRAINT "entity_types_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "entity_categories" (
+    "id" SERIAL NOT NULL,
+    "label" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3) NOT NULL,
+    "deleted_at" TIMESTAMPTZ(3),
+
+    CONSTRAINT "entity_categories_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "entities" (
     "id" SERIAL NOT NULL,
-    "categories" "EntityCategory"[],
-    "type" "EntityType" NOT NULL,
+    "group_id" INTEGER,
+    "categories" TEXT[],
+    "type" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "phone" TEXT,
     "email" TEXT,
@@ -66,14 +85,6 @@ CREATE TABLE "entities" (
     "deleted_at" TIMESTAMPTZ(3),
 
     CONSTRAINT "entities_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "entity_group" (
-    "entity_id" INTEGER NOT NULL,
-    "group_id" INTEGER NOT NULL,
-
-    CONSTRAINT "entity_group_pkey" PRIMARY KEY ("entity_id","group_id")
 );
 
 -- CreateTable
@@ -338,6 +349,12 @@ CREATE TABLE "property_media" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "entity_types_value_key" ON "entity_types"("value");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "entity_categories_value_key" ON "entity_categories"("value");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "nops_nop_key" ON "nops"("nop");
 
 -- CreateIndex
@@ -371,10 +388,7 @@ CREATE UNIQUE INDEX "property_media_media_id_property_id_key" ON "property_media
 ALTER TABLE "entities" ADD CONSTRAINT "entities_city_code_fkey" FOREIGN KEY ("city_code") REFERENCES "indonesia_cities"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "entity_group" ADD CONSTRAINT "entity_group_entity_id_fkey" FOREIGN KEY ("entity_id") REFERENCES "entities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "entity_group" ADD CONSTRAINT "entity_group_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "entities" ADD CONSTRAINT "entities_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "groups"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "nops" ADD CONSTRAINT "nops_subdistrict_code_fkey" FOREIGN KEY ("subdistrict_code") REFERENCES "indonesia_subdistricts"("code") ON DELETE SET NULL ON UPDATE CASCADE;
