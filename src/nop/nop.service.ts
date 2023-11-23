@@ -61,6 +61,11 @@ export class NopService {
         [query.orderBy]: query.orderDirection,
       },
       include: {
+        taxpayer: {
+          select: {
+            name: true,
+          },
+        },
         subdistrict: {
           select: {
             name: true,
