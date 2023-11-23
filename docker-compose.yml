@@ -15,6 +15,7 @@ services:
         ipv4_address: 192.168.1.100
     volumes:
       - postgres:/var/lib/postgresql/data
+    restart: unless-stopped
   landlord-storage:
     container_name: landlord-storage
     image: minio/minio:latest
@@ -29,6 +30,7 @@ services:
         ipv4_address: 192.168.1.101
     volumes:
       - 'minio:/data/minio'
+    restart: unless-stopped
     command: minio server /data/minio --console-address ":9090"
   # landlord-dev:
   #   build: .
