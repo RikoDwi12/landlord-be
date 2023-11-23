@@ -4,7 +4,10 @@ import { z } from 'zod';
 import { QueryableDto, SchemaDto } from '../../@types/dto.types';
 export const findGroupQuerySchema = z.object({
   search: z.string().optional(),
-  orderBy: z.enum(['name', 'created_at']).optional().default('created_at'),
+  orderBy: z
+    .enum(['name', 'created_at', 'entities._count'])
+    .optional()
+    .default('created_at'),
   orderDirection: z.enum(['asc', 'desc']).optional().default('desc'),
   //filterable
   id: z.array(z.number({ coerce: true })).optional(),

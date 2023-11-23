@@ -6,6 +6,7 @@ import {
 } from './dto';
 import { PrismaService } from '../prisma';
 import { Prisma } from '@prisma/client';
+import { dotToObject } from 'src/utils';
 
 @Injectable()
 export class GroupService {
@@ -65,14 +66,16 @@ export class GroupService {
           },
         ],
       },
-      orderBy: {
-        [query.orderBy]: query.orderDirection,
-      },
+      orderBy: dotToObject(query.orderBy, query.orderDirection),
       include: {
         // dibutuhkan di FE untuk menampilkan jumlah entity
-        entities: {
+        _count: {
           select: {
-            id: true,
+            entities: {
+              where: {
+                deleted_at: null,
+              },
+            },
           },
         },
       },
