@@ -83,7 +83,6 @@ export class PropertyRestore extends Seeder {
           city as City;
       }
     }
-    // properti sudah ditruncate sebelumnya
     await this.prisma.property.createMany({
       data: oldProperties.map((o) => ({
         id: Number(o.id),

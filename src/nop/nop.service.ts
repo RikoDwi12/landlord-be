@@ -59,6 +59,23 @@ export class NopService {
       orderBy: {
         [query.orderBy]: query.orderDirection,
       },
+      include: {
+        subdistrict: {
+          select: {
+            name: true,
+            district: {
+              select: {
+                name: true,
+                city: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
     return {
       ...res,

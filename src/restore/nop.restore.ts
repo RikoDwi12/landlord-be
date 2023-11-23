@@ -26,7 +26,6 @@ export class NopRestore extends Seeder {
     const taxPayerNames = [
       ...new Set(oldNops.map((o) => o.wajib_pajak)),
     ].sort();
-    await this.truncate('entity');
     await this.prisma.entity.createMany({
       data: taxPayerNames.map((name, index) => ({
         id: index + 1,
@@ -79,7 +78,6 @@ export class NopRestore extends Seeder {
         ] = subdistrict as SubDistrict;
       }
     }
-    await this.truncate('nop');
 
     await this.prisma.nop.createMany({
       data: oldNops.map((o) => ({

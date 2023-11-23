@@ -66,7 +66,6 @@ export class PbbRestore extends Seeder {
         name: true,
       },
     });
-    await this.truncate('pbb');
     await this.prisma.pbb.createMany({
       data: oldPbbs.map((o) => ({
         id: Number(o.id),

@@ -50,7 +50,6 @@ export class CertificateRestore extends Seeder {
     ).find((data: any) => data.type == 'table').data as CertificateOld[];
 
     const groupNames = [...new Set(oldCertificates.map((o) => o.grup))].sort();
-    await this.truncate('group');
     await this.prisma.group.createMany({
       data: groupNames.map((o) => ({
         name: o,
@@ -255,10 +254,6 @@ export class CertificateRestore extends Seeder {
         ] = subdistrict as SubDistrict;
       }
     }
-    // property harus ditruncate sebelum certificate
-    // jika tidak maka certificate akan kehapus karena cascade
-    await this.truncate('property');
-    await this.truncate('certificate');
     await this.prisma.certificate.createMany({
       data: oldCertificates.map((o) => ({
         id: Number(o.id),

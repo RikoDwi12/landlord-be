@@ -11,11 +11,13 @@ import { CertificateRestore } from './certificate.restore';
 import { CrmRestore } from './crm.restore';
 import { EntityCategorySeeder as EntityCategoryRestore } from '../seeder/entityCategory.seeder';
 import { EntityTypeSeeder as EntityTypeRestore } from '../seeder/entityType.seeder';
+import { PrepareRestore } from './prepare.restore';
 
 @Injectable()
 export class RestoreService {
   constructor(private readonly prisma: PrismaService) {}
   async restore() {
+    await this.call(PrepareRestore);
     await this.call(IndonesiaRestore);
     await this.call(UserRestore);
     await this.call(EntityCategoryRestore);

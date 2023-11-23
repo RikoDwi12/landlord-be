@@ -95,7 +95,6 @@ export class CrmRestore extends Seeder {
       },
     });
 
-    await this.truncate('crm');
     await this.prisma.crm.createMany({
       data: oldCrms.map((o) => ({
         date: new Date(o.tanggal),
