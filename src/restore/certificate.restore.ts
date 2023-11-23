@@ -92,8 +92,8 @@ export class CertificateRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-            ? 'CV'
-            : 'PERORANGAN',
+          ? 'CV'
+          : 'PERORANGAN',
         categories: ['NOTARIS'],
       })),
     });
@@ -145,8 +145,8 @@ export class CertificateRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-            ? 'CV'
-            : 'PERORANGAN',
+          ? 'CV'
+          : 'PERORANGAN',
         categories: ['LANDLORD'],
       })),
     });
@@ -198,8 +198,8 @@ export class CertificateRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-            ? 'CV'
-            : 'PERORANGAN',
+          ? 'CV'
+          : 'PERORANGAN',
         categories: ['LANDLORD'],
       })),
     });
@@ -219,7 +219,7 @@ export class CertificateRestore extends Seeder {
       let subdistrict: SubDistrict | null;
       const cachedSubdistrict =
         matchedSubdistricts[
-        `${oldCertificate.kota}|${oldCertificate.kecamatan}|${oldCertificate.kelurahan}`
+          `${oldCertificate.kota}|${oldCertificate.kecamatan}|${oldCertificate.kelurahan}`
         ];
       if (cachedSubdistrict) {
         subdistrict = cachedSubdistrict;
@@ -320,7 +320,7 @@ export class CertificateRestore extends Seeder {
   }
 
   private restoreSilsilah(o: CertificateOld) {
-    let documentActivities: {
+    const documentActivities: {
       pic: string;
       document: string;
       date?: Date;
@@ -367,7 +367,7 @@ export class CertificateRestore extends Seeder {
   }
 
   private restoreDocument(o: CertificateOld) {
-    let documents: {
+    const documents: {
       document: string;
     }[] = [];
     const parsedDokumen = JSON.parse(o.dokumen);

@@ -17,7 +17,7 @@ export class EntityService {
     private readonly prisma: PrismaService,
     private readonly media: MediaService,
     private readonly indo: IndonesiaService,
-  ) { }
+  ) {}
   async create({ attachments, ...data }: CreateEntityBodyDto, user: User) {
     if (
       await this.prisma.entity.findFirst({
@@ -59,7 +59,7 @@ export class EntityService {
   }
 
   async findAll(query: FindEntityQueryDto) {
-    let filter: Prisma.EntityWhereInput[] = [];
+    const filter: Prisma.EntityWhereInput[] = [];
     let search: Prisma.EntityWhereInput[] = [];
     if (query.type?.length) {
       filter.push({
@@ -238,24 +238,24 @@ export class EntityService {
       },
     });
   }
-  async groupOption(): Promise<ResponseOption>{
+  async groupOption(): Promise<ResponseOption> {
     const entityGroups = await this.prisma.group.findMany({
       where: {
         entities: {
           some: {
-            deleted_at:null
-          }
-        }
+            deleted_at: null,
+          },
+        },
       },
       select: {
-        id:true,
-        name:true
-      }
+        id: true,
+        name: true,
+      },
     });
 
     return entityGroups.map((x) => ({
       label: x.name,
-      value: x.id
-    }))
+      value: x.id.toString(),
+    }));
   }
 }

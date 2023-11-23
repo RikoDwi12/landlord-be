@@ -22,4 +22,4 @@ const findLegalQuerySchema = z.object({
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Legal, QueryableDto>);
-export class FindLegalQueryDto extends createZodDto(findLegalQuerySchema) { }
+export class FindLegalQueryDto extends createZodDto(findLegalQuerySchema) {}

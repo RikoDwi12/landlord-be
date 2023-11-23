@@ -23,7 +23,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 @ApiBearerAuth()
 @Controller('group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) { }
+  constructor(private readonly groupService: GroupService) {}
 
   @Post()
   async create(@Body() body: CreateGroupBodyDto) {
@@ -57,5 +57,4 @@ export class GroupController {
   async remove(@Param('id') id: string) {
     return success(await this.groupService.remove(+id));
   }
-
 }

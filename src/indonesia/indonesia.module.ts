@@ -7,4 +7,4 @@ import { IndonesiaController } from './indonesia.controller';
   providers: [IndonesiaService],
   exports: [IndonesiaService],
 })
-export class IndonesiaModule { }
+export class IndonesiaModule {}

@@ -5,7 +5,7 @@ import { FindCrmQueryDto, CreateCrmBodyDto, UpdateCrmBodyDto } from './dto';
 
 @Injectable()
 export class CrmService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async create(data: CreateCrmBodyDto) {
     // if (
     //   await this.prisma.crm.findFirst({
@@ -21,7 +21,7 @@ export class CrmService {
   }
 
   async findAll(query: FindCrmQueryDto) {
-    let filter: Prisma.CrmWhereInput[] = [];
+    const filter: Prisma.CrmWhereInput[] = [];
     let search: Prisma.CrmWhereInput[] = [];
 
     if (query.search) {

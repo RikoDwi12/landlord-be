@@ -16,4 +16,4 @@ const findPbbQuerySchema = z.object({
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Pbb, QueryableDto>);
-export class FindPbbQueryDto extends createZodDto(findPbbQuerySchema) { }
+export class FindPbbQueryDto extends createZodDto(findPbbQuerySchema) {}

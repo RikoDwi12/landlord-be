@@ -20,7 +20,7 @@ import { User } from '@prisma/client';
 
 @Controller('property')
 export class PropertyController {
-  constructor(private readonly propertyService: PropertyService) { }
+  constructor(private readonly propertyService: PropertyService) {}
 
   @Post()
   async create(@Body() body: CreatePropertyBodyDto, @CurrentUser() user: User) {

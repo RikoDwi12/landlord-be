@@ -54,7 +54,7 @@ export class PropertyService {
   }
 
   async findAll(query: FindPropertyQueryDto) {
-    let filter: Prisma.PropertyWhereInput[] = [];
+    const filter: Prisma.PropertyWhereInput[] = [];
     let search: Prisma.PropertyWhereInput[] = [];
     if (query.type?.length) {
       filter.push({

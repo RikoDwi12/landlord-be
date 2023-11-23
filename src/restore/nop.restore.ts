@@ -34,8 +34,8 @@ export class NopRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-            ? 'CV'
-            : 'PERORANGAN',
+          ? 'CV'
+          : 'PERORANGAN',
       })),
     });
     const matchedSubdistricts: Record<string, SubDistrict> = {};
@@ -43,7 +43,7 @@ export class NopRestore extends Seeder {
       let subdistrict: SubDistrict | null;
       const cachedSubdistrict =
         matchedSubdistricts[
-        `${oldNop.kota}|${oldNop.kecamatan}|${oldNop.kelurahan}`
+          `${oldNop.kota}|${oldNop.kecamatan}|${oldNop.kelurahan}`
         ];
       if (cachedSubdistrict) {
         subdistrict = cachedSubdistrict;

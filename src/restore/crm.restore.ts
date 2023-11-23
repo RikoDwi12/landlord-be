@@ -70,8 +70,8 @@ export class CrmRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-            ? 'CV'
-            : 'PERORANGAN',
+          ? 'CV'
+          : 'PERORANGAN',
         categories: ['CLIENT'],
         phone: oldCrms.find(
           (o) => o.perusahaan.toLowerCase() == name.toLowerCase(),

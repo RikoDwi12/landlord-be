@@ -7,4 +7,4 @@ const findMediaQuerySchema = z.object({
   mediable_id: z.number({ coerce: true }).optional(),
   tags: z.array(z.nativeEnum(MediaTag)),
 });
-export class FindMediaQueryDto extends createZodDto(findMediaQuerySchema) { }
+export class FindMediaQueryDto extends createZodDto(findMediaQuerySchema) {}

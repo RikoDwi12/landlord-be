@@ -19,4 +19,4 @@ const findCertificateQuerySchema = z.object({
 } satisfies SchemaDto<Certificate, QueryableDto>);
 export class FindCertificateQueryDto extends createZodDto(
   findCertificateQuerySchema,
-) { }
+) {}

@@ -4,6 +4,6 @@ import { NopController } from './nop.controller';
 
 @Module({
   controllers: [NopController],
-  providers: [NopService]
+  providers: [NopService],
 })
 export class NopModule {}

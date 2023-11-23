@@ -10,7 +10,7 @@ const createMediaBodySchema = z.object({
   tags: z.array(z.nativeEnum(MediaTag)),
 } satisfies SchemaDto<Media, QueryableDto>);
 
-export class CreateMediaBodyDto extends createZodDto(createMediaBodySchema) { }
+export class CreateMediaBodyDto extends createZodDto(createMediaBodySchema) {}
 
 // ini digunakan di module yang punya media attachments
 // tinggal di extends
@@ -25,4 +25,4 @@ export const uploadSchemaDto = extendApi(
     file: z.any().transform((val) => val as Express.Multer.File),
   }),
 );
-export class UpdloadDto extends createZodDto(uploadSchemaDto) { }
+export class UpdloadDto extends createZodDto(uploadSchemaDto) {}

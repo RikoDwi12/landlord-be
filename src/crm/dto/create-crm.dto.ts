@@ -10,4 +10,4 @@ const createCrmBodySchema = z.object({
   pic_client_id: z.number({ coerce: true }).int().optional(),
   // agar rule validasi sesuai denga schema prisma
 } satisfies SchemaDto<Crm>);
-export class CreateCrmBodyDto extends createZodDto(createCrmBodySchema) { }
+export class CreateCrmBodyDto extends createZodDto(createCrmBodySchema) {}

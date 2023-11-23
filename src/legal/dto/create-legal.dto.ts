@@ -40,4 +40,4 @@ export const createLegalBodySchema = attachMediaBodySchema.extend({
     .optional(),
 } satisfies SchemaDto<Legal>);
 
-export class CreateLegalBodyDto extends createZodDto(createLegalBodySchema) { }
+export class CreateLegalBodyDto extends createZodDto(createLegalBodySchema) {}

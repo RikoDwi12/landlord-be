@@ -5,4 +5,4 @@ import { createEntityBodySchema } from './create-entity.dto';
 const updateEntityBodySchema = createEntityBodySchema.extend({
   // agar rule validasi sesuai denga schema prisma
 } satisfies SchemaDto<Entity>);
-export class UpdateEntityBodyDto extends createZodDto(updateEntityBodySchema) { }
+export class UpdateEntityBodyDto extends createZodDto(updateEntityBodySchema) {}

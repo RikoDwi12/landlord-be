@@ -16,7 +16,7 @@ import { CurrentUser } from 'src/auth';
 
 @Controller('pbb')
 export class PbbController {
-  constructor(private readonly pbbService: PbbService) { }
+  constructor(private readonly pbbService: PbbService) {}
 
   @Post()
   async create(@Body() body: CreatePbbBodyDto, @CurrentUser() user: User) {

@@ -7,7 +7,7 @@ import { patchNestjsSwagger } from '@anatine/zod-nestjs';
 // Result dari prisma terkadang ada yang tipe BigInt
 // saat direturn, maka nestJS akan stringify menggunakan JSON.stringify
 // dan akan error. Kode di bawah ini adalah workaroundnya
-(BigInt.prototype as any).toJSON = function() {
+(BigInt.prototype as any).toJSON = function () {
   const int = Number.parseInt(this.toString());
   return int ?? this.toString();
 };
@@ -26,7 +26,11 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document);
+  SwaggerModule.setup('api-docs', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
   await app.listen(port);
   console.log('server run on http://localhost:' + port);
 }

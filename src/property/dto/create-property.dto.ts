@@ -24,4 +24,4 @@ export const createPropertyBodySchema = attachMediaBodySchema.extend({
 } satisfies SchemaDto<Property>);
 export class CreatePropertyBodyDto extends createZodDto(
   createPropertyBodySchema,
-) { }
+) {}

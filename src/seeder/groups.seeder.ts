@@ -14,9 +14,9 @@ export class GroupSeeder extends Seeder {
         {
           name: 'JSS',
         },
-		{
-		  name: 'Leon'
-		},
+        {
+          name: 'Leon',
+        },
       ],
     });
   }

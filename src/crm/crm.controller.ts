@@ -14,7 +14,7 @@ import { success } from '../http';
 
 @Controller('crm')
 export class CrmController {
-  constructor(private readonly crmService: CrmService) { }
+  constructor(private readonly crmService: CrmService) {}
 
   @Post()
   async create(@Body() body: CreateCrmBodyDto) {

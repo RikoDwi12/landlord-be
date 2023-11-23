@@ -7,7 +7,7 @@ import { FindSubDistrictQueryDto } from './dto/find-subdistrict.dto';
 
 @Controller('indonesia')
 export class IndonesiaController {
-  constructor(private readonly indonesiaService: IndonesiaService) { }
+  constructor(private readonly indonesiaService: IndonesiaService) {}
 
   @Get('province')
   async province() {

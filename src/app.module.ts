@@ -49,4 +49,4 @@ import { CertificateModule } from './certificate/certificate.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

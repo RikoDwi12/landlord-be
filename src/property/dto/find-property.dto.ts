@@ -17,4 +17,4 @@ const findPropertyQuerySchema = z.object({
 } satisfies SchemaDto<Property, QueryableDto>);
 export class FindPropertyQueryDto extends createZodDto(
   findPropertyQuerySchema,
-) { }
+) {}

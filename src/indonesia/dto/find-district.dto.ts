@@ -5,4 +5,4 @@ const findDistrictQuerySchema = z.object({
 });
 export class FindDistrictQueryDto extends createZodDto(
   findDistrictQuerySchema,
-) { }
+) {}

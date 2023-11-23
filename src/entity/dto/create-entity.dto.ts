@@ -16,9 +16,9 @@ export const createEntityBodySchema = attachMediaBodySchema.extend({
   contact_name: z.string().min(1),
   contact_phone: z.string().min(1),
   city_code: z.string().min(1),
-  group_id: z.number({coerce:true}).optional()
+  group_id: z.number({ coerce: true }).optional(),
 
   // agar rule validasi sesuai denga schema prisma
 } satisfies SchemaDto<Entity>);
 
-export class CreateEntityBodyDto extends createZodDto(createEntityBodySchema) { }
+export class CreateEntityBodyDto extends createZodDto(createEntityBodySchema) {}

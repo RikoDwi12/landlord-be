@@ -7,4 +7,4 @@ export const updateLegalBodySchema = createLegalBodySchema.extend(
   {} satisfies SchemaDto<Legal>,
 );
 
-export class updateLegalBodyDto extends createZodDto(updateLegalBodySchema) { }
+export class updateLegalBodyDto extends createZodDto(updateLegalBodySchema) {}

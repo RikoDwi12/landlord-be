@@ -5,4 +5,4 @@ import { SchemaDto } from '../../@types/dto.types';
 const createGroupBodySchema = z.object({
   name: z.string().nonempty(),
 } satisfies SchemaDto<Group>);
-export class CreateGroupBodyDto extends createZodDto(createGroupBodySchema) { }
+export class CreateGroupBodyDto extends createZodDto(createGroupBodySchema) {}

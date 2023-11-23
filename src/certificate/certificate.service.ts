@@ -44,7 +44,7 @@ export class CertificateService {
   }
 
   async findAll(query: FindCertificateQueryDto) {
-    let filter: Prisma.CertificateWhereInput[] = [];
+    const filter: Prisma.CertificateWhereInput[] = [];
     let search: Prisma.CertificateWhereInput[] = [];
     if (query.type?.length) {
       filter.push({

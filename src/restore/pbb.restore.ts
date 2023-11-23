@@ -56,8 +56,8 @@ export class PbbRestore extends Seeder {
         type: name.toUpperCase().includes('PT')
           ? 'PT'
           : name.toUpperCase().includes('CV')
-            ? 'CV'
-            : 'PERORANGAN',
+          ? 'CV'
+          : 'PERORANGAN',
       })),
     });
     const allEntities = await this.prisma.entity.findMany({

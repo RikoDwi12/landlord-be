@@ -9,4 +9,4 @@ import { MediaModule } from 'src/media/media.module';
   controllers: [PropertyController],
   providers: [PropertyService],
 })
-export class PropertyModule { }
+export class PropertyModule {}

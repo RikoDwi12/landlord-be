@@ -20,7 +20,7 @@ import { User } from '@prisma/client';
 
 @Controller('certificate')
 export class CertificateController {
-  constructor(private readonly certificateService: CertificateService) { }
+  constructor(private readonly certificateService: CertificateService) {}
 
   @Post()
   async create(

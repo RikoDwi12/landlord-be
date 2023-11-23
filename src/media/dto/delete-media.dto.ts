@@ -7,4 +7,4 @@ const deleteMediaBodySchema = z.object({
   mediable_type: z.nativeEnum(Mediable),
 } satisfies SchemaDto<Media, QueryableDto>);
 
-export class DeleteMediaBodyDto extends createZodDto(deleteMediaBodySchema) { }
+export class DeleteMediaBodyDto extends createZodDto(deleteMediaBodySchema) {}

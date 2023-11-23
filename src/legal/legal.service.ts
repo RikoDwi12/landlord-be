@@ -65,7 +65,7 @@ export class LegalService {
 
   async findAll(query: FindLegalQueryDto) {
     //TODO:handle filter jika ada
-    let filter: Prisma.LegalWhereInput[] = [];
+    const filter: Prisma.LegalWhereInput[] = [];
     let search: Prisma.LegalWhereInput[] = [];
     if (query.search) {
       search = [

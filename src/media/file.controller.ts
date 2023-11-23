@@ -20,7 +20,7 @@ import { User } from '@prisma/client';
 @UseGuards(JwtGuard)
 @ApiBearerAuth()
 export class FileController {
-  constructor(private readonly file: FileService) { }
+  constructor(private readonly file: FileService) {}
   @Post('upload')
   @ApiConsumes('multipart/form-data')
   @ApiBody({

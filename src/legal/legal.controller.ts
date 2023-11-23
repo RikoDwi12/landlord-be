@@ -20,7 +20,7 @@ import { success } from 'src/http';
 
 @Controller('legal')
 export class LegalController {
-  constructor(private readonly legalService: LegalService) { }
+  constructor(private readonly legalService: LegalService) {}
 
   @Post()
   async create(@Body() body: CreateLegalBodyDto, @CurrentUser() user: User) {

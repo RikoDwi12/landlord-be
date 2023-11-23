@@ -8,4 +8,4 @@ import { MediaModule } from 'src/media/media.module';
   controllers: [LegalController],
   providers: [LegalService],
 })
-export class LegalModule { }
+export class LegalModule {}

@@ -16,7 +16,7 @@ import { EntityTypeSeeder } from './entityType.seeder';
 
 @Injectable()
 export class SeederService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async seed() {
     await this.call(IndonesiaSeeder);
     await this.call(UserSeeder);

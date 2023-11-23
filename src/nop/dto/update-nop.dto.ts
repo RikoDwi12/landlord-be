@@ -11,4 +11,4 @@ const updateNopBodySchema = z.object({
   subdistrict_code: z.string().optional(),
   // agar rule validasi sesuai denga schema prisma
 } satisfies SchemaDto<Nop>);
-export class UpdateNopBodyDto extends createZodDto(updateNopBodySchema) { }
+export class UpdateNopBodyDto extends createZodDto(updateNopBodySchema) {}

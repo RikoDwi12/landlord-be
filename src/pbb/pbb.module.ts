@@ -8,4 +8,4 @@ import { MediaModule } from 'src/media/media.module';
   controllers: [PbbController],
   providers: [PbbService],
 })
-export class PbbModule { }
+export class PbbModule {}

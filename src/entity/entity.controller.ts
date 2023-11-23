@@ -24,7 +24,7 @@ import { User } from '@prisma/client';
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 export class EntityController {
-  constructor(private readonly entityService: EntityService) { }
+  constructor(private readonly entityService: EntityService) {}
 
   @Post()
   async create(@Body() body: CreateEntityBodyDto, @CurrentUser() user: User) {
@@ -69,5 +69,4 @@ export class EntityController {
   async group() {
     return success(await this.entityService.groupOption());
   }
-
 }

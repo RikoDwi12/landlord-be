@@ -20,4 +20,4 @@ export const createPbbBodySchema = attachMediaBodySchema.extend({
   payment_date: z.date({ coerce: true }).optional(),
   // agar rule validasi sesuai denga schema prisma
 } satisfies SchemaDto<Pbb>);
-export class CreatePbbBodyDto extends createZodDto(createPbbBodySchema) { }
+export class CreatePbbBodyDto extends createZodDto(createPbbBodySchema) {}

@@ -10,7 +10,7 @@ export class AuthService {
   constructor(
     private readonly configService: AppConfigService,
     private readonly prisma: PrismaService,
-  ) { }
+  ) {}
 
   async login(credentials: AuthCredential) {
     const user = await this.prisma.user.findFirst({

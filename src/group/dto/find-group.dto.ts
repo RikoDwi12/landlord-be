@@ -15,4 +15,4 @@ export const findGroupQuerySchema = z.object({
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Group, QueryableDto>);
-export class FindGroupQueryDto extends createZodDto(findGroupQuerySchema) { }
+export class FindGroupQueryDto extends createZodDto(findGroupQuerySchema) {}

@@ -11,4 +11,4 @@ const findCrmQuerySchema = z.object({
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Crm, QueryableDto>);
-export class FindCrmQueryDto extends createZodDto(findCrmQuerySchema) { }
+export class FindCrmQueryDto extends createZodDto(findCrmQuerySchema) {}

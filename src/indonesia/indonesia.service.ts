@@ -6,7 +6,7 @@ import { FindSubDistrictQueryDto } from './dto/find-subdistrict.dto';
 
 @Injectable()
 export class IndonesiaService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   getProvinces() {
     return this.prisma.province.findMany();
   }

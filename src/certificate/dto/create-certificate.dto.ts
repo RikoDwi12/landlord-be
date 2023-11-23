@@ -35,4 +35,4 @@ export const createCertificateBodySchema = attachMediaBodySchema.extend({
 } satisfies SchemaDto<Certificate>);
 export class CreateCertificateBodyDto extends createZodDto(
   createCertificateBodySchema,
-) { }
+) {}

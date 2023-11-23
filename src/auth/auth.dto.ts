@@ -15,4 +15,4 @@ const LoginBodyShema = extendApi(
   },
 );
 
-export class LoginBodyDto extends createZodDto(LoginBodyShema) { }
+export class LoginBodyDto extends createZodDto(LoginBodyShema) {}

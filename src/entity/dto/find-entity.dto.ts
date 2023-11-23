@@ -17,4 +17,4 @@ const findEntityQuerySchema = z.object({
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Entity, QueryableDto>);
-export class FindEntityQueryDto extends createZodDto(findEntityQuerySchema) { }
+export class FindEntityQueryDto extends createZodDto(findEntityQuerySchema) {}

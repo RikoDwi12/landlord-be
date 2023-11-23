@@ -81,8 +81,8 @@ export class MediaService {
 
   async findAll(query: FindMediaQueryDto, trx?: Prisma.TransactionClient) {
     const prisma = trx ?? this.prisma;
-    let filter: Prisma.MediaWhereInput[] = [];
-    let search: Prisma.MediaWhereInput[] = [];
+    const filter: Prisma.MediaWhereInput[] = [];
+    const search: Prisma.MediaWhereInput[] = [];
 
     if (query.mediable_type && query.mediable_id) {
       filter.push({

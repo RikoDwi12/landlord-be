@@ -1,4 +1,3 @@
-
 export const ENTITY_CATEGORIES = {
   LANDLORD: 'Landlord',
   PIC: 'PIC',

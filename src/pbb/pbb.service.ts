@@ -42,7 +42,7 @@ export class PbbService {
   }
 
   async findAll(query: FindPbbQueryDto) {
-    let filter: Prisma.PbbWhereInput[] = [];
+    const filter: Prisma.PbbWhereInput[] = [];
     let search: Prisma.PbbWhereInput[] = [];
     if (query.year?.length) {
       filter.push({

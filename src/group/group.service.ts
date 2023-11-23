@@ -27,7 +27,7 @@ export class GroupService {
   async findAll(query: FindGroupQueryDto) {
     //TODO: short filter search dan pagination
 
-    let filter: Prisma.GroupWhereInput[] = [];
+    const filter: Prisma.GroupWhereInput[] = [];
     let search: Prisma.GroupWhereInput[] = [];
     if (query.id) {
       filter.push({
@@ -126,7 +126,7 @@ export class GroupService {
     });
     return groups.map((group) => ({
       label: group.name,
-      value: group.id,
+      value: group.id.toString(),
     }));
   }
 }

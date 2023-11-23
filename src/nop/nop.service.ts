@@ -6,7 +6,7 @@ import { ResponseOption } from 'src/@types';
 
 @Injectable()
 export class NopService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async create(data: CreateNopBodyDto) {
     if (
       await this.prisma.nop.findFirst({
@@ -19,7 +19,7 @@ export class NopService {
   }
 
   async findAll(query: FindNopQueryDto) {
-    let filter: Prisma.NopWhereInput[] = [];
+    const filter: Prisma.NopWhereInput[] = [];
     let search: Prisma.NopWhereInput[] = [];
     if (query.taxpayer_id?.length) {
       filter.push({
@@ -132,7 +132,7 @@ export class NopService {
     });
     return taxpayers.map((taxpayer) => ({
       label: taxpayer.name,
-      value: taxpayer.id,
+      value: taxpayer.id.toString(),
     }));
   }
 }

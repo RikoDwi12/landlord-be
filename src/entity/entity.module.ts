@@ -9,4 +9,4 @@ import { IndonesiaModule } from 'src/indonesia/indonesia.module';
   controllers: [EntityController],
   providers: [EntityService],
 })
-export class EntityModule { }
+export class EntityModule {}
