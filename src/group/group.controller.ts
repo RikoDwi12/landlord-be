@@ -35,6 +35,11 @@ export class GroupController {
     return success(await this.groupService.findAll(query));
   }
 
+  @Get('option')
+  async option() {
+    return success(await this.groupService.option());
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return success(await this.groupService.findOne(+id));
@@ -52,4 +57,5 @@ export class GroupController {
   async remove(@Param('id') id: string) {
     return success(await this.groupService.remove(+id));
   }
+
 }

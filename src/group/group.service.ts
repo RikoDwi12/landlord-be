@@ -7,10 +7,12 @@ import {
 import { PrismaService } from '../prisma';
 import { Prisma } from '@prisma/client';
 import { dotToObject } from 'src/utils';
+import { ResponseOption } from 'src/@types';
+import { group } from 'console';
 
 @Injectable()
 export class GroupService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async create(data: CreateGroupBodyDto) {
     if (
       await this.prisma.group.findFirst({
@@ -110,5 +112,21 @@ export class GroupService {
         deleted_at: new Date(),
       },
     });
+  }
+
+  async option(): Promise<ResponseOption> {
+    const groups = await this.prisma.group.findMany({
+      select: {
+        name: true,
+        id: true,
+      },
+      where: {
+        deleted_at: null,
+      },
+    });
+    return groups.map((group) => ({
+      label: group.name,
+      value: group.id,
+    }));
   }
 }
