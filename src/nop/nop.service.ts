@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { FindNopQueryDto, CreateNopBodyDto, UpdateNopBodyDto } from './dto';
+import { ResponseOption } from 'src/@types';
 
 @Injectable()
 export class NopService {
@@ -105,5 +106,28 @@ export class NopService {
         deleted_at: new Date(),
       },
     });
+  }
+
+  async taxpayerOption(): Promise<ResponseOption> {
+    const taxpayers = await this.prisma.entity.findMany({
+      where: {
+        nop: {
+          some: {
+            deleted_at: null,
+          },
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    return taxpayers.map((taxpayer) => ({
+      label: taxpayer.name,
+      value: taxpayer.id,
+    }));
   }
 }

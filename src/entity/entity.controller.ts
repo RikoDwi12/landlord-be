@@ -36,21 +36,6 @@ export class EntityController {
     return success(await this.entityService.findAll(query));
   }
 
-  @Get('option/category')
-  async category() {
-    return success(await this.entityService.categoryOption());
-  }
-
-  @Get('option/type')
-  async type() {
-    return success(await this.entityService.typeOption());
-  }
-
-  @Get('option/group')
-  async group() {
-    return success(await this.entityService.groupOption());
-  }
-
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return success(await this.entityService.findOne(+id));
@@ -69,4 +54,20 @@ export class EntityController {
   async remove(@Param('id') id: string) {
     return success(await this.entityService.remove(+id));
   }
+
+  @Get('option/category')
+  async category() {
+    return success(await this.entityService.categoryOption());
+  }
+
+  @Get('option/type')
+  async type() {
+    return success(await this.entityService.typeOption());
+  }
+
+  @Get('option/group')
+  async group() {
+    return success(await this.entityService.groupOption());
+  }
+
 }

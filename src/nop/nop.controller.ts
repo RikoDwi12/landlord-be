@@ -40,4 +40,9 @@ export class NopController {
   async remove(@Param('id') id: string) {
     return success(await this.nopService.remove(+id));
   }
+
+  @Get('option/taxpayer')
+  async taxpayerOption() {
+    return success(await this.nopService.taxpayerOption());
+  }
 }

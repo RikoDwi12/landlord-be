@@ -9,6 +9,7 @@ import {
 import { MediaService } from 'src/media';
 import { Mediable } from 'src/media/media.const';
 import { IndonesiaService } from 'src/indonesia/indonesia.service';
+import { ResponseOption } from 'src/@types';
 
 @Injectable()
 export class EntityService {
@@ -220,7 +221,7 @@ export class EntityService {
     });
   }
 
-  categoryOption() {
+  categoryOption(): Promise<ResponseOption> {
     return this.prisma.entityCategory.findMany({
       select: {
         label: true,
@@ -229,7 +230,7 @@ export class EntityService {
     });
   }
 
-  typeOption() {
+  typeOption(): Promise<ResponseOption> {
     return this.prisma.entityType.findMany({
       select: {
         label: true,
@@ -237,7 +238,7 @@ export class EntityService {
       },
     });
   }
-  async groupOption(){
+  async groupOption(): Promise<ResponseOption>{
     const entityGroups = await this.prisma.group.findMany({
       where: {
         entities: {
