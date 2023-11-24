@@ -14,7 +14,7 @@ import { success } from '../http';
 
 @Controller('nop')
 export class NopController {
-  constructor(private readonly nopService: NopService) {}
+  constructor(private readonly nopService: NopService) { }
 
   @Post()
   async create(@Body() body: CreateNopBodyDto) {
@@ -44,5 +44,20 @@ export class NopController {
   @Get('option/taxpayer')
   async taxpayerOption() {
     return success(await this.nopService.taxpayerOption());
+  }
+
+  @Get('option/subdistrict')
+  async subdistrictOption() {
+    return success(await this.nopService.subdistrictOption());
+  }
+
+  @Get('option/city')
+  async cityOption() {
+    return success(await this.nopService.cityOption());
+  }
+
+  @Get('option/has-certificate')
+  async hasCertificateOption() {
+    return success(this.nopService.hasCertificateOption());
   }
 }

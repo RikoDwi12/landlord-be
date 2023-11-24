@@ -352,7 +352,7 @@ model City {
   province  Province   @relation(fields: [province_code], references: [code])
   entities  Entity[]
   districts District[]
-  Property  Property[]
+  properties  Property[]
 
   @@map("indonesia_cities")
 }
@@ -378,8 +378,8 @@ model SubDistrict {
   longitude     String?
 
   district    District      @relation(fields: [district_code], references: [code])
-  Certificate Certificate[]
-  Nop         Nop[]
+  certificates Certificate[]
+  nops         Nop[]
 
   @@map("indonesia_subdistricts")
 }

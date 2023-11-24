@@ -191,4 +191,71 @@ export class NopService {
       value: taxpayer.id.toString(),
     }));
   }
+
+  async subdistrictOption(): Promise<ResponseOption> {
+    const subdistricts = await this.prisma.subDistrict.findMany({
+      where: {
+        nops: {
+          some: {
+            deleted_at: null,
+          },
+        },
+      },
+      select: {
+        code: true,
+        name: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    return subdistricts.map((subdistrict) => ({
+      label: subdistrict.name,
+      value: subdistrict.code.toString(),
+    }));
+  }
+
+  async cityOption(): Promise<ResponseOption> {
+    const cities = await this.prisma.city.findMany({
+      where: {
+        districts: {
+          some: {
+            subdistricts: {
+              some: {
+                nops: {
+                  some: {
+                    deleted_at: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      select: {
+        code: true,
+        name: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+    return cities.map((city) => ({
+      label: city.name,
+      value: city.code.toString(),
+    }));
+  }
+
+  hasCertificateOption(): ResponseOption {
+    return [
+      {
+        label: 'Terkoneksi',
+        value: '1',
+      },
+      {
+        label: 'Tidak Terkoneksi',
+        value: '0',
+      },
+    ];
+  }
 }
