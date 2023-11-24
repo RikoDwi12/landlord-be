@@ -7,10 +7,24 @@ const findNopQuerySchema = z.object({
   orderBy: z.enum(['id', 'nop', 'created_at']).optional().default('created_at'),
   orderDirection: z.enum(['asc', 'desc']).optional().default('desc'),
   //filterable
+  //multiple filter
   taxpayer_id: z.array(z.number({ coerce: true })).optional(),
+  subdistrict_code: z
+    .array(z.number({ coerce: true }))
+    .transform((x) => x.map((x) => x.toString()))
+    .optional(),
+  city_code: z
+    .array(z.number({ coerce: true }))
+    .transform((x) => x.map((x) => x.toString()))
+    .optional(),
+  //single filter
+  has_certificate: z
+    .number({ coerce: true })
+    .pipe(z.boolean({ coerce: true }))
+    .optional(),
 
   //pagination
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Nop, QueryableDto>);
-export class FindNopQueryDto extends createZodDto(findNopQuerySchema) {}
+export class FindNopQueryDto extends createZodDto(findNopQuerySchema) { }

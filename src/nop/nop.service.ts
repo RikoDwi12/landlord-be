@@ -6,7 +6,7 @@ import { ResponseOption } from 'src/@types';
 
 @Injectable()
 export class NopService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
   async create(data: CreateNopBodyDto) {
     if (
       await this.prisma.nop.findFirst({
@@ -21,6 +21,8 @@ export class NopService {
   async findAll(query: FindNopQueryDto) {
     const filter: Prisma.NopWhereInput[] = [];
     let search: Prisma.NopWhereInput[] = [];
+
+    /// handle filter
     if (query.taxpayer_id?.length) {
       filter.push({
         taxpayer_id: {
@@ -28,6 +30,49 @@ export class NopService {
         },
       });
     }
+    if (query.subdistrict_code?.length) {
+      filter.push({
+        subdistrict_code: {
+          in: query.subdistrict_code,
+        },
+      });
+    }
+    if (query.city_code?.length) {
+      filter.push({
+        subdistrict: {
+          district: {
+            city_code: {
+              in: query.city_code,
+            },
+          },
+        },
+      });
+    }
+    if (typeof query.has_certificate != 'undefined') {
+      if (query.has_certificate) {
+        filter.push({
+          certificate_nops: {
+            some: {
+              certificate: {
+                deleted_at: null,
+              },
+            },
+          },
+        });
+      } else {
+        filter.push({
+          certificate_nops: {
+            none: {
+              certificate: {
+                deleted_at: null,
+              },
+            },
+          },
+        });
+      }
+    }
+
+    /// handle search
     if (query.search) {
       // TODO: tambahkan yang bisa disearch apa saja
       search = [
@@ -81,6 +126,18 @@ export class NopService {
             },
           },
         },
+        certificate_nops: {
+          select: {
+            certificate: {
+              // Tambahkan kolom yang dibutuhkan di frontend
+              select: {
+                type:true,
+                no: true,
+                location_name:true
+              },
+            }
+          }
+        }
       },
     });
     return {
