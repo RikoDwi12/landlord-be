@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { FindNopQueryDto, CreateNopBodyDto, UpdateNopBodyDto } from './dto';
 import { ResponseOption } from 'src/@types';
+import { dotToObject } from 'src/utils';
 
 @Injectable()
 export class NopService {
@@ -102,9 +103,7 @@ export class NopService {
           },
         ],
       },
-      orderBy: {
-        [query.orderBy]: query.orderDirection,
-      },
+      orderBy: dotToObject(query.orderBy, query.orderDirection),
       include: {
         taxpayer: {
           select: {
@@ -131,13 +130,13 @@ export class NopService {
             certificate: {
               // Tambahkan kolom yang dibutuhkan di frontend
               select: {
-                type:true,
+                type: true,
                 no: true,
-                location_name:true
+                location_name: true,
               },
-            }
-          }
-        }
+            },
+          },
+        },
       },
     });
     return {

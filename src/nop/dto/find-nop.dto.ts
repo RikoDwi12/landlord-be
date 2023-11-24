@@ -4,7 +4,21 @@ import { z } from 'zod';
 import { QueryableDto, SchemaDto } from '../../@types/dto.types';
 const findNopQuerySchema = z.object({
   search: z.string().optional(),
-  orderBy: z.enum(['id', 'nop', 'created_at']).optional().default('created_at'),
+  orderBy: z
+    .enum([
+      'id',
+      'nop',
+      'created_at',
+      'taxpayer.name',
+      'location',
+      'subdistrict.name',
+      'subdistrict.district.name',
+      'subdistrict.district.city.name',
+      'land_area',
+      'building_area',
+    ])
+    .optional()
+    .default('created_at'),
   orderDirection: z.enum(['asc', 'desc']).optional().default('desc'),
   //filterable
   //multiple filter
