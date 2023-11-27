@@ -168,7 +168,7 @@ export class EntityService {
     const newAttachmentNames = attachments.filter(
       ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
-    const keepAttachments = attachments.filter((x) => typeof x == 'object');
+    const keepAttachments = attachments.filter(({id}) => typeof id == 'number');
 
     return await this.prisma.$transaction(async (trx) => {
       // upload new attachments
