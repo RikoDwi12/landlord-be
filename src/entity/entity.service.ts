@@ -171,13 +171,6 @@ export class EntityService {
     const keepAttachments = attachments.filter(({id}) => typeof id == 'number');
 
     return await this.prisma.$transaction(async (trx) => {
-      // upload new attachments
-      await this.media.attachMedia(trx, user, newAttachmentNames, {
-        mediable_id: id,
-        mediable_type: Mediable.Entity,
-        tags: [MediaTag.ATTACHMENT],
-      });
-
       // remove attachment yang tidak dikeep
       const deletedAttachments = await trx.media.findMany({
         where: {
@@ -190,8 +183,15 @@ export class EntityService {
         mediable_type: Mediable.Entity,
       });
 
+      // upload new attachments
+      await this.media.attachMedia(trx, user, newAttachmentNames, {
+        mediable_id: id,
+        mediable_type: Mediable.Entity,
+        tags: [MediaTag.ATTACHMENT],
+      });
+
       // cleanup temporary uploaded attachments
-      await this.media.cleanTmp(user, newAttachmentNames);
+      // await this.media.cleanTmp(user, newAttachmentNames);
 
       // return result with new attachments
       return await trx.entity

@@ -23,8 +23,8 @@ services:
       - 9010:9000
       - 9011:9090
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadminpassword
+      MINIO_ROOT_USER: ${STORAGE_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${STORAGE_SECRET_KEY}
       MINIO_SERVER_URL: ${STORAGE_ENDPOINT}
     networks:
       landlordnet:
@@ -32,7 +32,8 @@ services:
     volumes:
       - 'minio:/data/minio'
     restart: unless-stopped
-    command: minio server /data/minio --console-address ":9090"
+    entrypoint: sh
+    command: -c 'mkdir -p /data/minio/${STORAGE_BUCKET} && minio server /data/minio --console-address ":9090"'
   # landlord-dev:
   #   build: .
   #   ports:
