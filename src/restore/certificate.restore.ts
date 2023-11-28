@@ -1,5 +1,5 @@
 import { Seeder } from '../seeder';
-import * as path from 'path';
+import path from 'path';
 import {
   CertificateStatus,
   CertificateType,
@@ -46,7 +46,7 @@ export class CertificateRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring certificates...');
     const oldCertificates = (
-      await import(path.join(process.cwd(), 'raw/landlordv1/sertifikat.json'))
+      (await import(path.join(process.cwd(), 'raw/landlordv1/sertifikat.json'), {assert:{type:"json"}})).default
     ).find((data: any) => data.type == 'table').data as CertificateOld[];
 
     const groupNames = [...new Set(oldCertificates.map((o) => o.grup))].sort();

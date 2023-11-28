@@ -1,5 +1,5 @@
 import { Seeder } from '../seeder';
-import * as path from 'path';
+import path from 'path';
 
 interface OldCrm {
   id: number;
@@ -18,7 +18,7 @@ export class CrmRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring crms...');
     const oldCrms = (
-      await import(path.join(process.cwd(), 'raw/landlordv1/crm.json'))
+      (await import(path.join(process.cwd(), 'raw/landlordv1/crm.json'), {assert:{type:"json"}})).default
     ).find((data: any) => data.type == 'table').data as OldCrm[];
     const prospectNames = [
       ...new Set(oldCrms.map((data) => data.perusahaan)),

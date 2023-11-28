@@ -16,7 +16,7 @@ import {
 } from './dto';
 import { success } from '../http';
 import { CurrentUser } from 'src/auth';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 
 @Controller('certificate')
 export class CertificateController {

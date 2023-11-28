@@ -1,5 +1,5 @@
 import { Seeder } from '../seeder';
-import * as path from 'path';
+import path from 'path';
 
 interface PbbOld {
   id: number;
@@ -24,7 +24,7 @@ export class PbbRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring pbbs...');
     const oldPbbs = (
-      await import(path.join(process.cwd(), 'raw/landlordv1/pbb.json'))
+      (await import(path.join(process.cwd(), 'raw/landlordv1/pbb.json'),{assert:{type:'json'}})).default
     ).find((data: any) => data.type == 'table').data as PbbOld[];
     const taxPayerNames = [...new Set(oldPbbs.map((o) => o.penanggung))].sort();
     // get data entity yang pernah direstore sebelumnya

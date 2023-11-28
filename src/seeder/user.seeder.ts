@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { Seeder } from './seeder.abstract';
 
 export class UserSeeder extends Seeder {

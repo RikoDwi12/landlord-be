@@ -6,9 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "tsup",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "dev": "nest start --watch",
+    "dev": "tsup --watch --onSuccess 'node dist/main.js'",
     "seed": "node dist/script/seed.js",
     "restore": "node dist/script/restore.js",
     "prod": "node dist/main",
@@ -45,6 +45,7 @@
     "@nestjs/cli": "^10.2.1",
     "@nestjs/schematics": "^10.0.3",
     "@nestjs/testing": "^10.2.7",
+    "@swc/core": "^1.3.99",
     "@types/bcrypt": "^5.0.1",
     "@types/express": "^4.17.20",
     "@types/jest": "^29.5.7",
@@ -68,6 +69,7 @@
     "ts-loader": "^9.5.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
+    "tsup": "^8.0.1",
     "typescript": "^5.2.2"
   },
   "jest": {
@@ -89,5 +91,6 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "type":"module"
 }

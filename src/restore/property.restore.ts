@@ -1,5 +1,5 @@
 import { Seeder } from '../seeder';
-import * as path from 'path';
+import path from 'path';
 import { City, PropertyType } from '@prisma/client';
 import { Electricity, SpecificInfo, Water } from '../property/property.type';
 
@@ -49,7 +49,7 @@ export class PropertyRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring properties...');
     const oldProperties = (
-      await import(path.join(process.cwd(), 'raw/landlordv1/properti.json'))
+      (await import(path.join(process.cwd(), 'raw/landlordv1/properti.json'),{assert:{type:"json"}})).default
     ).find((data: any) => data.type == 'table').data as PropertyOld[];
 
     const matchedCities: Record<string, City> = {};

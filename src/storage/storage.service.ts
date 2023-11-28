@@ -12,7 +12,7 @@ import { AppConfigService } from '../config';
 import type { Response } from 'express';
 import { extname, join } from 'path';
 import { lookup } from 'mime-types';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 
 @Injectable()
 export class StorageService extends BaseStorageManager {

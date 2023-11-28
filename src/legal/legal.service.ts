@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateLegalBodyDto } from './dto/create-legal.dto';
 import { updateLegalBodyDto } from './dto/update-legal.dto';
 import { PrismaService } from 'src/prisma';
-import { Media, MediaTag, Prisma, User } from '@prisma/client';
+import { Media, MediaTag, Prisma, type User } from '@prisma/client';
 import { MediaService } from 'src/media';
 import { Mediable } from 'src/media/media.const';
 import { FindLegalQueryDto } from './dto';

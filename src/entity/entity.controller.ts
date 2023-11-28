@@ -18,7 +18,7 @@ import {
 import { success } from '../http';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser, JwtGuard } from 'src/auth';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 
 @Controller('entity')
 @ApiBearerAuth()

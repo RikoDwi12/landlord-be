@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Media, MediaTag, Prisma, User } from '@prisma/client';
+import { Media, MediaTag, Prisma, type User } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import {
   FindEntityQueryDto,

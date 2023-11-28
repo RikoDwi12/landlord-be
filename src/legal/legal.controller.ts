@@ -15,7 +15,7 @@ import {
   updateLegalBodyDto,
 } from './dto';
 import { CurrentUser } from 'src/auth';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { success } from 'src/http';
 
 @Controller('legal')

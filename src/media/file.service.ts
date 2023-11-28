@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { StorageService } from 'src/storage/storage.service';
 import type { Response } from 'express';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 
 @Injectable()
 export class FileService {

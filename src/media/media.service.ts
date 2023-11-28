@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FindMediaQueryDto } from './dto/find-media.dto';
-import { Media, Prisma, User } from '@prisma/client';
+import { Media, Prisma, type User } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { StorageService } from 'src/storage/storage.service';
 import { AmazonWebServicesS3Storage } from '@kodepandai/flydrive-s3';

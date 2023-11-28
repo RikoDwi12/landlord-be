@@ -1,9 +1,9 @@
 import { Seeder } from './seeder.abstract';
-import * as path from 'path';
+import path from 'path';
 import { gunzipSync } from 'zlib';
-import * as fs from 'fs';
+import fs from 'fs';
 import { PrismaClient } from '@prisma/client';
-import * as runtime from '@prisma/client/runtime/library';
+import runtime from '@prisma/client/runtime/library';
 
 export class IndonesiaSeeder extends Seeder {
   async run(): Promise<void> {

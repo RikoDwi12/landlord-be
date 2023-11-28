@@ -14,7 +14,7 @@ import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { CurrentUser, JwtGuard } from 'src/auth';
 import type { Response } from 'express';
 import { FileService } from './file.service';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 
 @Controller('file')
 @UseGuards(JwtGuard)

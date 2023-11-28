@@ -11,7 +11,7 @@ import {
 import { PbbService } from './pbb.service';
 import { FindPbbQueryDto, CreatePbbBodyDto, UpdatePbbBodyDto } from './dto';
 import { success } from '../http';
-import { User } from '@prisma/client';
+import type { User } from '@prisma/client';
 import { CurrentUser } from 'src/auth';
 
 @Controller('pbb')

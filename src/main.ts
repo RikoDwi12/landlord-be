@@ -21,8 +21,8 @@ async function bootstrap() {
   const port = app.get(AppConfigService).root.app.port;
 
   const config = new DocumentBuilder()
-    .setTitle('Landlord')
-    .setVersion('0.0.1')
+    .setTitle('Landlord DOCS')
+    .setVersion('0.1.0')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
