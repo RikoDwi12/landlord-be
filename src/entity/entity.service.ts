@@ -117,6 +117,11 @@ export class EntityService {
       },
       include: {
         group: true,
+        city: {
+          select: {
+            name: true
+          }
+        }
       },
     });
     return {
