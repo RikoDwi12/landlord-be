@@ -7,7 +7,7 @@ const findCrmQuerySchema = z.object({
   orderBy: z.enum(['created_at']).optional().default('created_at'),
   orderDirection: z.enum(['asc', 'desc']).optional().default('desc'),
   //filterable
-  prospect_client_id: z.array(z.number({coerce:true})).optional(),
+  prospect_client_id: z.array(z.number({ coerce: true })).optional(),
   //pagination
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),

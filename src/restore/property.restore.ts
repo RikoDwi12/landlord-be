@@ -49,8 +49,10 @@ export class PropertyRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring properties...');
     const oldProperties = (
-      (await import(path.join(process.cwd(), 'raw/landlordv1/properti.json'),{assert:{type:"json"}})).default
-    ).find((data: any) => data.type == 'table').data as PropertyOld[];
+      await import(path.join(process.cwd(), 'raw/landlordv1/properti.json'), {
+        assert: { type: 'json' },
+      })
+    ).default.find((data: any) => data.type == 'table').data as PropertyOld[];
 
     const matchedCities: Record<string, City> = {};
     for (const oldProperty of oldProperties) {

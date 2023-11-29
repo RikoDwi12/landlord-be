@@ -15,12 +15,12 @@ export class CrmService {
     let search: Prisma.CrmWhereInput[] = [];
 
     // handle filter
-    if(query.prospect_client_id?.length){
+    if (query.prospect_client_id?.length) {
       filter.push({
         prospect_client_id: {
-          in: query.prospect_client_id
-        }
-      })
+          in: query.prospect_client_id,
+        },
+      });
     }
 
     // handle search
@@ -51,24 +51,24 @@ export class CrmService {
       },
       include: {
         prospect_client: {
-        select: {
-            name:true
-        }
+          select: {
+            name: true,
+          },
         },
         property: {
           select: {
-            type:true,
-            name:true,
-            specific_info:true,
-            address:true,
+            type: true,
+            name: true,
+            specific_info: true,
+            address: true,
             city: {
               select: {
-                name:true
-              }
-            }
-          }
-        }
-      }
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
     return {
       ...res,

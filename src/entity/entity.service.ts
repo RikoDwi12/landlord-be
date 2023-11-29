@@ -119,9 +119,9 @@ export class EntityService {
         group: true,
         city: {
           select: {
-            name: true
-          }
-        }
+            name: true,
+          },
+        },
       },
     });
     return {
@@ -173,7 +173,9 @@ export class EntityService {
     const newAttachmentNames = attachments.filter(
       ({ id }) => typeof id == 'string' && !id.includes('http'),
     );
-    const keepAttachments = attachments.filter(({id}) => typeof id == 'number');
+    const keepAttachments = attachments.filter(
+      ({ id }) => typeof id == 'number',
+    );
 
     return await this.prisma.$transaction(async (trx) => {
       // remove attachment yang tidak dikeep

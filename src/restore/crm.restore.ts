@@ -18,8 +18,10 @@ export class CrmRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring crms...');
     const oldCrms = (
-      (await import(path.join(process.cwd(), 'raw/landlordv1/crm.json'), {assert:{type:"json"}})).default
-    ).find((data: any) => data.type == 'table').data as OldCrm[];
+      await import(path.join(process.cwd(), 'raw/landlordv1/crm.json'), {
+        assert: { type: 'json' },
+      })
+    ).default.find((data: any) => data.type == 'table').data as OldCrm[];
     const prospectNames = [
       ...new Set(oldCrms.map((data) => data.perusahaan)),
     ].sort();

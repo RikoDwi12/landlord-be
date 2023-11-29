@@ -41,4 +41,4 @@ const findNopQuerySchema = z.object({
   limit: z.number({ coerce: true }).optional(),
   page: z.number({ coerce: true }).optional(),
 } satisfies SchemaDto<Nop, QueryableDto>);
-export class FindNopQueryDto extends createZodDto(findNopQuerySchema) { }
+export class FindNopQueryDto extends createZodDto(findNopQuerySchema) {}

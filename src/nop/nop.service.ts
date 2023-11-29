@@ -7,7 +7,7 @@ import { dotToObject } from 'src/utils';
 
 @Injectable()
 export class NopService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
   async create(data: CreateNopBodyDto) {
     if (
       await this.prisma.nop.findFirst({

@@ -165,4 +165,13 @@ export class MediaService {
       })),
     );
   }
+
+  update({ id, ...data }: Required<Partial<Media>, 'id'>) {
+    return this.prisma.media.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
 }

@@ -19,8 +19,10 @@ export class NopRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring nops...');
     const oldNops = (
-      (await import(path.join(process.cwd(), 'raw/landlordv1/nop.json'),{assert:{type:"json"}})).default
-    )
+      await import(path.join(process.cwd(), 'raw/landlordv1/nop.json'), {
+        assert: { type: 'json' },
+      })
+    ).default
       .find((data: any) => data.type == 'table')
       .data.map(this.fixTypo) as OldNop[];
     const taxPayerNames = [

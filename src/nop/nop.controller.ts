@@ -14,7 +14,7 @@ import { success } from '../http';
 
 @Controller('nop')
 export class NopController {
-  constructor(private readonly nopService: NopService) { }
+  constructor(private readonly nopService: NopService) {}
 
   @Post()
   async create(@Body() body: CreateNopBodyDto) {

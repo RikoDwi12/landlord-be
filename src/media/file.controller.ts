@@ -7,6 +7,8 @@ import {
   UseGuards,
   UploadedFile,
   Res,
+  Patch,
+  Body,
 } from '@nestjs/common';
 import { success } from '../http';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -15,6 +17,7 @@ import { CurrentUser, JwtGuard } from 'src/auth';
 import type { Response } from 'express';
 import { FileService } from './file.service';
 import type { User } from '@prisma/client';
+import { RenameMediaBodyDto } from './dto/update-media.dto';
 
 @Controller('file')
 @UseGuards(JwtGuard)
@@ -47,5 +50,10 @@ export class FileController {
     @CurrentUser() user: User,
   ) {
     return this.file.streamTmpFile(response, user, filename);
+  }
+
+  @Patch('media')
+  async renameMedia(@Body() body: RenameMediaBodyDto) {
+    return success(await this.file.renameMedia(body));
   }
 }

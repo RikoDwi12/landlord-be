@@ -24,8 +24,10 @@ export class PbbRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring pbbs...');
     const oldPbbs = (
-      (await import(path.join(process.cwd(), 'raw/landlordv1/pbb.json'),{assert:{type:'json'}})).default
-    ).find((data: any) => data.type == 'table').data as PbbOld[];
+      await import(path.join(process.cwd(), 'raw/landlordv1/pbb.json'), {
+        assert: { type: 'json' },
+      })
+    ).default.find((data: any) => data.type == 'table').data as PbbOld[];
     const taxPayerNames = [...new Set(oldPbbs.map((o) => o.penanggung))].sort();
     // get data entity yang pernah direstore sebelumnya
     const alreadySavedEntities = await this.prisma.entity.findMany({

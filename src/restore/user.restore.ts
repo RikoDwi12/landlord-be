@@ -15,8 +15,10 @@ export class UserRestore extends Seeder {
   async run(): Promise<void> {
     console.log('restoring users...');
     const oldUsers = (
-      (await import(path.join(process.cwd(), 'raw/landlordv1/users.json'),{assert: {type: 'json'}})).default
-    ).find((data: any) => data.type == 'table').data as OldUser[];
+      await import(path.join(process.cwd(), 'raw/landlordv1/users.json'), {
+        assert: { type: 'json' },
+      })
+    ).default.find((data: any) => data.type == 'table').data as OldUser[];
     await this.prisma.user.createMany({
       data: oldUsers.map((o) => ({
         id: o.id,
