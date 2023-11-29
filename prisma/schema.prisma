@@ -349,10 +349,10 @@ model City {
   latitude      String?
   longitude     String?
 
-  province  Province   @relation(fields: [province_code], references: [code])
-  entities  Entity[]
-  districts District[]
-  properties  Property[]
+  province   Province   @relation(fields: [province_code], references: [code])
+  entities   Entity[]
+  districts  District[]
+  properties Property[]
 
   @@map("indonesia_cities")
 }
@@ -377,7 +377,7 @@ model SubDistrict {
   latitude      String?
   longitude     String?
 
-  district    District      @relation(fields: [district_code], references: [code])
+  district     District      @relation(fields: [district_code], references: [code])
   certificates Certificate[]
   nops         Nop[]
 
@@ -392,6 +392,7 @@ enum MediaTag {
 model Media {
   id         Int        @id @default(autoincrement())
   directory  String
+  title      String
   filename   String
   extension  String     @db.Char(32)
   mime_type  String     @db.Char(128)

@@ -300,6 +300,7 @@ CREATE TABLE "indonesia_subdistricts" (
 CREATE TABLE "media" (
     "id" SERIAL NOT NULL,
     "directory" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "filename" TEXT NOT NULL,
     "extension" CHAR(32) NOT NULL,
     "mime_type" CHAR(128) NOT NULL,

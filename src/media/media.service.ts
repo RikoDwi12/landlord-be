@@ -42,6 +42,7 @@ export class MediaService {
         uploaded.push({
           size: file.size,
           filename: file.originalname,
+          title: file.originalname,
           directory,
           extension: file.ext,
           mime_type: file.mime,
