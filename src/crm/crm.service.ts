@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma';
 import { FindCrmQueryDto, CreateCrmBodyDto, UpdateCrmBodyDto } from './dto';
@@ -7,16 +7,6 @@ import { FindCrmQueryDto, CreateCrmBodyDto, UpdateCrmBodyDto } from './dto';
 export class CrmService {
   constructor(private readonly prisma: PrismaService) {}
   async create(data: CreateCrmBodyDto) {
-    // if (
-    //   await this.prisma.crm.findFirst({
-    //     where: { deleted_at: null },
-    //   })
-    // ) {
-    //   throw new HttpException(
-    //     'Crm name already exists',
-    //     HttpStatus.CONFLICT,
-    //   );
-    // }
     return await this.prisma.crm.create({ data });
   }
 
@@ -24,8 +14,17 @@ export class CrmService {
     const filter: Prisma.CrmWhereInput[] = [];
     let search: Prisma.CrmWhereInput[] = [];
 
+    // handle filter
+    if(query.prospect_client_id?.length){
+      filter.push({
+        prospect_client_id: {
+          in: query.prospect_client_id
+        }
+      })
+    }
+
+    // handle search
     if (query.search) {
-      // TODO: tambahkan yang bisa disearch apa saja
       search = [
         {
           prospect_desc: {
@@ -50,6 +49,26 @@ export class CrmService {
       orderBy: {
         [query.orderBy]: query.orderDirection,
       },
+      include: {
+        prospect_client: {
+        select: {
+            name:true
+        }
+        },
+        property: {
+          select: {
+            type:true,
+            name:true,
+            specific_info:true,
+            address:true,
+            city: {
+              select: {
+                name:true
+              }
+            }
+          }
+        }
+      }
     });
     return {
       ...res,
@@ -62,16 +81,6 @@ export class CrmService {
   }
 
   async update(id: number, data: UpdateCrmBodyDto) {
-    // if (
-    //   await this.prisma.crm.findFirst({
-    //     where: { name: data.name, id: { not: id }, deleted_at: null },
-    //   })
-    // ) {
-    //   throw new HttpException(
-    //     'Crm name already exists',
-    //     HttpStatus.CONFLICT,
-    //   );
-    // }
     return await this.prisma.crm.update({ where: { id }, data });
   }
 
