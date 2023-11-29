@@ -20,8 +20,8 @@
   "dependencies": {
     "@anatine/zod-nestjs": "^2.0.3",
     "@anatine/zod-openapi": "^2.2.1",
-    "@kodepandai/flydrive": "3.0.0-next.2",
-    "@kodepandai/flydrive-s3": "3.0.0-next.2",
+    "@kodepandai/flydrive": "3.0.0-next.4",
+    "@kodepandai/flydrive-s3": "3.0.0-next.4",
     "@nestjs/common": "^10.2.7",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.2.7",
@@ -92,5 +92,5 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   },
-  "type":"module"
+  "type": "module"
 }

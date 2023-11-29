@@ -12,11 +12,11 @@ dependencies:
     specifier: ^2.2.1
     version: 2.2.1(openapi3-ts@4.1.2)(zod@3.22.4)
   '@kodepandai/flydrive':
-    specifier: 3.0.0-next.2
-    version: 3.0.0-next.2
+    specifier: 3.0.0-next.4
+    version: 3.0.0-next.4
   '@kodepandai/flydrive-s3':
-    specifier: 3.0.0-next.2
-    version: 3.0.0-next.2(@kodepandai/flydrive@3.0.0-next.2)
+    specifier: 3.0.0-next.4
+    version: 3.0.0-next.4(@kodepandai/flydrive@3.0.0-next.4)
   '@nestjs/common':
     specifier: ^10.2.7
     version: 10.2.7(reflect-metadata@0.1.13)(rxjs@7.8.1)
@@ -1744,20 +1744,20 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@kodepandai/flydrive-s3@3.0.0-next.2(@kodepandai/flydrive@3.0.0-next.2):
-    resolution: {integrity: sha512-qAywLRhBAs+iQ5IdJTGhfjodCPdPvLxjWRE3rgXFd1otpKst43zdHFE3YJaryWyZvyVh8cWQjnkNRdYC8k8qbw==}
+  /@kodepandai/flydrive-s3@3.0.0-next.4(@kodepandai/flydrive@3.0.0-next.4):
+    resolution: {integrity: sha512-k4lHVC5i/0x8ZKBx5hrZPXBdNshIiioIENH9zbTr82cAgs5ZVvkLTMG/MHX71551wMxygxx2pOQigjTsHzN/IQ==}
     peerDependencies:
-      '@kodepandai/flydrive': 3.0.0-next.2
+      '@kodepandai/flydrive': 3.0.0-next.4
     dependencies:
       '@aws-sdk/client-s3': 3.441.0
       '@aws-sdk/s3-request-presigner': 3.441.0
-      '@kodepandai/flydrive': 3.0.0-next.2
+      '@kodepandai/flydrive': 3.0.0-next.4
     transitivePeerDependencies:
       - aws-crt
     dev: false
 
-  /@kodepandai/flydrive@3.0.0-next.2:
-    resolution: {integrity: sha512-PHFBbIprHSmu+Gx0Zl/hcoMqPWGHOzVFIm5f65u9HkqXWwdnN4fEqNDZQbO3TpLfX3P/XwKH5ypB0pWOzIA3fw==}
+  /@kodepandai/flydrive@3.0.0-next.4:
+    resolution: {integrity: sha512-8sen8K5Bx5d7AvPqIN1NGFx9RUkItDoym94IRRRQCUugnVwK6A7juS+PV2rizUw2Zn+LGe+qd94mMLfowbVwBg==}
     dependencies:
       fs-extra: 9.1.0
       node-exceptions: 4.0.1

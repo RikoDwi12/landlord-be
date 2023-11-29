@@ -87,7 +87,7 @@ export class MediaService {
     if (query.mediable_type && query.mediable_id) {
       filter.push({
         [query.mediable_type + 'Media']: {
-          every: {
+          some: {
             [query.mediable_type + '_id']: query.mediable_id,
           },
         },

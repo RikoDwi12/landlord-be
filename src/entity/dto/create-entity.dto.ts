@@ -10,13 +10,13 @@ export const createEntityBodySchema = attachMediaBodySchema.extend({
   name: z.string().min(3),
   phone: z.string().optional(),
   email: z.string().email().optional(),
-  nib: z.string().optional().nullable(),
-  npwp: z.string().optional().nullable(),
+  nib: z.string().nullish(),
+  npwp: z.string().nullish(),
   address: z.string().optional(),
   contact_name: z.string().min(1),
   contact_phone: z.string().min(1),
   city_code: z.string().min(1),
-  group_id: z.number({ coerce: true }).optional(),
+  group_id: z.number({ coerce: true }).nullish(),
 
   // agar rule validasi sesuai denga schema prisma
 } satisfies SchemaDto<Entity>);
