@@ -37,6 +37,11 @@ export class RoleController {
     return success(await this.roleService.findAll(query));
   }
 
+  @Get('permission')
+  allPermission() {
+    return success(this.roleService.allPermission());
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return success(await this.roleService.findOne(+id));
@@ -54,4 +59,5 @@ export class RoleController {
   async remove(@Param('id') id: string) {
     return success(await this.roleService.remove(+id));
   }
+
 }

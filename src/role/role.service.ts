@@ -3,6 +3,7 @@ import { CreateRoleBodyDto, FindRoleQueryDto, UpdateRoleBodyDto } from './dto';
 import { PrismaService } from '../prisma';
 import type { Prisma, User } from '@prisma/client';
 import { dotToObject } from 'src/utils';
+import { PERMISSIONS, modules } from './permission.const';
 
 @Injectable()
 export class RoleService {
@@ -98,5 +99,12 @@ export class RoleService {
         resource: resource == '*' ? 'all' : resource,
       };
     });
+  }
+
+  allPermission(){
+    return modules.map(m=>({
+      resource: m,
+      permissions: PERMISSIONS.filter(p=>p.startsWith(m+"."))
+    }))
   }
 }
