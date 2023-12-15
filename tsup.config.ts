@@ -4,5 +4,6 @@ export default defineConfig({
   clean:true,
   target: "esnext",
   format: "esm",
-  external: ["@nestjs/core", "@nestjs/microservices", "@faker-js/faker"]
+  external: ["@nestjs/core", "@nestjs/microservices", "@faker-js/faker"],
+  onSuccess: process.argv[2] == "--watch" && "node dist/main.js"
 })

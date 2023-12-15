@@ -8,10 +8,10 @@
   "scripts": {
     "build": "tsup",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "dev": "tsup --watch --onSuccess 'node dist/main.js'",
+    "dev": "tsup --watch",
     "seed": "node dist/script/seed.js",
     "restore": "node dist/script/restore.js",
-    "prod": "node dist/main",
+    "prod": "node dist/main.js",
     "lint": "tsc --noEmit && eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate",
