@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   name       String
   username   String
   email      String
   password   String
-  created_at DateTime  @default(now()) @db.Timestamptz(3)
-  updated_at DateTime  @updatedAt @db.Timestamptz(3)
-  deleted_at DateTime? @db.Timestamptz(3)
+  created_at DateTime   @default(now()) @db.Timestamptz(3)
+  updated_at DateTime   @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime?  @db.Timestamptz(3)
+  user_roles   UserRole[]
 
   @@map("users")
 }
@@ -457,4 +458,27 @@ model PropertyMedia {
 
   @@unique([media_id, property_id])
   @@map("property_media")
+}
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String
+  permissions String[]
+
+  created_at DateTime   @default(now()) @db.Timestamptz(3)
+  updated_at DateTime   @updatedAt @db.Timestamptz(3)
+  deleted_at DateTime?  @db.Timestamptz(3)
+  user_roles   UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id      Int @id @default(autoincrement())
+  user_id Int
+  role_id Int
+
+  user User @relation(fields: [user_id], references: [id])
+  role Role @relation(fields: [role_id], references: [id])
+  @@map("user_role")
 }

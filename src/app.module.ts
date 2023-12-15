@@ -18,12 +18,14 @@ import { FileModule } from './media/file.module';
 import { MediaModule } from './media/media.module';
 import { LegalModule } from './legal/legal.module';
 import { CertificateModule } from './certificate/certificate.module';
+import { AuthorizationModule } from './authorization/authorization.module';
 
 @Module({
   imports: [
     AppConfigModule,
     PrismaModule,
     AuthModule,
+    AuthorizationModule,
     UserModule,
     GroupModule,
     PropertyModule,

@@ -12,6 +12,7 @@ import { CrmRestore } from './crm.restore';
 import { EntityCategorySeeder as EntityCategoryRestore } from '../seeder/entityCategory.seeder';
 import { EntityTypeSeeder as EntityTypeRestore } from '../seeder/entityType.seeder';
 import { PrepareRestore } from './prepare.restore';
+import { RoleSeeder as RoleRestore } from "../seeder/role.seeder";
 
 @Injectable()
 export class RestoreService {
@@ -19,6 +20,7 @@ export class RestoreService {
   async restore() {
     await this.call(PrepareRestore);
     await this.call(IndonesiaRestore);
+    await this.call(RoleRestore);
     await this.call(UserRestore);
     await this.call(EntityCategoryRestore);
     await this.call(EntityTypeRestore);

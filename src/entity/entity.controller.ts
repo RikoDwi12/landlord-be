@@ -19,10 +19,12 @@ import { success } from '../http';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CurrentUser, JwtGuard } from 'src/auth';
 import type { User } from '@prisma/client';
+import { AuthorizationGuard, EntityPolicy, UsePolicy } from 'src/authorization';
 
-@Controller('entity')
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(EntityPolicy)
 @ApiBearerAuth()
-@UseGuards(JwtGuard)
+@Controller('entity')
 export class EntityController {
   constructor(private readonly entityService: EntityService) {}
 

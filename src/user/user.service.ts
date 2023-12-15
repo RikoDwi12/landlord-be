@@ -15,6 +15,15 @@ export class UserService {
         name: true,
         created_at: true,
         password: false,
+        user_roles: {
+          select: {
+            role: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
       },
     });
   }

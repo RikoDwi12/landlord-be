@@ -13,12 +13,14 @@ import { PbbSeeder } from './pbb.seeder';
 import { PropertiesSeeder } from './properties.seeder';
 import { EntityCategorySeeder } from './entityCategory.seeder';
 import { EntityTypeSeeder } from './entityType.seeder';
+import { RoleSeeder } from './role.seeder';
 
 @Injectable()
 export class SeederService {
   constructor(private readonly prisma: PrismaService) {}
   async seed() {
     await this.call(IndonesiaSeeder);
+    await this.call(RoleSeeder);
     await this.call(UserSeeder);
     await this.call(GroupSeeder);
     await this.call(EntityCategorySeeder);

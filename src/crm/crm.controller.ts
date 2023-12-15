@@ -7,11 +7,18 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CrmService } from './crm.service';
 import { FindCrmQueryDto, CreateCrmBodyDto, UpdateCrmBodyDto } from './dto';
 import { success } from '../http';
+import { JwtGuard } from 'src/auth';
+import { AuthorizationGuard, CrmPolicy, UsePolicy } from 'src/authorization';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(CrmPolicy)
+@ApiBearerAuth()
 @Controller('crm')
 export class CrmController {
   constructor(private readonly crmService: CrmService) {}

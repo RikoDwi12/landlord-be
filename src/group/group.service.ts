@@ -8,7 +8,6 @@ import { PrismaService } from '../prisma';
 import { Prisma } from '@prisma/client';
 import { dotToObject } from 'src/utils';
 import { ResponseOption } from 'src/@types';
-import { group } from 'console';
 
 @Injectable()
 export class GroupService {
@@ -88,9 +87,9 @@ export class GroupService {
     };
   }
 
-  findOne(id: number) {
+  findOne(id: number, where?: Prisma.GroupWhereInput) {
     return this.prisma.group.findFirst({
-      where: { id, deleted_at: null },
+      where: { id, deleted_at: null, ...where },
     });
   }
 

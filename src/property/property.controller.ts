@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import {
@@ -15,9 +16,14 @@ import {
   UpdatePropertyBodyDto,
 } from './dto';
 import { success } from '../http';
-import { CurrentUser } from 'src/auth';
+import { CurrentUser, JwtGuard } from 'src/auth';
 import type { User } from '@prisma/client';
+import { AuthorizationGuard, PropertyPolicy, UsePolicy } from 'src/authorization';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(PropertyPolicy)
+@ApiBearerAuth()
 @Controller('property')
 export class PropertyController {
   constructor(private readonly propertyService: PropertyService) {}

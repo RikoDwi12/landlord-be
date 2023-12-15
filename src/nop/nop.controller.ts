@@ -7,11 +7,18 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { NopService } from './nop.service';
 import { FindNopQueryDto, CreateNopBodyDto, UpdateNopBodyDto } from './dto';
 import { success } from '../http';
+import { JwtGuard } from 'src/auth';
+import { AuthorizationGuard, NopPolicy, UsePolicy } from 'src/authorization';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(NopPolicy)
+@ApiBearerAuth()
 @Controller('nop')
 export class NopController {
   constructor(private readonly nopService: NopService) {}

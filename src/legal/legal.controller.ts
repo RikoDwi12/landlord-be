@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { LegalService } from './legal.service';
 import {
@@ -14,10 +15,15 @@ import {
   FindLegalQueryDto,
   updateLegalBodyDto,
 } from './dto';
-import { CurrentUser } from 'src/auth';
+import { CurrentUser, JwtGuard } from 'src/auth';
 import type { User } from '@prisma/client';
 import { success } from 'src/http';
+import { AuthorizationGuard, LegalPolicy, UsePolicy } from 'src/authorization';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(LegalPolicy)
+@ApiBearerAuth()
 @Controller('legal')
 export class LegalController {
   constructor(private readonly legalService: LegalService) {}

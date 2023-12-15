@@ -31,6 +31,25 @@ export class UserRestore extends Seeder {
         password: o.password.replace('$2y', '$2b'),
       })),
     });
+    await this.restoreAutoincrement('user');
+    console.log('DONE');
+    console.log('restoring users roles...');
+    const admin = await this.prisma.role.findFirstOrThrow({
+      where: {
+        name: 'Admin',
+      },
+    });
+    const god = await this.prisma.role.findFirstOrThrow({
+      where: {
+        name: 'God',
+      },
+    });
+    await this.prisma.userRole.createMany({
+      data: oldUsers.map((u) => ({
+        user_id: u.id,
+        role_id: u.username == 'leon' ? god.id : admin.id,
+      })),
+    });
     console.log('DONE');
   }
 }

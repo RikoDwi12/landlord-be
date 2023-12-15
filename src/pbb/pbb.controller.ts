@@ -7,13 +7,19 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { PbbService } from './pbb.service';
 import { FindPbbQueryDto, CreatePbbBodyDto, UpdatePbbBodyDto } from './dto';
 import { success } from '../http';
 import type { User } from '@prisma/client';
-import { CurrentUser } from 'src/auth';
+import { CurrentUser, JwtGuard } from 'src/auth';
+import { AuthorizationGuard, PbbPolicy, UsePolicy } from 'src/authorization';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(PbbPolicy)
+@ApiBearerAuth()
 @Controller('pbb')
 export class PbbController {
   constructor(private readonly pbbService: PbbService) {}

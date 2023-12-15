@@ -18,10 +18,12 @@ import type { Response } from 'express';
 import { FileService } from './file.service';
 import type { User } from '@prisma/client';
 import { RenameMediaBodyDto } from './dto/update-media.dto';
+import { AuthorizationGuard, MediaPolicy, UsePolicy } from 'src/authorization';
 
-@Controller('file')
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(MediaPolicy)
 @ApiBearerAuth()
+@Controller('file')
 export class FileController {
   constructor(private readonly file: FileService) {}
   @Post('upload')

@@ -1,3 +1,4 @@
+/*@depcrecated Ini sudah tidak digunakan, sudah menggunakan data dari DB*/
 export const ENTITY_CATEGORIES = {
   LANDLORD: 'Landlord',
   PIC: 'PIC',

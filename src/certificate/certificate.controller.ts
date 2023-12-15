@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CertificateService } from './certificate.service';
 import {
@@ -15,9 +16,14 @@ import {
   UpdateCertificateBodyDto,
 } from './dto';
 import { success } from '../http';
-import { CurrentUser } from 'src/auth';
+import { CurrentUser, JwtGuard } from 'src/auth';
 import type { User } from '@prisma/client';
+import { AuthorizationGuard, UsePolicy, CertificatePolicy } from 'src/authorization';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(CertificatePolicy)
+@ApiBearerAuth()
 @Controller('certificate')
 export class CertificateController {
   constructor(private readonly certificateService: CertificateService) {}

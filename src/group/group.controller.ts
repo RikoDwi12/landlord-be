@@ -18,8 +18,10 @@ import {
 import { JwtGuard } from '../auth';
 import { success } from '../http';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { AuthorizationGuard, UsePolicy, GroupPolicy } from 'src/authorization';
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, AuthorizationGuard)
+@UsePolicy(GroupPolicy)
 @ApiBearerAuth()
 @Controller('group')
 export class GroupController {
