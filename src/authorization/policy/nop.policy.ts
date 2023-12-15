@@ -1,7 +1,7 @@
 import { BasePolicy } from './base.policy';
 
-export class GroupPolicy extends BasePolicy {
+export class NopPolicy extends BasePolicy {
   protected setup(): void {
-    this.model = "Group";
+    this.model = "Nop";
   }
 }
