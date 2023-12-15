@@ -6,10 +6,10 @@ export class UserPolicy extends BasePolicy {
     this.model = 'User';
   }
   profile() {
-    return this.authorization.ability.can('read', subject('User', this.user));
+    return this.authorize('read', subject('User', this.user));
   }
 
   ability() {
-    return this.authorization.ability.can('read', subject('User', this.user));
+    return this.authorize('read', subject('User', this.user));
   }
 }

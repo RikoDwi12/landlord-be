@@ -14,4 +14,8 @@ export class Policy {
   protected setup(){
     throw new Error('Method setup not implemented.');
   }
+  /** alias of this.authorization.ability.can */
+  protected get authorize(): typeof this.authorization.ability.can {
+    return this.authorization.ability.can.bind(this.authorization.ability);
+  }
 }

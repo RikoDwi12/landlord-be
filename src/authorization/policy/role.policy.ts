@@ -6,6 +6,6 @@ export class RolePolicy extends BasePolicy {
   }
 
   allPermission(){
-    return this.authorization.ability.can("read", "Role")
+    return this.authorize("read", "Role");
   }
 }

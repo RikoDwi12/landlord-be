@@ -16,7 +16,7 @@ import { patchNestjsSwagger } from '@anatine/zod-nestjs';
 patchNestjsSwagger();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {logger: ["error"]});
   app.enableCors();
   const port = app.get(AppConfigService).root.app.port;
 
